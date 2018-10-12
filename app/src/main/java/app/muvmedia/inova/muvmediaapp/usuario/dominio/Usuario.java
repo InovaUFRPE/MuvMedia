@@ -5,6 +5,16 @@ public class Usuario {
     private String email;
     private String senha;
 
+    public Muver getMuver() {
+        return muver;
+    }
+
+    public void setMuver(Muver muver) {
+        this.muver = muver;
+    }
+
+    private Muver muver;
+
     public long getId() {
         return id;
     }
