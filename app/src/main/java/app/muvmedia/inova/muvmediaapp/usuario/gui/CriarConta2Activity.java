@@ -11,8 +11,6 @@ import android.widget.Toast;
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
 
-import java.util.Date;
-
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
@@ -23,7 +21,7 @@ public class CriarConta2Activity extends AppCompatActivity {
     private Button cadastrarConta;
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private Muver muver = new Muver();
-
+    private Usuario usuario = new Usuario();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +51,9 @@ public class CriarConta2Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()){
-                    Toast.makeText(CriarConta2Activity.this, "Conta Criada: "+ campoNascimento.getText().toString(), Toast.LENGTH_LONG).show();
+                    receberDadosTela1();
+                    criarMuver();
+                    Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -93,15 +93,19 @@ public class CriarConta2Activity extends AppCompatActivity {
         }
     }
 
-    private void receberDadosTela1(){
-        Bundle bundle = getIntent().getBundleExtra("tela1");
-        if (bundle != null){
-            Usuario usuario = (Usuario) bundle.getSerializable("tripla");
-            String email = usuario.getEmail();
-        }
+    private void setMascaras(){
+        SimpleMaskFormatter cpf = new SimpleMaskFormatter("NNN.NNN.NNN-NN");
+        MaskTextWatcher setMaskCpf =  new MaskTextWatcher(campoCpf, cpf);
+        campoCpf.addTextChangedListener(setMaskCpf);
+
+        SimpleMaskFormatter nascimento = new SimpleMaskFormatter("NN/NN/NNNN");
+        MaskTextWatcher setMaskNasc =  new MaskTextWatcher(campoNascimento, nascimento);
+        campoNascimento.addTextChangedListener(setMaskNasc);
     }
+
     private void criarMuver(){
         String cpf = String.valueOf(campoCpf.getText().toString()).replace(".","").replace("-","");
+
         muver.setNome(campoNome.getText().toString());
         muver.setSobrenome(campoSobrenome.getText().toString());
         muver.setCpf(cpf);
@@ -117,13 +121,10 @@ public class CriarConta2Activity extends AppCompatActivity {
         return nascimento;
     }
 
-    private void setMascaras(){
-        SimpleMaskFormatter cpf = new SimpleMaskFormatter("NNN.NNN.NNN-NN");
-        MaskTextWatcher setMaskCpf =  new MaskTextWatcher(campoCpf, cpf);
-        campoCpf.addTextChangedListener(setMaskCpf);
-
-        SimpleMaskFormatter nascimento = new SimpleMaskFormatter("NN/NN/NNNN");
-        MaskTextWatcher setMaskNasc =  new MaskTextWatcher(campoNascimento, nascimento);
-        campoNascimento.addTextChangedListener(setMaskNasc);
+    private void receberDadosTela1(){
+        Bundle bundle = getIntent().getBundleExtra("tela1");
+        if (bundle != null){
+            usuario = (Usuario) bundle.getSerializable("tripla");
+            }
     }
 }

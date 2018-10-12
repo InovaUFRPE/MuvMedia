@@ -52,27 +52,15 @@ public class CriarConta1Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()) {
-                    String user = setarUsuario(campoEmail.getText().toString().trim() , campoSenha.getText().toString().trim());
+                    irSegundaTela();
+                    String user = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                     cadastrar(user);
-
-                    Intent intent = new Intent(getApplicationContext(), CriarConta2Activity.class);
-                    startActivity(intent);
                 }
 
-            }
+
+                }
+
         });
-    }
-
-    private void irSegundaTela(){
-        Bundle bundle = new Bundle();
-        Usuario usuario = new Usuario();
-        usuario.setEmail(campoEmail.getText().toString());
-        usuario.setSenha(campoSenha.getText().toString());
-        bundle.putSerializable("tripla", usuario);
-
-        Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);
-        it.putExtra("tela1", bundle);
-        startActivity(it);
     }
 
     private String setarUsuario(String email, String senha){
@@ -116,6 +104,19 @@ public class CriarConta1Activity extends AppCompatActivity {
         } else {
             return true;
         }
+
+    }
+
+    private void irSegundaTela(){
+        Bundle bundle = new Bundle();
+        Usuario usuario = new Usuario();
+        usuario.setEmail(campoEmail.getText().toString());
+        usuario.setSenha(campoSenha.getText().toString());
+        bundle.putSerializable("tripla", usuario);
+
+        Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);
+        it.putExtra("tela1", bundle);
+        startActivity(it);
     }
 }
 
