@@ -11,7 +11,10 @@ import android.widget.Toast;
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
 
+import java.util.Date;
+
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
@@ -19,6 +22,8 @@ public class CriarConta2Activity extends AppCompatActivity {
     private EditText campoNome, campoSobrenome, campoCpf, campoNascimento;
     private Button cadastrarConta;
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
+    private Muver muver = new Muver();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +91,30 @@ public class CriarConta2Activity extends AppCompatActivity {
         else {
             return true;
         }
+    }
+
+    private void receberDadosTela1(){
+        Bundle bundle = getIntent().getBundleExtra("tela1");
+        if (bundle != null){
+            Usuario usuario = (Usuario) bundle.getSerializable("tripla");
+            String email = usuario.getEmail();
+        }
+    }
+    private void criarMuver(){
+        String cpf = String.valueOf(campoCpf.getText().toString()).replace(".","").replace("-","");
+        muver.setNome(campoNome.getText().toString());
+        muver.setSobrenome(campoSobrenome.getText().toString());
+        muver.setCpf(cpf);
+        muver.setDataNascimento(formatarData());
+    }
+
+    private String formatarData(){
+        String ano = campoNascimento.getText().toString().substring(6, 10);
+        String mes = campoNascimento.getText().toString().substring(3, 5);
+        String dia = campoNascimento.getText().toString().substring(0, 2);
+        String nascimento = ano+"-"+mes+"-"+dia;
+
+        return nascimento;
     }
 
     private void setMascaras(){

@@ -8,7 +8,7 @@ public class Muver {
     private String nome;
     private String sobrenome;
     private String cpf;
-    private Date dataNascimento;
+    private String dataNascimento;
 
     public Usuario getUsuario() {
         return usuario;
@@ -50,11 +50,11 @@ public class Muver {
         this.cpf = cpf;
     }
 
-    public Date getDataNascimento() {
+    public String getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(String dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 }
