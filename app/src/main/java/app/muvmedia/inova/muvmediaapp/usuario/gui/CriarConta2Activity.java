@@ -1,5 +1,6 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
 
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class CriarConta2Activity extends AppCompatActivity {
@@ -26,8 +28,17 @@ public class CriarConta2Activity extends AppCompatActivity {
         this.campoSobrenome = findViewById(R.id.editText7);
         this.campoCpf = findViewById(R.id.editText10);
         this.campoNascimento = findViewById(R.id.editText8);
+        setUser();
         setMascaras();
         cadastrarConta();
+    }
+
+    private void setUser() {
+        Usuario usuario = new Usuario();
+        Intent intent = getIntent();
+        usuario.setEmail(intent.getStringExtra("email"));
+        usuario.setSenha(intent.getStringExtra("senha"));
+
     }
 
 

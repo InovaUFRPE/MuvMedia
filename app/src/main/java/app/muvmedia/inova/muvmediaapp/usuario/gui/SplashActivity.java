@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import app.muvmedia.inova.muvmediaapp.infra.Permissoes;
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 
 public class SplashActivity extends Activity implements Runnable {
 
@@ -17,6 +18,7 @@ public class SplashActivity extends Activity implements Runnable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        isOnline();
         String permissions[] = new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -29,7 +31,17 @@ public class SplashActivity extends Activity implements Runnable {
     }
     public void run() {
         startActivity(new Intent(this, LoginActivity.class));
+
         finish();
+    }
+
+    private void isOnline() {
+        if(ServicoDownload.isNetworkAvailable(getApplicationContext()))
+        {
+            Toast.makeText(getApplicationContext(), "ONLINE", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Sem conexão com a internet", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

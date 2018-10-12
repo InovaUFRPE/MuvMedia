@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -80,14 +79,14 @@ public class LoginActivity extends AppCompatActivity {
     private void isOnline() {
         if(ServicoDownload.isNetworkAvailable(getApplicationContext()))
         {
-            DownloadFilmes newsTask = new DownloadFilmes();
+            logar newsTask = new logar();
             newsTask.execute();
         }else{
             Toast.makeText(getApplicationContext(), "Sem conexão com a internet", Toast.LENGTH_LONG).show();
         }
     }
 
-    public class DownloadFilmes extends AsyncTask<String, Void, String> {
+    public class logar extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -121,11 +120,12 @@ public class LoginActivity extends AppCompatActivity {
     private void montarUsuario(JSONArray jsonArray) throws JSONException {
         JSONObject jsonObject = jsonArray.getJSONObject(0);
         Usuario usuario = new Usuario();
-        usuario.setId(jsonObject.optLong("id"));
+        usuario.set_id(jsonObject.optString("_id"));
         usuario.setEmail(jsonObject.optString("email"));
         usuario.setSenha(jsonObject.optString("senha"));
         //usuario.setMuver()...
 
         //Sessao.setUsuarioLogado...
     }
+
 }

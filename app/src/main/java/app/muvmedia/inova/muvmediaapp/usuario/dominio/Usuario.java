@@ -1,26 +1,17 @@
 package app.muvmedia.inova.muvmediaapp.usuario.dominio;
 
 public class Usuario {
-    private long id;
+    private String _id;
     private String email;
     private String senha;
+    private int nivel;
 
-    public Muver getMuver() {
-        return muver;
+    public String get_id() {
+        return _id;
     }
 
-    public void setMuver(Muver muver) {
-        this.muver = muver;
-    }
-
-    private Muver muver;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getEmail() {
@@ -37,5 +28,13 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
     }
 }

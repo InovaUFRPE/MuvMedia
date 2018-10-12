@@ -41,6 +41,7 @@ public class ServicoDownload {
         }
     }
 
+
     @NonNull
     private static String getString(InputStream inputStream) throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));

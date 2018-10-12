@@ -4,10 +4,19 @@ import java.util.Date;
 
 public class Muver {
     private long id;
+    private Usuario usuario;
     private String nome;
     private String sobrenome;
     private String cpf;
     private Date dataNascimento;
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public long getId() {
         return id;
