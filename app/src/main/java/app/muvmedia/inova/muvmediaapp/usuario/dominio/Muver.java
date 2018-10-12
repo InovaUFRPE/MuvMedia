@@ -1,6 +1,5 @@
 package app.muvmedia.inova.muvmediaapp.usuario.dominio;
 
-import java.util.Date;
 
 public class Muver {
     private long id;

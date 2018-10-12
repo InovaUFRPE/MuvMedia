@@ -56,8 +56,6 @@ public class CriarConta1Activity extends AppCompatActivity {
                     String user = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                     cadastrar(user);
                 }
-
-
                 }
 
         });
@@ -104,9 +102,7 @@ public class CriarConta1Activity extends AppCompatActivity {
         } else {
             return true;
         }
-
     }
-
     private void irSegundaTela(){
         Bundle bundle = new Bundle();
         Usuario usuario = new Usuario();

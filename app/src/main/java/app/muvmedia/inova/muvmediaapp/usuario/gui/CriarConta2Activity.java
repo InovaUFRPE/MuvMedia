@@ -44,7 +44,6 @@ public class CriarConta2Activity extends AppCompatActivity {
 
     }
 
-
     private void cadastrarConta(){
         cadastrarConta = findViewById(R.id.button3);
         cadastrarConta.setOnClickListener(new View.OnClickListener() {
