@@ -49,6 +49,7 @@ public class CriarConta1Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()){
+                    irSegundaTela();
 //                    try {
 //                        isOnline();
 //                    } catch (JSONException e) {
@@ -58,8 +59,7 @@ public class CriarConta1Activity extends AppCompatActivity {
 ////                       new GetJsonTask("http://localhost:5000/public/register/user", user);
 //                        newsTask.execute();
 
-                    Intent intent = new Intent(getApplicationContext(), CriarConta2Activity.class);
-                    startActivity(intent);
+
                 }
 
 //            }
@@ -186,6 +186,18 @@ public class CriarConta1Activity extends AppCompatActivity {
             return true;
         }
 
+    }
+
+    private void irSegundaTela(){
+        Bundle bundle = new Bundle();
+        Usuario usuario = new Usuario();
+        usuario.setEmail(campoEmail.getText().toString());
+        usuario.setSenha(campoSenha.getText().toString());
+        bundle.putSerializable("tripla", usuario);
+
+        Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);
+        it.putExtra("tela1", bundle);
+        startActivity(it);
     }
 }
 

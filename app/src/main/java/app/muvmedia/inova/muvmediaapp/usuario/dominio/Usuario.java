@@ -1,6 +1,8 @@
 package app.muvmedia.inova.muvmediaapp.usuario.dominio;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
     private String _id;
     private String email;
     private String senha;

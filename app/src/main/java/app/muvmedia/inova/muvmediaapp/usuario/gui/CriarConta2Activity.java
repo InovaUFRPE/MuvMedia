@@ -21,6 +21,7 @@ public class CriarConta2Activity extends AppCompatActivity {
     private Button cadastrarConta;
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private Muver muver = new Muver();
+    private Usuario usuario = new Usuario();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +51,9 @@ public class CriarConta2Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()){
+                    receberDadosTela1();
                     criarMuver();
-                    Toast.makeText(CriarConta2Activity.this, "Conta Criada: "+ campoNascimento.getText().toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -117,5 +119,12 @@ public class CriarConta2Activity extends AppCompatActivity {
         String nascimento = ano+"-"+mes+"-"+dia;
 
         return nascimento;
+    }
+
+    private void receberDadosTela1(){
+        Bundle bundle = getIntent().getBundleExtra("tela1");
+        if (bundle != null){
+            usuario = (Usuario) bundle.getSerializable("tripla");
+            }
     }
 }
