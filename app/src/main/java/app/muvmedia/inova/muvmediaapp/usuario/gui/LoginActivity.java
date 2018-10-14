@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
+import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
@@ -68,7 +69,9 @@ public class LoginActivity extends AppCompatActivity {
                     //avisar que n encontrou
                 } else{
                     Muver muverLogado = montarMuver(logado);
-                    //Sessao.setOnline(muverlogado);
+                    Sessao sessao = Sessao.getInstance();
+                    sessao.setMuver(muverLogado);
+//                    Muver logado atualmente: Muver muverLogado2 = Sessao.getInstance().getMuver();
 
                 }
 
