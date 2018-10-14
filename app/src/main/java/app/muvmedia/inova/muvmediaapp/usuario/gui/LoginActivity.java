@@ -23,7 +23,7 @@ import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
-import app.muvmedia.inova.muvmediaapp.usuario.dominio.Login;
+//import app.muvmedia.inova.muvmediaapp.usuario.dominio.Login;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
@@ -60,7 +60,11 @@ public class LoginActivity extends AppCompatActivity {
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login();
+                try {
+                    login();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -68,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void login() {
+    private void login() throws InterruptedException {
         if (!this.verificarCampos()) {
             if(isOnline()){
                 String usuario = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
@@ -78,9 +82,9 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vem", Toast.LENGTH_SHORT).show();
             }
 
-            }
-
         }
+
+    }
 
 
     private Muver montarMuver(String logado) {
@@ -90,19 +94,22 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void logar(String jason){
+    private void logar(String jason)  throws InterruptedException {
         callServer(jason);
 
     }
 
-    private void callServer(final String data){
-        new Thread(){
-            public void run(){
+    private void callServer(final String data) throws InterruptedException{
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
                 Sessao.instance.setResposta(HttpConnection.post("http://muvmedia-api.herokuapp.com/auth/login", data));
                 Log.i("Script", "OLHAAA: "+ Sessao.instance
                 .getResposta());
             }
-        }.start();
+        });
+        thread.start();
+        thread.join();
     }
 
     private String setarUsuario(String email, String senha){
@@ -150,5 +157,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Sessao.setUsuarioLogado...
     }
+
+
 
 }

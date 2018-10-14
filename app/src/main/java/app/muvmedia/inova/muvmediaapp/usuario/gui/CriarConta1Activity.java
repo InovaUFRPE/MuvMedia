@@ -37,7 +37,7 @@ public class CriarConta1Activity extends AppCompatActivity {
         irCadastro2();
     }
 
-    private void irCadastro2(){
+    private void irCadastro2() {
         this.botaoProximo = findViewById(R.id.button);
         this.campoEmail = findViewById(R.id.editText);
         this.campoSenha = findViewById(R.id.editText2);
@@ -47,7 +47,11 @@ public class CriarConta1Activity extends AppCompatActivity {
             public void onClick(View view) {
                 if (verificarCampos()) {
                     String user = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
-                    cadastrar(user);
+                    try {
+                        cadastrar(user);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     cadastrarUser();
                 }
                 }
@@ -80,20 +84,22 @@ public class CriarConta1Activity extends AppCompatActivity {
         return user;
     }
 
-    private void cadastrar(String json){
+    private void cadastrar(String json) throws InterruptedException{
         callServer("POST",json);
     }
 
 
-    private void callServer(final String method, final String data){
-        new Thread(){
-            public void run(){
+    private void callServer(final String method, final String data)  throws InterruptedException{
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
                 validar = HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/user",data);
 //                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
 //                Log.i("Script", "ANSWER: "+ answer);
             }
-        }.start();
-
+        });
+        thread.start();
+        thread.join();
     }
 
     private boolean verificarCampos() {
@@ -118,9 +124,6 @@ public class CriarConta1Activity extends AppCompatActivity {
         Gson gson = new Gson();
         String jaja = validar;
         Usuario usuario = gson.fromJson(validar, Usuario.class);
-//        Usuario usuario = new Usuario();
-//        usuario.setEmail(campoEmail.getText().toString());
-//        usuario.setPassword(campoSenha.getText().toString());
         bundle.putSerializable("tripla", usuario);
         Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);
         it.putExtra("tela1", bundle);
