@@ -10,8 +10,10 @@ import android.widget.Toast;
 
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
+import com.google.gson.Gson;
 
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
@@ -22,6 +24,7 @@ public class CriarConta2Activity extends AppCompatActivity {
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private Muver muver = new Muver();
     private Usuario usuario = new Usuario();
+    private String validar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +34,10 @@ public class CriarConta2Activity extends AppCompatActivity {
         this.campoSobrenome = findViewById(R.id.editText7);
         this.campoCpf = findViewById(R.id.editText10);
         this.campoNascimento = findViewById(R.id.editText8);
-        setUser();
         setMascaras();
         cadastrarConta();
     }
 
-    private void setUser() {
-        Usuario usuario = new Usuario();
-        Intent intent = getIntent();
-        usuario.setEmail(intent.getStringExtra("email"));
-        usuario.setPassword(intent.getStringExtra("senha"));
-
-    }
 
     private void cadastrarConta(){
         cadastrarConta = findViewById(R.id.button3);
@@ -51,12 +46,28 @@ public class CriarConta2Activity extends AppCompatActivity {
             public void onClick(View view) {
                 if (verificarCampos()){
                     receberDadosTela1();
-                    criarMuver();
+                    String muver = criarMuver();
+                    cadastrar(muver);
                     Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
                 }
 
             }
         });
+    }
+
+    private void cadastrar(String json){
+        callServer(json);
+    }
+
+    private void callServer(final String data){
+        new Thread(){
+            public void run(){
+                validar = HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/muver",data);
+//                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
+//                Log.i("Script", "ANSWER: "+ answer);
+            }
+        }.start();
+
     }
 
     private boolean verificarCampos(){
@@ -102,13 +113,17 @@ public class CriarConta2Activity extends AppCompatActivity {
         campoNascimento.addTextChangedListener(setMaskNasc);
     }
 
-    private void criarMuver(){
+    private String criarMuver(){
         String cpf = String.valueOf(campoCpf.getText().toString()).replace(".","").replace("-","");
-
         muver.setNome(campoNome.getText().toString());
-        muver.setSobrenome(campoSobrenome.getText().toString());
+//        muver.setSobrenome(campoSobrenome.getText().toString());
         muver.setCpf(cpf);
-        muver.setDataNascimento(formatarData());
+        muver.setDataDeNascimento(formatarData());
+        muver.setUsuario(this.usuario);
+        Gson gson = new Gson();
+        String muver = gson.toJson(this.muver);
+
+        return muver;
     }
 
     private String formatarData(){
@@ -123,7 +138,7 @@ public class CriarConta2Activity extends AppCompatActivity {
     private void receberDadosTela1(){
         Bundle bundle = getIntent().getBundleExtra("tela1");
         if (bundle != null){
-            usuario = (Usuario) bundle.getSerializable("tripla");
+            this.usuario = (Usuario) bundle.getSerializable("tripla");
             }
     }
 }

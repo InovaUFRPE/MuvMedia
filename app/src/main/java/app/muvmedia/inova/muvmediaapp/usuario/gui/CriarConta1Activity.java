@@ -21,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
@@ -28,7 +29,7 @@ public class CriarConta1Activity extends AppCompatActivity {
     private EditText campoEmail, campoSenha, campoRepetirSenha;
     private Button botaoProximo;
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
-
+    private String validar = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +48,24 @@ public class CriarConta1Activity extends AppCompatActivity {
                 if (verificarCampos()) {
                     String user = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                     cadastrar(user);
-                    irSegundaTela();
-
+                    cadastrarUser();
                 }
                 }
 
         });
+    }
+
+    private void cadastrarUser() {
+        if (validar.length()>10){
+            String teste = this.validar.substring(2,4);
+            if(teste.equals("er")){
+                campoEmail.requestFocus();
+                campoEmail.setError("Email em uso");
+            }else {
+                irSegundaTela();
+            }
+        }
+
     }
 
     private String setarUsuario(String email, String senha){
@@ -70,28 +83,11 @@ public class CriarConta1Activity extends AppCompatActivity {
         callServer("POST",json);
     }
 
-    public void post(String completeUrl, String body) {
-        HttpClient httpClient = new DefaultHttpClient();
-        String answer = "";
-        HttpPost httpPost = new HttpPost(completeUrl);
-        httpPost.setHeader("Content-type", "application/json");
-        try {
-            StringEntity stringEntity = new StringEntity(body);
-            httpPost.getRequestLine();
-            httpPost.setEntity(stringEntity);
-
-            HttpResponse resposta = httpClient.execute(httpPost);
-            answer = EntityUtils.toString(resposta.getEntity());
-            Log.i("Script", "ANSWER: "+ answer);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void callServer(final String method, final String data){
         new Thread(){
             public void run(){
-                post("https://muvmedia-api.herokuapp.com/public/register/user",data);
+                validar = HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/user",data);
 //                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
 //                Log.i("Script", "ANSWER: "+ answer);
             }
@@ -118,11 +114,12 @@ public class CriarConta1Activity extends AppCompatActivity {
     }
     private void irSegundaTela(){
         Bundle bundle = new Bundle();
-        Usuario usuario = new Usuario();
-        usuario.setEmail(campoEmail.getText().toString());
-        usuario.setPassword(campoSenha.getText().toString());
+        Gson gson = new Gson();
+        Usuario usuario = gson.fromJson(validar, Usuario.class);
+//        Usuario usuario = new Usuario();
+//        usuario.setEmail(campoEmail.getText().toString());
+//        usuario.setPassword(campoSenha.getText().toString());
         bundle.putSerializable("tripla", usuario);
-
         Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);
         it.putExtra("tela1", bundle);
         startActivity(it);

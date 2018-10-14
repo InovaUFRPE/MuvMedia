@@ -3,18 +3,17 @@ package app.muvmedia.inova.muvmediaapp.usuario.dominio;
 
 public class Muver {
     private long id;
-    private Usuario usuario;
+    private Usuario user;
     private String nome;
-    private String sobrenome;
     private String cpf;
-    private String dataNascimento;
+    private String dataDeNascimento;
 
     public Usuario getUsuario() {
-        return usuario;
+        return user;
     }
 
     public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+        this.user = usuario;
     }
 
     public long getId() {
@@ -33,14 +32,6 @@ public class Muver {
         this.nome = nome;
     }
 
-    public String getSobrenome() {
-        return sobrenome;
-    }
-
-    public void setSobrenome(String sobrenome) {
-        this.sobrenome = sobrenome;
-    }
-
     public String getCpf() {
         return cpf;
     }
@@ -49,11 +40,11 @@ public class Muver {
         this.cpf = cpf;
     }
 
-    public String getDataNascimento() {
-        return dataNascimento;
+    public String getDataDeNascimento() {
+        return dataDeNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
-        this.dataNascimento = dataNascimento;
+    public void setDataDeNascimento(String dataDeNascimento) {
+        this.dataDeNascimento = dataDeNascimento;
     }
 }
