@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
+import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
@@ -47,28 +48,41 @@ public class CriarConta2Activity extends AppCompatActivity {
                 if (verificarCampos()){
                     receberDadosTela1();
                     String muver = criarMuver();
-                    cadastrar(muver);
-                    Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
-                    finish();
+                    try {
+                        cadastrar(muver);
+                        if(Sessao.instance.getResposta().contains("EMV01")){
+                            campoCpf.requestFocus();
+                            campoCpf.setError("CPF JÁ CADASTRADO");
+                        } else{
+                            Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
 
             }
         });
     }
 
-    private void cadastrar(String json){
+    private void cadastrar(String json) throws InterruptedException {
         callServer(json);
     }
 
-    private void callServer(final String data){
-        new Thread(){
-            public void run(){
-                validar = HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/muver",data);
+    private void callServer(final String data) throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Sessao.instance.setResposta(HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/muver",data));
 //                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
 //                Log.i("Script", "ANSWER: "+ answer);
             }
-        }.start();
-
+        });
+        thread.start();
+        thread.join();
     }
 
     private boolean verificarCampos(){
