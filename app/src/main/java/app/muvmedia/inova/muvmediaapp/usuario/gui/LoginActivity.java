@@ -1,20 +1,23 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
@@ -57,8 +60,65 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login() {
-        if (!this.verificarCampos()) {
-            isOnline();
+        if (this.verificarCampos()) {
+            if(isOnline()){
+                String usuario = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
+                String logado = logar(usuario);
+                if(logado.equals("404")){
+                    //avisar que n encontrou
+                } else{
+                    Muver muverLogado = montarMuver(logado);
+                    //Sessao.setOnline(muverlogado);
+
+                }
+
+            }
+
+        }
+    }
+
+    private Muver montarMuver(String logado) {
+        Gson gson = new Gson();
+        Muver muver = gson.fromJson(logado, Muver.class);
+        return muver;
+
+    }
+
+    private String logar(String jason){
+        String call = callServer("GET", jason);
+        return call;
+
+    }
+
+    private String callServer(final String method, final String data){
+        final String[] resposta = {null};
+        new Thread(){
+            public void run(){
+                resposta[0] = HttpConnection.getSetDataWeb("URL LOGIN", method, data);
+                Log.i("Script", "ANSWER: "+ resposta);
+            }
+        }.start();
+        return resposta[0];
+
+    }
+
+    private String setarUsuario(String email, String senha){
+        Usuario usuario = new Usuario();
+        usuario.setSenha(senha);
+        usuario.setEmail(email);
+        usuario.setNivel(1);
+        Gson gson = new Gson();
+        String user = gson.toJson(usuario);
+
+        return user;
+    }
+
+    private boolean isOnline() {
+        if(ServicoDownload.isNetworkAvailable(getApplicationContext()))
+        {
+            return true;
+        }else{
+           return false;
         }
     }
 
@@ -76,46 +136,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void isOnline() {
-        if(ServicoDownload.isNetworkAvailable(getApplicationContext()))
-        {
-            logar newsTask = new logar();
-            newsTask.execute();
-        }else{
-            Toast.makeText(getApplicationContext(), "Sem conexão com a internet", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public class logar extends AsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        protected String doInBackground(String... strings) {
-            String xml;
-            String urlParameters = "";
-            xml = ServicoDownload.excuteGet("http://processo.stos.mobi/app/filme/listar", urlParameters);
-            return xml;
-        }
-
-        @Override
-        protected void onPostExecute(String xml) {
-            if(xml.length()>10){
-                try {
-                    JSONArray jsonArray = new JSONArray(xml);
-                    //for (int i = 0; i < jsonArray.length(); i++) { PARA ARRAYS COM MUITAS COISAS, TIPO A DE BANDEIRAS DE UM POSTO
-                    montarUsuario(jsonArray);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Erro não esperado", Toast.LENGTH_SHORT).show();
-                }
-            } else{
-                Toast.makeText(getApplicationContext(), "Usuário não encontrado", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     private void montarUsuario(JSONArray jsonArray) throws JSONException {
         JSONObject jsonObject = jsonArray.getJSONObject(0);

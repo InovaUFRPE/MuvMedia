@@ -1,14 +1,14 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.content.Intent;
-import android.os.AsyncTask;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 
 import com.google.gson.Gson;
 
@@ -52,9 +52,10 @@ public class CriarConta1Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()) {
-                    irSegundaTela();
                     String user = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                     cadastrar(user);
+                    irSegundaTela();
+
                 }
                 }
 
@@ -73,13 +74,13 @@ public class CriarConta1Activity extends AppCompatActivity {
     }
 
     private void cadastrar(String json){
-        callServer("POST", json);
+        callServer("POST",json);
     }
 
     private void callServer(final String method, final String data){
         new Thread(){
             public void run(){
-                String answer = HttpConnection.getSetDataWeb("http://localhost:5000/public/register/user", method, data);
+                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
                 Log.i("Script", "ANSWER: "+ answer);
             }
         }.start();
