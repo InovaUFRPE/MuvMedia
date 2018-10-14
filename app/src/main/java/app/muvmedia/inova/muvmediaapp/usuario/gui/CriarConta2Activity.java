@@ -40,7 +40,7 @@ public class CriarConta2Activity extends AppCompatActivity {
         Usuario usuario = new Usuario();
         Intent intent = getIntent();
         usuario.setEmail(intent.getStringExtra("email"));
-        usuario.setSenha(intent.getStringExtra("senha"));
+        usuario.setPassword(intent.getStringExtra("senha"));
 
     }
 

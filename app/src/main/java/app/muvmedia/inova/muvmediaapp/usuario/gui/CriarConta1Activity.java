@@ -12,24 +12,17 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 
-import app.muvmedia.inova.muvmediaapp.R;
-import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
-import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
-import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
-import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
-
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
+import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
+import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class CriarConta1Activity extends AppCompatActivity {
     private EditText campoEmail, campoSenha, campoRepetirSenha;
@@ -64,9 +57,9 @@ public class CriarConta1Activity extends AppCompatActivity {
 
     private String setarUsuario(String email, String senha){
         Usuario usuario = new Usuario();
-        usuario.setSenha(senha);
+        usuario.setPassword(senha);
         usuario.setEmail(email);
-        usuario.setNivel(1);
+        usuario.setLevel(1);
         Gson gson = new Gson();
         String user = gson.toJson(usuario);
 
@@ -77,11 +70,30 @@ public class CriarConta1Activity extends AppCompatActivity {
         callServer("POST",json);
     }
 
+    public void post(String completeUrl, String body) {
+        HttpClient httpClient = new DefaultHttpClient();
+        String answer = "";
+        HttpPost httpPost = new HttpPost(completeUrl);
+        httpPost.setHeader("Content-type", "application/json");
+        try {
+            StringEntity stringEntity = new StringEntity(body);
+            httpPost.getRequestLine();
+            httpPost.setEntity(stringEntity);
+
+            HttpResponse resposta = httpClient.execute(httpPost);
+            answer = EntityUtils.toString(resposta.getEntity());
+            Log.i("Script", "ANSWER: "+ answer);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void callServer(final String method, final String data){
         new Thread(){
             public void run(){
-                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
-                Log.i("Script", "ANSWER: "+ answer);
+                post("https://muvmedia-api.herokuapp.com/public/register/user",data);
+//                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
+//                Log.i("Script", "ANSWER: "+ answer);
             }
         }.start();
 
@@ -108,7 +120,7 @@ public class CriarConta1Activity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         Usuario usuario = new Usuario();
         usuario.setEmail(campoEmail.getText().toString());
-        usuario.setSenha(campoSenha.getText().toString());
+        usuario.setPassword(campoSenha.getText().toString());
         bundle.putSerializable("tripla", usuario);
 
         Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);

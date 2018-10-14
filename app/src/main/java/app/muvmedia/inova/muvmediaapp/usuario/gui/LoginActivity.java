@@ -104,9 +104,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private String setarUsuario(String email, String senha){
         Usuario usuario = new Usuario();
-        usuario.setSenha(senha);
+        usuario.setPassword(senha);
         usuario.setEmail(email);
-        usuario.setNivel(1);
+        usuario.setLevel(1);
         Gson gson = new Gson();
         String user = gson.toJson(usuario);
 
@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
         Usuario usuario = new Usuario();
         usuario.set_id(jsonObject.optString("_id"));
         usuario.setEmail(jsonObject.optString("email"));
-        usuario.setSenha(jsonObject.optString("senha"));
+        usuario.setPassword(jsonObject.optString("senha"));
         //usuario.setMuver()...
 
         //Sessao.setUsuarioLogado...

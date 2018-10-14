@@ -5,8 +5,8 @@ import java.io.Serializable;
 public class Usuario implements Serializable {
     private String _id;
     private String email;
-    private String senha;
-    private int nivel;
+    private String password;
+    private int level;
 
     public String get_id() {
         return _id;
@@ -24,19 +24,19 @@ public class Usuario implements Serializable {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getPassword() {
+        return password;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public int getNivel() {
-        return nivel;
+    public int getLevel() {
+        return level;
     }
 
-    public void setNivel(int nivel) {
-        this.nivel = nivel;
+    public void setLevel(int level) {
+        this.level = level;
     }
 }
