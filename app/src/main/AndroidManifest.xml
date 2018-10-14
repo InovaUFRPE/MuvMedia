@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".usuario.gui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".usuario.gui.LoginActivity" />
         <activity android:name=".usuario.gui.CriarConta1Activity" />

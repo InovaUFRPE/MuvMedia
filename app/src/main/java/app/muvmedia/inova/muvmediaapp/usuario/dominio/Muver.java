@@ -2,11 +2,11 @@ package app.muvmedia.inova.muvmediaapp.usuario.dominio;
 
 
 public class Muver {
-    private long id;
+    private String _id;
     private Usuario user;
     private String nome;
     private String cpf;
-    private String dataDeNascimento;
+    private String dataNascimento;
 
     public Usuario getUsuario() {
         return user;
@@ -16,12 +16,12 @@ public class Muver {
         this.user = usuario;
     }
 
-    public long getId() {
-        return id;
+    public String getId() {
+        return _id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setId(String id) {
+        this._id = id;
     }
 
     public String getNome() {
@@ -41,10 +41,10 @@ public class Muver {
     }
 
     public String getDataDeNascimento() {
-        return dataDeNascimento;
+        return dataNascimento;
     }
 
     public void setDataDeNascimento(String dataDeNascimento) {
-        this.dataDeNascimento = dataDeNascimento;
+        this.dataNascimento = dataDeNascimento;
     }
 }

@@ -49,6 +49,7 @@ public class CriarConta2Activity extends AppCompatActivity {
                     String muver = criarMuver();
                     cadastrar(muver);
                     Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
+                    finish();
                 }
 
             }
@@ -122,7 +123,6 @@ public class CriarConta2Activity extends AppCompatActivity {
         muver.setUsuario(this.usuario);
         Gson gson = new Gson();
         String muver = gson.toJson(this.muver);
-
         return muver;
     }
 

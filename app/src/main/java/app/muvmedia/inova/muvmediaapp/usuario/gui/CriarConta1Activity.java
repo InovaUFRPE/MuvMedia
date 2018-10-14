@@ -56,11 +56,12 @@ public class CriarConta1Activity extends AppCompatActivity {
     }
 
     private void cadastrarUser() {
-        if (validar.length()>10){
+        if (this.validar.length()>10){
             String teste = this.validar.substring(2,4);
             if(teste.equals("er")){
                 campoEmail.requestFocus();
                 campoEmail.setError("Email em uso");
+                finish();
             }else {
                 irSegundaTela();
             }
@@ -115,6 +116,7 @@ public class CriarConta1Activity extends AppCompatActivity {
     private void irSegundaTela(){
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
+        String jaja = validar;
         Usuario usuario = gson.fromJson(validar, Usuario.class);
 //        Usuario usuario = new Usuario();
 //        usuario.setEmail(campoEmail.getText().toString());
