@@ -7,17 +7,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.jar.JarInputStream;
+
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Login;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
@@ -55,30 +61,27 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 login();
+
             }
         });
 
     }
 
+
     private void login() {
-        if (this.verificarCampos()) {
+        if (!this.verificarCampos()) {
             if(isOnline()){
                 String usuario = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
-                String logado = logar(usuario);
-                if(logado.equals("404")){
-                    //avisar que n encontrou
-                } else{
-                    Muver muverLogado = montarMuver(logado);
-                    Sessao sessao = Sessao.getInstance();
-                    sessao.setMuver(muverLogado);
-//                    Muver logado atualmente: Muver muverLogado2 = Sessao.getInstance().getMuver();
-
-                }
+                logar(usuario);
+                Toast.makeText(this, Sessao.instance.getResposta(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Vem", Toast.LENGTH_SHORT).show();
+            }
 
             }
 
         }
-    }
+
 
     private Muver montarMuver(String logado) {
         Gson gson = new Gson();
@@ -87,22 +90,19 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private String logar(String jason){
-        String call = callServer("GET", jason);
-        return call;
+    private void logar(String jason){
+        callServer(jason);
 
     }
 
-    private String callServer(final String method, final String data){
-        final String[] resposta = {null};
+    private void callServer(final String data){
         new Thread(){
             public void run(){
-                resposta[0] = HttpConnection.getSetDataWeb("URL LOGIN", method, data);
-                Log.i("Script", "ANSWER: "+ resposta);
+                Sessao.instance.setResposta(HttpConnection.post("http://muvmedia-api.herokuapp.com/auth/login", data));
+                Log.i("Script", "OLHAAA: "+ Sessao.instance
+                .getResposta());
             }
         }.start();
-        return resposta[0];
-
     }
 
     private String setarUsuario(String email, String senha){
