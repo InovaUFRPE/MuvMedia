@@ -1,0 +1,609 @@
+swagger: '2.0'
+info:
+  description: Powered by cletus
+  version: 1.0.0
+  title: MuvMedia Api
+  # put the contact info for your development or API team
+  contact:
+    email: cletoproject@gmail.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags are used for organizing operations
+tags:
+- name: Auth
+  description: Rotas de autenticação.
+- name: User
+  description: Rotas de usuário.
+- name: Muver
+  description: Rotas de muver.
+
+
+paths:
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Realizar login.
+      operationId: login
+      description: |
+        Realiza o login no sistema e recebe um token.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: login
+        description: Dados para login.
+        schema:
+          type: object
+          required:
+            - email
+            - password
+          properties:
+            email:
+              type: string
+              example: user@signweb.com.br
+            password:
+              type: string
+              example: 123
+      responses:
+        200:
+          description: Usuário Logado.
+          schema:
+            $ref: '#/definitions/Session'
+        400:
+          description: Email ou senha incorreto.
+
+  /users:
+    get:
+      tags:
+      - User
+      summary: Pesquisa usuários.
+      operationId: getUsers
+      description: |
+        Se não passar nenhum parâmetro, retorna todos os usuários em ordem de insersão, da última para mais atual limitado a 10 itens.
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: Authorization
+        description: Obrigatório. Token de autorização.
+        type: string
+        required: true
+      - in: query
+        name: page
+        description: Opcional. Pagina atual.
+        default: 1
+        required: false
+        type: integer
+        format: int32
+      - in: query
+        name: limit
+        description: Opcional. Quantidade de itens por página.
+        default: 10
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: O resultado corresponde a todo os itens no banco de dados.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        206:
+          description: O resultado contem parte de todos os itens.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        400:
+          description: A paginação requisitada não se encaixa nos valores permitidos pela API.
+    post:
+      tags:
+      - User
+      summary: Adiciona um usuário.
+      operationId: addUser
+      description: |
+        Adiciona um usuário no sistema.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: user
+        description: Usuário a ser adicionado.
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        201:
+          description: Usuário criado.
+        400:
+          description: Usuário inválido.
+        409:
+          description: Usuário já existe.
+  /users/{id}:
+    get:
+      tags:
+      - User
+      summary: Retorna um usuário.
+      operationId: getUser
+      description: |
+        Retorna as informações de apenas um usuário em específico.
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: Authorization
+        description: Obrigatório. Token de autorização.
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: Obrigatório. Id do usuário.
+        default: 1
+        required: true
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: Usuário encontrado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        404:
+          description: Usuário não encontrado.
+        400:
+          description: Parâmetros errados.
+    put:
+      tags:
+      - User
+      summary: Atualiza um usuário.
+      operationId: putUser
+      description: |
+        Retorna as informações de apenas um usuário em específico.
+      parameters:
+      - in: header
+        name: Authorization
+        description: Obrigatório. Token de autorização.
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: Obrigatório. Id do usuário.
+        default: 1
+        required: true
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: Usuário atualizado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        404:
+          description: Usuário não encontrado.
+        400:
+          description: Parâmetros inseridos podem estar errados.
+    delete:
+      tags:
+      - User
+      summary: Remove um usuário.
+      operationId: deleteUser
+      description: |
+        Remove um usuário em específico.
+      parameters:
+      - in: header
+        name: Authorization
+        description: Obrigatório. Token de autorização.
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: Obrigatório. Id do usuário.
+        default: 1
+        required: true
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: Usuário atualizado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        404:
+          description: Usuário não encontrado.
+        400:
+          description: Parâmetros inseridos podem estar errados.
+
+  /muvers:
+    get:
+      tags:
+      - Muver
+      summary: Pesquisa muvers.
+      operationId: getMuvers
+      description: |
+        Se não passar nenhum parâmetro, retorna todos os muvers em ordem de insersão, da última para mais atual limitado a 10 itens.
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: Authorization
+        description: Obrigatório. Token de autorização.
+        type: string
+        required: true
+      - in: query
+        name: page
+        description: Opcional. Pagina atual.
+        default: 1
+        required: false
+        type: integer
+        format: int32
+      - in: query
+        name: limit
+        description: Opcional. Quantidade de itens por página.
+        default: 10
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: O resultado corresponde a todo os itens no banco de dados.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Muver'
+        206:
+          description: O resultado contem parte de todos os itens.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Muver'
+        400:
+          description: A paginação requisitada não se encaixa nos valores permitidos pela API.
+    post:
+      tags:
+      - Muver
+      summary: Adiciona um muver.
+      operationId: addMuver
+      description: |
+        Adiciona um muver no sistema.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: muver
+        description: Muver a ser adicionado.
+        schema:
+          $ref: '#/definitions/Muver'
+      responses:
+        201:
+          description: Muver criado.
+        400:
+          description: Muver inválido.
+        409:
+          description: Muver já existe.
+  /muvers/{id}:
+    get:
+      tags:
+      - Muver
+      summary: Retorna um muver.
+      operationId: getMuver
+      description: |
+        Retorna as informações de apenas um muver em específico.
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: Authorization
+        description: Obrigatório. Token de autorização.
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: Obrigatório. Id do muver.
+        default: 1
+        required: true
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: Muver encontrado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Muver'
+        404:
+          description: Muver não encontrado.
+        400:
+          description: Parâmetros errados.
+    put:
+      tags:
+      - Muver
+      summary: Atualiza um muver.
+      operationId: putMuver
+      description: |
+        Retorna as informações de apenas um muver em específico.
+      parameters:
+      - in: header
+        name: Authorization
+        description: Obrigatório. Token de autorização.
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: Obrigatório. Id do muver.
+        default: 1
+        required: true
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: Muver atualizado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Muver'
+        404:
+          description: Muver não encontrado.
+        400:
+          description: Parâmetros inseridos podem estar errados.
+    delete:
+      tags:
+      - Muver
+      summary: Remove um muver.
+      operationId: deleteMuver
+      description: |
+        Remove um muver em específico.
+      parameters:
+      - in: header
+        name: Authorization
+        description: Obrigatório. Token de autorização.
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: Obrigatório. Id do muver.
+        default: 1
+        required: true
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: Muver atualizado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Muver'
+        404:
+          description: Muver não encontrado.
+        400:
+          description: Parâmetros inseridos podem estar errados.
+
+
+definitions:
+  User:
+    type: object
+    required:
+    - email
+    - password
+    - level
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: 507f1f77bcf86cd799439011
+      email:
+        type: string
+        example: cletoproject@gmail.com
+      password:
+        type: string
+        example: "s3nHa"
+      level:
+        type: integer
+        example: 1
+      status:
+        type: boolean
+        example: true
+      deleted:
+        type: boolean
+        example: false
+
+  Session:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: 507f1f77bcf86cd799439011
+      user:
+        $ref: '#/definitions/User'
+      expiresAt:
+        type: string
+        format: ISO 8601
+        example: "2018-08-31T20:28:43.195Z"
+      token:
+        type: string
+        format: jwt
+        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...e0mQeGb9cN3GhB5KnCmKJHxHCJffNltDskLIPAMqyk4"
+
+  Muver:
+    type: object
+    required:
+    - user
+    - nome
+    - dataDeNascimento
+    - cpf
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: 507f1f77bcf86cd799439011
+      user:
+        $ref: '#/definitions/User'
+      nome:
+        type: string
+        example: Fulano da Silva
+      dataDeNascimento:
+        type: string
+        format: ISO 8601
+        example: "1990-08-31T00:00:00"
+      cpf:
+        type: string
+        example: "12345678910"
+      deleted:
+        type: boolean
+        example: false
+
+  Campanha:
+    type: object
+    required:
+    - nome
+    - anunciado
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: 507f1f77bcf86cd799439011
+      nome:
+        type: string
+        example: MuvMedia
+      anunciado:
+        $ref: '#/definitions/Anunciado'
+      dataInicio:
+        type: string
+        format: ISO 8601
+        example: "2018-08-31T00:00:00"
+      dataFim:
+        type: string
+        format: ISO 8601
+        example: "2019-05-22T00:00:00"
+      deleted:
+        type: boolean
+        example: false
+
+  Anunciado:
+    type: object
+    required:
+    - nome
+    - razaoSocial
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: 507f1f77bcf86cd799439011
+      nome:
+        type: string
+        example: MuvMedia
+      razaoSocial:
+        type: string
+        example: Cletus Anuncios Moveis
+      cpf:
+        type: string
+        example: "12345678910"
+      cnpj:
+        type: string
+        example: "23594317000107"
+      deleted:
+        type: boolean
+        example: false
+
+  Bandeira:
+    type: object
+    required:
+    - campanha
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: 507f1f77bcf86cd799439011
+      campanha:
+        $ref: '#/definitions/Campanha'
+      deleted:
+        type: boolean
+        example: false
+
+  Anuncio:
+    type: object
+    required:
+    - muver
+    - bandeira
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: 507f1f77bcf86cd799439011
+      codigo:
+        type: string
+        example: K7P1C4
+      muver:
+        $ref: '#/definitions/Muver'
+      bandeira:
+        $ref: '#/definitions/Bandeira'
+      deleted:
+        type: boolean
+        example: false
+
+  Posto:
+    type: object
+    required:
+    - bandeiras
+    - endereco
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: 507f1f77bcf86cd799439011
+      bandeiras:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/Bandeira'
+        example:
+          - id: 507f1f77bcf86cd799439011e
+      endereco:
+        type: object
+        $ref: '#/definitions/Endereco'
+      deleted:
+        type: boolean
+        example: false
+
+  Endereco:
+    type: object
+    required:
+    - cep
+    - endereco
+    - numero
+    - bairro
+    - cidade
+    - uf
+    properties:
+      cep:
+        type: string
+        example: "52171-900"
+      endereco:
+        type: string
+        example: R. Manuel de Medeiros
+      numero:
+        type: number
+        example: 1080
+      complemento:
+        type: string
+        example: "Ceagri II - Sala 35"
+      bairro:
+        type: string
+        example: "Dois Irmãos"
+      cidade:
+        type: string
+        example: "Recife"
+      uf:
+        type: string
+        example: "Pernambuco"
