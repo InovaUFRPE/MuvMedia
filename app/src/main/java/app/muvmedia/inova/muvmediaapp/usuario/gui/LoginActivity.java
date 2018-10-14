@@ -73,13 +73,19 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void login() throws InterruptedException {
-        if (!this.verificarCampos()) {
+        if (this.verificarCampos()) {
             if(isOnline()){
                 String usuario = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                 logar(usuario);
-                Toast.makeText(this, Sessao.instance.getResposta(), Toast.LENGTH_SHORT).show();
+                if(Sessao.instance.getResposta().contains("Usuário ou senha incorreto")){
+                    Toast.makeText(this, "Usuário ou senha incorreto", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "Vem", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
             }
 
         }
