@@ -10,4 +10,8 @@
     <string name="CPF">CPF</string>
     <string name="DatadeNascimento">Data de Nascimento</string>
     <string name="Cadastrar">Cadastrar</string>
+    <string name="title_activity_bottom_navigation">BottomNavigation</string>
+    <string name="title_home">Home</string>
+    <string name="anunciar">Anunciar</string>
+    <string name="perfil">Perfil</string>
 </resources>

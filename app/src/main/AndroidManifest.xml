@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -31,7 +30,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".usuario.gui.LoginActivity" />
         <activity android:name=".usuario.gui.CriarConta1Activity" />
-        <activity android:name=".usuario.gui.CriarConta2Activity"></activity>
+        <activity android:name=".usuario.gui.CriarConta2Activity" />
+        <activity
+            android:name=".usuario.gui.BottomNavigation"
+            android:label="@string/title_activity_bottom_navigation"></activity>
     </application>
 
 </manifest>

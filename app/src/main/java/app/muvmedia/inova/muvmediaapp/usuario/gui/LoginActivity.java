@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(Sessao.instance.getResposta().contains("Usuário ou senha incorreto")){
                     Toast.makeText(this, "Usuário ou senha incorreto", Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                     startActivity(intent);
                     Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
                 }
