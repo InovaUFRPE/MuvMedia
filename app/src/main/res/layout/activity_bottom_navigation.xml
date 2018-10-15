@@ -17,6 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        app:itemBackground="@color/botaoVermelho"
+        app:itemIconTint="@color/preto"
+        app:itemTextColor="@color/preto"
         app:menu="@menu/navigation"
         tools:layout_editor_absoluteY="500dp" />
 

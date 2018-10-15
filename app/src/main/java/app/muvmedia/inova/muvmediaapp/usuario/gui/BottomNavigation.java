@@ -1,5 +1,6 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,11 +12,13 @@ import android.widget.TextView;
 import app.muvmedia.inova.muvmediaapp.R;
 
 public class BottomNavigation extends AppCompatActivity {
+    Fragment selectedFragment = new HomeFragmentActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_navigation);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(navListener);
@@ -25,7 +28,6 @@ public class BottomNavigation extends AppCompatActivity {
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        Fragment selectedFragment = null;
 
                         switch (item.getItemId()){
                             case R.id.navigation_home2:
