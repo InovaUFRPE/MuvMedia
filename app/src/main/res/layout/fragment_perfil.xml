@@ -3,11 +3,55 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Perfil"
-        android:textSize="40sp"
-        android:textColor="@color/preto"
-        android:layout_centerInParent="true"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="139dp"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="189dp"
+        android:layout_toEndOf="@+id/textView"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="225dp"
+        android:text="" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="53dp"
+        android:layout_marginBottom="203dp"
+        android:text="Resgatar Bônus"
+        android:backgroundTint="@color/botaoVermelho"
+        android:textColor="#ffffff"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="117dp"
+        android:text="EDITAR PERFIL"
+        android:textColor="#ffffff"
+        android:backgroundTint="@color/botaoLaranja"/>
 
 </RelativeLayout>
