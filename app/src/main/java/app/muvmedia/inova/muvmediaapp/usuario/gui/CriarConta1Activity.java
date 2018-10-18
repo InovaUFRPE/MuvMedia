@@ -65,7 +65,6 @@ public class CriarConta1Activity extends AppCompatActivity {
             if(teste.equals("er")){
                 campoEmail.requestFocus();
                 campoEmail.setError("Email em uso");
-                finish();
             }else {
                 irSegundaTela();
             }

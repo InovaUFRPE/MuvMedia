@@ -25,6 +25,7 @@ import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 //import app.muvmedia.inova.muvmediaapp.usuario.dominio.Login;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Token;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
@@ -80,6 +81,10 @@ public class LoginActivity extends AppCompatActivity {
                 if(Sessao.instance.getResposta().contains("Usuário ou senha incorreto")){
                     Toast.makeText(this, "Usuário ou senha incorreto", Toast.LENGTH_SHORT).show();
                 } else {
+                    Gson gson = new Gson();
+                    Token token = gson.fromJson(Sessao.instance.getResposta(), Token.class);
+                    getMuver();
+                    Sessao.instance.setToken(token.getToken());
                     Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                     startActivity(intent);
                     Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
@@ -89,6 +94,18 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         }
+
+    }
+
+    private void getMuver() throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpConnection.get("http://muvmedia-api.herokuapp.com/muvers/5bc0cef8eb73b51ea4d8c0fb");
+            }
+        });
+        thread.start();
+        thread.join();
 
     }
 

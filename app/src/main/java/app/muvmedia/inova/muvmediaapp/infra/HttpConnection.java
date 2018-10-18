@@ -10,6 +10,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -52,6 +53,22 @@ public class HttpConnection {
             httpPost.setEntity(stringEntity);
 
             HttpResponse resposta = httpClient.execute(httpPost);
+            answer = EntityUtils.toString(resposta.getEntity());
+            Log.i("Script", "ANSWER: "+ answer);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return answer;
+    }
+
+    public static String get(String completeUrl) {
+        HttpClient httpClient = new DefaultHttpClient();
+        String answer;
+        HttpGet httpGet = new HttpGet(completeUrl);
+        httpGet.setHeader("Content-type", "application/json");
+        httpGet.addHeader("Authorization", "Bearer "+ Sessao.instance.getToken());
+        try {
+            HttpResponse resposta = httpClient.execute(httpGet);
             answer = EntityUtils.toString(resposta.getEntity());
             Log.i("Script", "ANSWER: "+ answer);
         } catch (Exception e) {

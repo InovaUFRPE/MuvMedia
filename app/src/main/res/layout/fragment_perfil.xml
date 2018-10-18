@@ -18,7 +18,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="189dp"
         android:layout_toEndOf="@+id/textView"
-        android:text="" />
+        android:text=""
+        android:layout_toRightOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView4"
@@ -47,11 +48,12 @@
         android:id="@+id/button5"
         android:layout_width="match_parent"
         android:layout_height="67dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:layout_marginBottom="117dp"
+        android:backgroundTint="@color/botaoLaranja"
         android:text="EDITAR PERFIL"
         android:textColor="#ffffff"
-        android:backgroundTint="@color/botaoLaranja"/>
+        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

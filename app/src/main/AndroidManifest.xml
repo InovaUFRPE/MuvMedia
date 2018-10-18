@@ -33,7 +33,8 @@
         <activity android:name=".usuario.gui.CriarConta2Activity" />
         <activity
             android:name=".usuario.gui.BottomNavigation"
-            android:label="@string/title_activity_bottom_navigation"></activity>
+            android:label="@string/title_activity_bottom_navigation" />
+        <activity android:name=".usuario.gui.EditarPerfilActivity"></activity>
     </application>
 
 </manifest>

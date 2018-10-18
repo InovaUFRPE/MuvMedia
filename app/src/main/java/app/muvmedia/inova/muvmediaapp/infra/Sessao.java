@@ -22,5 +22,20 @@ public class Sessao {
         return (String) values.get("sessao.resposta");
     }
 
+    public void setToken(Object valor) {
+        values.put("sessao.token", valor);
+    }
+
+    public String getToken(){
+        return (String) values.get("sessao.token");
+    }
+
+    public void setMuver(Object valor){
+        values.put("sessao.muver", valor);
+    }
+
+    public Muver getMuver(){
+        return (Muver) values.get("sessao.muver");
+    }
 }
 
