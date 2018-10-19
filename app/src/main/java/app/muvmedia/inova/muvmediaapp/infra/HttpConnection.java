@@ -66,7 +66,7 @@ public class HttpConnection {
         String answer;
         HttpGet httpGet = new HttpGet(completeUrl);
         httpGet.setHeader("Content-type", "application/json");
-        httpGet.addHeader("Authorization", "Bearer "+ Sessao.instance.getToken());
+        httpGet.addHeader("Authorization", "Bearer "+ Sessao.instance.getSession().getToken());
         try {
             HttpResponse resposta = httpClient.execute(httpGet);
             answer = EntityUtils.toString(resposta.getEntity());

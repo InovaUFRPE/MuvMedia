@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
@@ -21,23 +23,31 @@ public class PerfilFragmentActivity extends Fragment {
     private TextView anuncio;
     private TextView conversoes;
     private Button botaoEditarPerfil;
-    private Muver muver = Sessao.instance.getMuver();
+    private Muver muver;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_perfil, container, false);
-
+        irEditarPerfil(v);
         setBoasVindas(v);
         setAnuncio(v);
         setConversoes(v);
         return v;
     }
 
+    private void setMuver() {
+        Gson gson = new Gson();
+        String teste = Sessao.instance.getResposta();
+        Muver muver = gson.fromJson(Sessao.instance.getResposta(), Muver.class);//fromJson(muverString, Muver.class);
+        Sessao.instance.setMuver(muver);
+    }
+
 
     private void setBoasVindas(View v) {
         boasVindas = v.findViewById(R.id.textView);
-        boasVindas.setText("Olá "); //+nome do muver
+      //  String nome = muver.getNome();
+      //  boasVindas.setText(nome); //+nome do muver
     }
 
     private void setAnuncio(View v){

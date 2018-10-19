@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.SessionApi;
 
 public class Sessao {
     public static final Sessao instance = new Sessao();
@@ -22,12 +23,12 @@ public class Sessao {
         return (String) values.get("sessao.resposta");
     }
 
-    public void setToken(Object valor) {
-        values.put("sessao.token", valor);
+    public void setSession(Object valor) {
+        values.put("sessao.Session", valor);
     }
 
-    public String getToken(){
-        return (String) values.get("sessao.token");
+    public SessionApi getSession(){
+        return (SessionApi) values.get("sessao.Session");
     }
 
     public void setMuver(Object valor){
