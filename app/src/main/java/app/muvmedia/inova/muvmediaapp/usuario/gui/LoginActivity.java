@@ -24,6 +24,7 @@ import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.SessionApi;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
+import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class LoginActivity extends AppCompatActivity {
@@ -96,19 +97,20 @@ public class LoginActivity extends AppCompatActivity {
         Gson gson = new Gson();
         SessionApi sessionApi = gson.fromJson(Sessao.instance.getResposta(), SessionApi.class);
         Sessao.instance.setSession(sessionApi);
-        setMuverApi(sessionApi.getUser().get_id());
+        setMuverApi(sessionApi.getUser());
     }
 
-    private void setMuverApi(final String idUser) throws InterruptedException {
+    private void setMuverApi(final Usuario usuario) throws InterruptedException {
+        final ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Sessao.instance.setResposta(HttpConnection.get("http://muvmedia-api.herokuapp.com/muvers?user="+idUser));
+                Muver muver = servicoHttpMuver.getMuverByUser(usuario);
+                muver.getNome();
             }
         });
         thread.start();
         thread.join();
-
     }
 
 
