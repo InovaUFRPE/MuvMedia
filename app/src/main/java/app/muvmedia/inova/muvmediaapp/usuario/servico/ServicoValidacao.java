@@ -23,6 +23,14 @@ public class ServicoValidacao {
         }
     }
 
+    public boolean verificarCampoSenha(String senha){
+        if (verificarCampoVazio(senha) || senha.length()<=5){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public boolean verificarCpf(String cpf){
         cpf = String.valueOf(cpf).replace(".","").replace("-","");

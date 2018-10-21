@@ -1,59 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:id="@+id/anuncio"
+        android:layout_width="298dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="139dp"
-        android:text="" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/conversoes"
+        android:layout_marginBottom="254dp"
+        android:text="Bruno"
+        android:textColor="@color/principal"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+        android:id="@+id/conversoes"
+        android:layout_width="296dp"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/button4"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="189dp"
-        android:layout_toEndOf="@+id/textView"
-        android:text=""
-        android:layout_toRightOf="@+id/textView" />
+        android:layout_marginTop="239dp"
+        android:text="Bruno"
+        android:textColor="@color/principal"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:id="@+id/nomeMuver"
+        android:layout_width="319dp"
+        android:layout_height="80dp"
+        android:layout_below="@+id/imageView4"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="225dp"
-        android:text="" />
+        android:gravity="center"
+        android:text="Bruno"
+        android:textColor="@color/principal"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <Button
         android:id="@+id/button4"
-        android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:layout_below="@+id/textView4"
+        android:layout_width="263dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp"
-        android:layout_marginBottom="203dp"
-        android:text="Resgatar Bônus"
+        android:layout_marginBottom="71dp"
+        android:background="@drawable/botaoredondocheio"
         android:backgroundTint="@color/botaoVermelho"
+        android:text="@string/resgatar_b_nus"
         android:textColor="#ffffff"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="match_parent"
-        android:layout_height="67dp"
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="114dp"
+        android:layout_height="123dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:contentDescription="@string/userFoto"
+        app:srcCompat="@drawable/ic_person" />
+
+    <ImageView
+        android:id="@+id/editarPerfilButtton"
+        android:layout_width="61dp"
+        android:layout_height="52dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="117dp"
-        android:backgroundTint="@color/botaoLaranja"
-        android:text="EDITAR PERFIL"
-        android:textColor="#ffffff"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignStart="@+id/button4"
+        android:layout_marginBottom="159dp"
+        android:layout_marginStart="11dp"
+        app:srcCompat="@drawable/editperfil" />
+
+    <TextView
+        android:id="@+id/editarPerf"
+        android:layout_width="102dp"
+        android:layout_height="27dp"
+        android:layout_alignEnd="@+id/nomeMuver"
+        android:layout_below="@+id/editarPerfilButtton"
+        android:layout_marginTop="-159dp"
+        android:lineSpacingExtra="12sp"
+        android:text="@string/Historico"
+        android:textColor="@color/azulescuro"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/editarPerf2"
+        android:layout_width="129dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@+id/nomeMuver"
+        android:layout_below="@+id/editarPerfilButtton"
+        android:layout_marginTop="-159dp"
+        android:lineSpacingExtra="12sp"
+        android:text="Editar Perfil"
+        android:textColor="@color/azulescuro"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:text="Editar @string/editarPerfil" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="72dp"
+        android:layout_height="52dp"
+        android:layout_alignTop="@+id/editarPerfilButtton"
+        android:layout_marginStart="0dp"
+        android:layout_toEndOf="@+id/imageView4"
+        app:srcCompat="@drawable/historico" />
 
 </RelativeLayout>

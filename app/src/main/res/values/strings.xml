@@ -14,4 +14,14 @@
     <string name="title_home">Home</string>
     <string name="anunciar">Anunciar</string>
     <string name="perfil">Perfil</string>
+    <string name="userFoto" />
+    <string name="resgatar_b_nus">Resgatar Bônus</string>
+    <string name="editarPerfil">Editar Perfil</string>
+    <string name="Historico">Histórico</string>
+    <string name="changeEmail">Mudar Email</string>
+    <string name="mudar_email">Mudar Email</string>
+    <string name="confime_o_email">Confime o Email</string>
+    <string name="novo_email">Novo Email</string>
+    <string name="mudar_senha">Mudar Senha</string>
+    <string name="nova_senha">Nova Senha</string>
 </resources>
