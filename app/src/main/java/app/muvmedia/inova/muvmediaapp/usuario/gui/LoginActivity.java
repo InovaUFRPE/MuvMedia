@@ -1,12 +1,14 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -32,19 +34,30 @@ public class LoginActivity extends AppCompatActivity {
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private Button botaoCadstrar;
     private String muverString;
+    private TextView nomeApp,textCriarConta;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
+        setAppContexto();
         encontrarElementosView();
         cadastrar();
     }
 
+    private void setAppContexto() {
+        nomeApp = findViewById(R.id.nomeEmp);
+        String fontPath = "fonts/airstrike.ttf";
+        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
+        nomeApp.setTypeface(typeface);
+    }
+
     private void cadastrar(){
-        this.botaoCadstrar = findViewById(R.id.button2);
-        botaoCadstrar.setOnClickListener(new View.OnClickListener() {
+        //this.botaoCadstrar = findViewById(R.id.button2);
+        this.textCriarConta = findViewById(R.id.textViewCriarConta);
+
+        textCriarConta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), CriarConta1Activity.class);

@@ -41,7 +41,6 @@ public class CriarConta1Activity extends AppCompatActivity {
         this.botaoProximo = findViewById(R.id.button);
         this.campoEmail = findViewById(R.id.editText);
         this.campoSenha = findViewById(R.id.editText2);
-        this.campoRepetirSenha = findViewById(R.id.editText3);
         botaoProximo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
