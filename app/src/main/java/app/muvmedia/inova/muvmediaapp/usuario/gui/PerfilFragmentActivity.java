@@ -1,6 +1,5 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,10 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.gson.Gson;
 
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
@@ -22,8 +19,8 @@ public class PerfilFragmentActivity extends Fragment {
     private TextView boasVindas;
     private TextView anuncio;
     private TextView conversoes;
-    private Button botaoEditarPerfil;
-    private Muver muver;
+    private ImageView botaoEditarPerfil;
+    private Muver muver = Sessao.instance.getMuver();
 
     @Nullable
     @Override
@@ -36,32 +33,27 @@ public class PerfilFragmentActivity extends Fragment {
         return v;
     }
 
-    private void setMuver() {
-        Gson gson = new Gson();
-        String teste = Sessao.instance.getResposta();
-        Muver muver = gson.fromJson(Sessao.instance.getResposta(), Muver.class);//fromJson(muverString, Muver.class);
-        Sessao.instance.setMuver(muver);
-    }
+
 
 
     private void setBoasVindas(View v) {
-        boasVindas = v.findViewById(R.id.textView);
-      //  String nome = muver.getNome();
-      //  boasVindas.setText(nome); //+nome do muver
+        boasVindas = v.findViewById(R.id.nomeMuver);
+        String nome = muver.getNome();
+        boasVindas.setText("Olá "+nome+"!"); //+nome do muver
     }
 
     private void setAnuncio(View v){
-        anuncio = v.findViewById(R.id.textView3);
-        anuncio.setText("Seu anúncio é: "); //promocao que o muver está anunciando
+       anuncio = v.findViewById(R.id.anuncio);
+       anuncio.setText("Seu anúncio é: "); //promocao que o muver está anunciando
     }
 
     private void setConversoes(View v){
-        conversoes = v.findViewById(R.id.textView4);
+        conversoes = v.findViewById(R.id.conversoes);
         conversoes.setText("Suas conversoes: "); //conversoes do muver
     }
 
     private void irEditarPerfil(final View v) {
-        botaoEditarPerfil = v.findViewById(R.id.button5);
+        botaoEditarPerfil = v.findViewById(R.id.editarPerfilButtton);
         botaoEditarPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

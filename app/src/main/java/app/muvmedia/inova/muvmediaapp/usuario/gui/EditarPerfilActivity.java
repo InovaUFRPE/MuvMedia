@@ -1,15 +1,196 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
+import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
+import app.muvmedia.inova.muvmediaapp.infra.Sessao;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
+import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class EditarPerfilActivity extends AppCompatActivity {
+    private TextView email;
+    private Button mudarEmailButton, mudarSenhaButton, voltarButton;
+    private Usuario usuario = Sessao.instance.getMuver().getUsuario();
+    private ServicoValidacao servicoValidacao = new ServicoValidacao();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_perfil);
+        setUpView();
+    }
+
+    private void setUpView() {
+        email = findViewById(R.id.TextEmail);
+        email.setText(usuario.getEmail());
+        mudarEmailButton = findViewById(R.id.mudarEmailButton);
+        mudarSenhaButton = findViewById(R.id.mudarSenhaButton);
+        voltarButton = findViewById(R.id.buttonVoltar);
+        setListners();
+    }
+
+    private void setListners() {
+        this.mudarEmailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createDialogEmail();
+            }
+        });
+        this.mudarSenhaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                crateDialogSenha();
+
+            }
+        });
+    }
+
+    private void crateDialogSenha() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditarPerfilActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_senha, null);
+        final EditText changeSenha = mView.findViewById(R.id.senhaChange);
+        Button buttonChangeSenha = mView.findViewById(R.id.buttonConfirmarMudarSenha);
+        mBuilder.setView(mView);
+        final AlertDialog dialog = mBuilder.create();
+        dialog.show();
+        buttonChangeSenha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mudarSenha(changeSenha,dialog);
+            }
+        });
+
+    }
+
+    private void createDialogEmail() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditarPerfilActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_email, null);
+        final EditText changeEmail = mView.findViewById(R.id.emailChange);
+        Button buttonChangeEmail = mView.findViewById(R.id.buttonConfirmarMudarEmail);
+        mBuilder.setView(mView);
+        final AlertDialog dialog = mBuilder.create();
+        dialog.show();
+        buttonChangeEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mudarEmail(changeEmail,dialog);
+            }
+        });
+    }
+
+    private void mudarSenha(EditText changeSenha, AlertDialog dialog){
+        if(verificarCampoSenha(changeSenha)){
+            if(isOnline()){
+                String senha = changeSenha.getText().toString().trim();
+                usuario.setPassword(senha);
+                try {
+                    mudarSenhaUsuario(senha);
+                    dialog.dismiss();
+                    Toast.makeText(EditarPerfilActivity.this, "Editado com sucesso", Toast.LENGTH_SHORT).show();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(EditarPerfilActivity.this, "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+
+            }
+            
+        }
+    }
+
+    private void mudarSenhaUsuario(String senha) throws InterruptedException {
+        Gson gson = new Gson();
+        String user = gson.toJson(this.usuario);
+        editar(user);
+    }
+
+    private boolean verificarCampoSenha(EditText changeSenha) {
+        String senha = changeSenha.getText().toString().trim();
+        if(this.servicoValidacao.verificarCampoSenha(senha)){
+            changeSenha.setError("Senha inválida");
+            return false;
+        }
+        return true;
+    }
+
+    private void mudarEmail(EditText changeEmail, AlertDialog dialog) {
+        if(verificarCampoEmail(changeEmail)){
+            if(isOnline()){
+                String email = changeEmail.getText().toString().trim();
+                usuario.setEmail(email);
+                try {
+                    mudarEmailUsuario(email);
+                    if(Sessao.instance.getResposta().contains("Err")){
+                        changeEmail.setError("EMAIL EM USO");
+                    } else {
+                        dialog.dismiss();
+                        Toast.makeText(EditarPerfilActivity.this, "Editado com sucesso", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                dialog.dismiss();
+
+            } else {
+                Toast.makeText(EditarPerfilActivity.this, "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            changeEmail.setError("Email inválido");
+        }
+    }
+
+    private void mudarEmailUsuario(String email) throws InterruptedException {
+        Gson gson = new Gson();
+        String user = gson.toJson(this.usuario);
+        editar(user);
+    }
+
+    private void editar(String user) throws InterruptedException {
+        callServer(user);
+    }
+
+    private void callServer(final String user) throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Sessao.instance.setResposta(HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/muver",user));
+//                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
+//                Log.i("Script", "ANSWER: "+ answer);
+            }
+        });
+        thread.start();
+        thread.join();
+    }
+
+
+    private boolean verificarCampoEmail(EditText campo) {
+        String email = campo.getText().toString().trim();
+        if(this.servicoValidacao.verificarCampoEmail(email)){
+            campo.setError("Email inválido");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isOnline() {
+        if(ServicoDownload.isNetworkAvailable(getApplicationContext()))
+        {
+            return true;
+        }else{
+            return false;
+        }
     }
 }

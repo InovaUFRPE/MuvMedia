@@ -103,15 +103,11 @@ public class CriarConta1Activity extends AppCompatActivity {
     private boolean verificarCampos() {
         String email = this.campoEmail.getText().toString().trim();
         String senha = this.campoSenha.getText().toString().trim();
-        String repetirSenha = this.campoRepetirSenha.getText().toString().trim();
         if (servicoValidacao.verificarCampoEmail(email)) {
             this.campoEmail.setError("Email inválido");
             return false;
         } else if (servicoValidacao.verificarCampoVazio(senha)) {
             this.campoSenha.setError("Senha inválida");
-            return false;
-        } else if (!senha.equals(repetirSenha)) {
-            this.campoRepetirSenha.setError("As senhas não correspondem");
             return false;
         } else {
             return true;

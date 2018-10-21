@@ -1,5 +1,6 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
@@ -32,9 +33,8 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 public class LoginActivity extends AppCompatActivity {
     private EditText campoSenha, campoEmail;
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
-    private Button botaoCadstrar;
-    private String muverString;
     private TextView nomeApp,textCriarConta;
+    private ProgressDialog dialog;
 
 
     @Override
@@ -69,6 +69,9 @@ public class LoginActivity extends AppCompatActivity {
     private void encontrarElementosView() {
         this.campoEmail = findViewById(R.id.editText4);
         this.campoSenha = findViewById(R.id.editText5);
+        dialog = new ProgressDialog(LoginActivity.this);
+        dialog.setTitle("Verficando dados");
+        dialog.setMessage("Aguarde");
         Button botaoLogar = findViewById(R.id.butaozinho);
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Muver muver = servicoHttpMuver.getMuverByUser(usuario);
-                muver.getNome();
+                Sessao.instance.setMuver(muver);
             }
         });
         thread.start();
@@ -143,6 +146,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         thread.start();
         thread.join();
+        dialog.cancel();
     }
 
     private String setarUsuario(String email, String senha){
