@@ -56,7 +56,8 @@ public class ServicoHttpMuver {
     }
 
     public Usuario updateUsuario(Usuario usuario) {
-        String userUrl = "http://muvmedia-api.herokuapp.com/users";
+        String idUsuario = usuario.get_id();
+        String userUrl = "http://muvmedia-api.herokuapp.com/users/" + idUsuario;
         Gson gson = new Gson();
         String userString = gson.toJson(usuario);
         String resposta = this.put(userUrl, userString);
@@ -127,7 +128,7 @@ public class ServicoHttpMuver {
             httpPut.setEntity(stringEntity);
             HttpResponse resposta = httpClient.execute(httpPut);
             int status = resposta.getStatusLine().getStatusCode();
-            if (status == 201) {
+            if (status == 200) {
                 answer = EntityUtils.toString(resposta.getEntity());
                 Log.i("Script", "ANSWER: "+ answer);
             } else if (status == 404) {
