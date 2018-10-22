@@ -9,23 +9,49 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import app.muvmedia.inova.muvmediaapp.R;
 
-public class HomeFragmentActivity extends Fragment {
+public class HomeFragmentActivity extends Fragment implements OnMapReadyCallback {
 
-    TextView texto;
+    GoogleMap map;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        setTexto(v);
-
         return v;
     }
 
-    private void setTexto(View v){
-        texto = v.findViewById(R.id.textoHome);
-        texto.setText("Home");
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        chamarMapa();
     }
+
+    private void chamarMapa(){
+        SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.mapinha1);
+        mapFragment.getMapAsync(this);
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map=googleMap;
+        LatLng latLng = new LatLng(40.6643, -73.9385);
+
+        MarkerOptions marker = new MarkerOptions();
+        marker.position(latLng);
+        marker.title("Em Nova York");
+        map.addMarker(marker);
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
 }

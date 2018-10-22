@@ -46,7 +46,7 @@ public class PerfilFragmentActivity extends Fragment {
 
     private void setConversoes(View v){
         conversoes = v.findViewById(R.id.conversoes);
-        conversoes.setText("Suas conversoes: "); //conversoes do muver
+        conversoes.setText("Suas conversões: "); //conversoes do muver
     }
 
     private void irEditarPerfil(final View v) {

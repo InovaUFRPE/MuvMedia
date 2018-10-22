@@ -2,13 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="40sp"
-        android:textColor="@color/preto"
-        android:id="@+id/textoHome"
-        android:layout_centerInParent="true"/>
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mapinha1"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        tools:context=".usuario.gui.MapsFragment"/>
 
 </RelativeLayout>

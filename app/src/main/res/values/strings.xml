@@ -29,4 +29,5 @@
     <string name="verifique_o_qr_code">Verifique o QR code</string>
     <string name="clique_em_anunciar">Clique em \'Anunciar\'</string>
     <string name="doIT">Vamos Lá!!!!</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
