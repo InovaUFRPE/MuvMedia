@@ -16,6 +16,7 @@ import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
+import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class EditarPerfilActivity extends AppCompatActivity {
@@ -117,9 +118,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
     }
 
     private void mudarSenhaUsuario(String senha) throws InterruptedException {
-        Gson gson = new Gson();
-        String user = gson.toJson(this.usuario);
-        editar(user);
+        this.usuario.setPassword(senha);
+        editar(this.usuario);
     }
 
     private boolean verificarCampoSenha(EditText changeSenha) {
@@ -134,9 +134,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
     private void mudarEmail(EditText changeEmail, AlertDialog dialog) {
         if(verificarCampoEmail(changeEmail)){
             if(isOnline()){
-                String email = changeEmail.getText().toString().trim();
-                usuario.setEmail(email);
                 try {
+                    String email = changeEmail.getText().toString().trim();
                     mudarEmailUsuario(email);
                     if(Sessao.instance.getResposta().contains("Err")){
                         changeEmail.setError("EMAIL EM USO");
@@ -159,22 +158,21 @@ public class EditarPerfilActivity extends AppCompatActivity {
     }
 
     private void mudarEmailUsuario(String email) throws InterruptedException {
-        Gson gson = new Gson();
-        String user = gson.toJson(this.usuario);
-        editar(user);
+        this.usuario.setEmail(email);
+        editar(this.usuario);
     }
 
-    private void editar(String user) throws InterruptedException {
-        callServer(user);
+    private void editar(Usuario usuario) throws InterruptedException {
+        callServer(usuario);
     }
 
-    private void callServer(final String user) throws InterruptedException {
+    private void callServer(final Usuario usuario) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Sessao.instance.setResposta(HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/muver",user));
-//                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
-//                Log.i("Script", "ANSWER: "+ answer);
+                ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
+                Usuario usuarioEditado = servicoHttpMuver.updateUsuario(usuario);
+                //Sessao.instance.setResposta(usuarioEditado);
             }
         });
         thread.start();
