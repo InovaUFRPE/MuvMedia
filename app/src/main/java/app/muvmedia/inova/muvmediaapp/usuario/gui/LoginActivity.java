@@ -70,12 +70,12 @@ public class LoginActivity extends AppCompatActivity {
         this.campoEmail = findViewById(R.id.editText4);
         this.campoSenha = findViewById(R.id.editText5);
         dialog = new ProgressDialog(LoginActivity.this);
-        dialog.setTitle("Verficando dados");
-        dialog.setMessage("Aguarde");
+        dialog.setTitle("Verficando dados...");
         Button botaoLogar = findViewById(R.id.butaozinho);
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.show();
                 try {
                     login();
                 } catch (InterruptedException e) {
@@ -94,9 +94,11 @@ public class LoginActivity extends AppCompatActivity {
                 String usuario = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                 logar(usuario);
                 if(Sessao.instance.getResposta().contains("Usuário ou senha incorreto")){
+                    dialog.dismiss();
                     Toast.makeText(this, "Usuário ou senha incorreto", Toast.LENGTH_SHORT).show();
                 } else {
                     getSessaoApi();
+                    dialog.dismiss();
                     Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                     startActivity(intent);
                     Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();

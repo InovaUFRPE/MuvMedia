@@ -1,5 +1,6 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,16 +26,22 @@ public class CriarConta2Activity extends AppCompatActivity {
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private Muver muver = new Muver();
     private Usuario usuario = new Usuario();
-    private String validar;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criar_conta2);
+        setItensView();
+    }
+
+    private void setItensView() {
         this.campoNome = findViewById(R.id.editText6);
         this.campoSobrenome = findViewById(R.id.editText7);
         this.campoCpf = findViewById(R.id.editText10);
         this.campoNascimento = findViewById(R.id.editText8);
+        dialog = new ProgressDialog(CriarConta2Activity.this);
+        dialog.setTitle("Cadastrando...");
         setMascaras();
         cadastrarConta();
     }
@@ -46,14 +53,17 @@ public class CriarConta2Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()){
+                    dialog.show();
                     receberDadosTela1();
                     String muver = criarMuver();
                     try {
                         cadastrar(muver);
                         if(Sessao.instance.getResposta().contains("EMV01")){
+                            dialog.dismiss();
                             campoCpf.requestFocus();
                             campoCpf.setError("CPF JÁ CADASTRADO");
                         } else{
+                            dialog.dismiss();
                             Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
                             finish();
                         }

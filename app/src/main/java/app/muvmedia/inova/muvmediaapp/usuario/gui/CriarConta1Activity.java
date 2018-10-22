@@ -1,5 +1,6 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 
 import android.support.v7.app.AppCompatActivity;
@@ -8,16 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 
 import com.google.gson.Gson;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+
 
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
@@ -30,6 +27,7 @@ public class CriarConta1Activity extends AppCompatActivity {
     private Button botaoProximo;
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private String validar = "";
+    private ProgressDialog mprogressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +39,8 @@ public class CriarConta1Activity extends AppCompatActivity {
         this.botaoProximo = findViewById(R.id.button);
         this.campoEmail = findViewById(R.id.editText);
         this.campoSenha = findViewById(R.id.editText2);
+        mprogressDialog = new ProgressDialog(CriarConta1Activity.this);
+        this.mprogressDialog.setMessage("Cadastrando...");
         botaoProximo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,6 +52,7 @@ public class CriarConta1Activity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     cadastrarUser();
+                    mprogressDialog.show();
                 }
                 }
 
@@ -62,6 +63,7 @@ public class CriarConta1Activity extends AppCompatActivity {
         if (this.validar.length()>10){
             String teste = this.validar.substring(2,4);
             if(teste.equals("er")){
+                mprogressDialog.dismiss();
                 campoEmail.requestFocus();
                 campoEmail.setError("Email em uso");
             }else {
@@ -106,7 +108,7 @@ public class CriarConta1Activity extends AppCompatActivity {
         if (servicoValidacao.verificarCampoEmail(email)) {
             this.campoEmail.setError("Email inválido");
             return false;
-        } else if (servicoValidacao.verificarCampoVazio(senha)) {
+        } else if (servicoValidacao.verificarCampoSenha(senha)) {
             this.campoSenha.setError("Senha inválida");
             return false;
         } else {
@@ -116,7 +118,6 @@ public class CriarConta1Activity extends AppCompatActivity {
     private void irSegundaTela(){
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
-        String jaja = validar;
         Usuario usuario = gson.fromJson(validar, Usuario.class);
         bundle.putSerializable("tripla", usuario);
         Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);

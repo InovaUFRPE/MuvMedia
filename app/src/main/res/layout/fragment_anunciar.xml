@@ -1,13 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Anunciar"
-        android:textSize="40sp"
-        android:textColor="@color/preto"
-        android:layout_centerInParent="true"/>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/doIT"
+            android:textColor="@color/azulescuro"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/imageView11"
+            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="36dp"
+            android:text="@string/clique_em_anunciar"
+            android:textColor="@color/azulescuro"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/imageView16"
+            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="40dp"
+            android:layout_toEndOf="@+id/imageView7"
+            android:text="@string/verifique_o_qr_code"
+            android:textColor="@color/azulescuro"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView15"
+            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="54dp"
+            android:text="@string/escolha_sua_bandeira"
+            android:textColor="@color/azulescuro"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView7"
+            app:layout_constraintTop_toBottomOf="@+id/nomeEmp4" />
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="64dp"
+            android:layout_height="61dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/nomeEmp4"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView16"
+            app:srcCompat="@drawable/instruc" />
+
+        <ImageView
+            android:id="@+id/imageView16"
+            android:layout_width="64dp"
+            android:layout_height="61dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/nomeEmp4"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView15"
+            app:srcCompat="@drawable/instruc" />
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="64dp"
+            android:layout_height="61dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/nomeEmp4"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7"
+            app:srcCompat="@drawable/instruc" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="64dp"
+            android:layout_height="61dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/nomeEmp4"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nomeEmp4"
+            app:srcCompat="@drawable/instruc" />
+
+        <Button
+            android:id="@+id/buttonAnunciar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/botaoredondocheio"
+            android:text="Anunciar"
+            android:textColor="@color/textoBranco"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView11"
+            app:layout_constraintVertical_bias="0.052"
+            tools:text="Anunciar" />
+
+        <TextView
+            android:id="@+id/nomeEmp4"
+            android:layout_width="319dp"
+            android:layout_height="80dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/instrucoes"
+            android:textColor="@color/principal"
+            android:textSize="36dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.507"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+    </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>

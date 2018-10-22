@@ -24,4 +24,9 @@
     <string name="novo_email">Novo Email</string>
     <string name="mudar_senha">Mudar Senha</string>
     <string name="nova_senha">Nova Senha</string>
+    <string name="instrucoes">Instruções</string>
+    <string name="escolha_sua_bandeira">Escolha sua bandeira</string>
+    <string name="verifique_o_qr_code">Verifique o QR code</string>
+    <string name="clique_em_anunciar">Clique em \'Anunciar\'</string>
+    <string name="doIT">Vamos Lá!!!!</string>
 </resources>

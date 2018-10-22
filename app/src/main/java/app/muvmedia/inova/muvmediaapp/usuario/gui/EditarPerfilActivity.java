@@ -54,6 +54,12 @@ public class EditarPerfilActivity extends AppCompatActivity {
 
             }
         });
+        this.voltarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void crateDialogSenha() {

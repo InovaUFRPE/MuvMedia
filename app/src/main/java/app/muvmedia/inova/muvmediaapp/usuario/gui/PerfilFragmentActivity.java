@@ -33,9 +33,6 @@ public class PerfilFragmentActivity extends Fragment {
         return v;
     }
 
-
-
-
     private void setBoasVindas(View v) {
         boasVindas = v.findViewById(R.id.nomeMuver);
         String nome = muver.getNome();
