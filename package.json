@@ -1,11 +1,14 @@
 {
   "name": "muvmedia-api",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "created by cletus",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "node devServer.js"
+  },
+  "engines": {
+    "node": "8.9.3"
   },
   "keywords": [
     "admin",
