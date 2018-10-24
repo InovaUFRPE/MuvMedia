@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() throws InterruptedException {
         if (this.verificarCampos()) {
             if(isOnline()){
+                dialog.show();
                 String usuario = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                 logar(usuario);
                 if(Sessao.instance.getResposta().contains("Usuário ou senha incorreto")){
@@ -176,9 +177,11 @@ public class LoginActivity extends AppCompatActivity {
         String senha = this.campoSenha.getText().toString().trim();
         if (this.servicoValidacao.verificarCampoEmail(email)) {
             this.campoEmail.setError("Email Inválido");
+            dialog.dismiss();
             return false;
         } else if (this.servicoValidacao.verificarCampoVazio(senha)) {
             this.campoSenha.setError("Senha Inválida");
+            dialog.dismiss();
             return false;
         } else {
             return true;
