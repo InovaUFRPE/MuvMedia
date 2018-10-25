@@ -1,0 +1,356 @@
+{
+	"info": {
+		"_postman_id": "e50fd5ed-dffc-47d2-a4a5-d5ed6adabc44",
+		"name": "Muvmedia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"cletoproject@gmail.com\",\n\t\"password\": \"s3nHa\"\n}"
+						},
+						"url": {
+							"raw": "{{localhost}}/auth/login",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\": \"cletoproject@gmail.com\",\n\t\"password\": \"s3nHa\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:5000/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "579"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"243-g3jaRZUH4uC4yFexNqGwPri6cdY\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 13 Oct 2018 13:30:33 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"active\": true,\n    \"_id\": \"5bc1f379099c422fbcc1df69\",\n    \"user\": {\n        \"status\": true,\n        \"deleted\": false,\n        \"_id\": \"5bc0cea1eb73b51ea4d8c0f9\",\n        \"email\": \"cletoproject@gmail.com\",\n        \"password\": \"\",\n        \"level\": 1,\n        \"createdAt\": \"2018-10-12T16:41:05.442Z\",\n        \"updatedAt\": \"2018-10-12T16:41:05.442Z\",\n        \"__v\": 0\n    },\n    \"expiresAt\": \"2018-10-13T14:30:33.722Z\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzk0NDEwMzM3MjIsImlhdCI6MTUzOTQzNzQzMzcyMywic3ViIjoiNWJjMGNlYTFlYjczYjUxZWE0ZDhjMGY5In0.9no3GsyDhOBL24cG-0881cmMfTnlBN7Gr3O4Ess915Q\",\n    \"createdAt\": \"2018-10-13T13:30:33.729Z\",\n    \"updatedAt\": \"2018-10-13T13:30:33.729Z\",\n    \"__v\": 0\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Register",
+			"item": [
+				{
+					"name": "Register Muver",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"user\": {\r\n    \"status\": true,\r\n    \"deleted\": false,\r\n    \"_id\": \"5bc0cea1eb73b51ea4d8c0f9\",\r\n    \"email\": \"cletoproject@gmail.com\",\r\n    \"password\": \"$2b$10$c7jMFgKtsOIuiyrKvgT2jOY4/evc598D6ArKn7esGPpw9Rk47hSY6\",\r\n    \"level\": 1\r\n},\r\n  \"nome\": \"Cleto da Silva\",\r\n  \"dataNascimento\": \"1990-08-31\",\r\n  \"cpf\": \"12345678910\"\r\n}"
+						},
+						"url": {
+							"raw": "{{localhost}}/public/register/muver",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"public",
+								"register",
+								"muver"
+							]
+						},
+						"description": "enviar um muver e recebe um muver com id"
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\t\r\n\t\"email\": \"cletoproject@gmail.com\",\r\n\t\"password\": \"s3nHa\",\r\n\t\"level\": 1\r\n}"
+						},
+						"url": {
+							"raw": "{{localhost}}/public/register/user",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"public",
+								"register",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Muver",
+			"item": [
+				{
+					"name": "Get Muvers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzk0NDEwMzM3MjIsImlhdCI6MTUzOTQzNzQzMzcyMywic3ViIjoiNWJjMGNlYTFlYjczYjUxZWE0ZDhjMGY5In0.9no3GsyDhOBL24cG-0881cmMfTnlBN7Gr3O4Ess915Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{localhost}}/muvers?user=5bc0cea1eb73b51ea4d8c0f4",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"muvers"
+							],
+							"query": [
+								{
+									"key": "user",
+									"value": "5bc0cea1eb73b51ea4d8c0f4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Muver",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzk0NDEwMzM3MjIsImlhdCI6MTUzOTQzNzQzMzcyMywic3ViIjoiNWJjMGNlYTFlYjczYjUxZWE0ZDhjMGY5In0.9no3GsyDhOBL24cG-0881cmMfTnlBN7Gr3O4Ess915Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{localhost}}/muvers/5bc0cef8eb73b51ea4d8c0fb",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"muvers",
+								"5bc0cef8eb73b51ea4d8c0fb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Muver",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzk0NDEwMzM3MjIsImlhdCI6MTUzOTQzNzQzMzcyMywic3ViIjoiNWJjMGNlYTFlYjczYjUxZWE0ZDhjMGY5In0.9no3GsyDhOBL24cG-0881cmMfTnlBN7Gr3O4Ess915Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{localhost}}/muvers/5bc0cef8eb73b51ea4d8c0fb",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"muvers",
+								"5bc0cef8eb73b51ea4d8c0fb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Muver",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzk0NDUyNDc4NDYsImlhdCI6MTUzOTQ0MTY0Nzg2NCwic3ViIjoiNWJjMGNlYTFlYjczYjUxZWE0ZDhjMGY5In0.Q--k0bCEeOyvdLL70bpzcgOS78ZNfxa-JewmhZ_QlKg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"deleted\": false,\n    \"_id\": \"5bc0cef8eb73b51ea4d8c0fb\",\n    \"user\": {\n        \"status\": true,\n        \"deleted\": false,\n        \"_id\": \"5bc0cea1eb73b51ea4d8c0f9\",\n        \"email\": \"cletoproject@gmail.com\",\n        \"level\": 1,\n        \"createdAt\": \"2018-10-12T16:41:05.442Z\",\n        \"updatedAt\": \"2018-10-12T16:41:05.442Z\",\n        \"__v\": 0\n    },\n    \"nome\": \"Cleto da Silva Alves Brandão\",\n    \"dataNascimento\": \"1990-08-31T00:00:00.000Z\",\n    \"cpf\": \"12345678910\",\n    \"createdAt\": \"2018-10-12T16:42:32.350Z\",\n    \"updatedAt\": \"2018-10-12T16:42:32.350Z\",\n    \"__v\": 0\n}"
+						},
+						"url": {
+							"raw": "{{localhost}}/muvers/5bc0cef8eb73b51ea4d8c0fb",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"muvers",
+								"5bc0cef8eb73b51ea4d8c0fb"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "857117cc-95ce-49b1-b3b5-7108eb4b3d6f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "875967b1-5475-4ae3-8e0f-a0cd8f21e4e8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "98a33ca2-d6e1-48e2-827a-40ad75e5e1bb",
+			"key": "localhost",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "f27d5894-3e40-47e1-8abb-48157c24c81e",
+			"key": "production",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

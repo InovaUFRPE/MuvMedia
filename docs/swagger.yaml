@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: Powered by cletus
-  version: 1.0.0
+  version: 1.1.1
   title: MuvMedia Api
   # put the contact info for your development or API team
   contact:
@@ -252,6 +252,12 @@ paths:
         default: 10
         type: integer
         format: int32
+      - in: query
+        name: user
+        description: Opcional. Pesquisa muver Pelo id do usuário.
+        default: 10
+        type: string
+        format: uuid
       responses:
         200:
           description: O resultado corresponde a todo os itens no banco de dados.
@@ -387,6 +393,40 @@ paths:
           description: Muver não encontrado.
         400:
           description: Parâmetros inseridos podem estar errados.
+  /muvers/user/{id}:
+    get:
+      tags:
+      - Muver
+      summary: Retorna um muver pelo id do usuário.
+      operationId: getMuverByUser
+      description: |
+        Retorna as informações de apenas um muver em específico pelo id do seu usuário.
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: Authorization
+        description: Obrigatório. Token de autorização.
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: Obrigatório. Id do user.
+        default: 1
+        required: true
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: Muver encontrado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Muver'
+        404:
+          description: Muver não encontrado.
+        400:
+          description: Parâmetros errados.
 
 
 definitions:
@@ -440,7 +480,7 @@ definitions:
     required:
     - user
     - nome
-    - dataDeNascimento
+    - dataNascimento
     - cpf
     properties:
       id:
@@ -452,7 +492,7 @@ definitions:
       nome:
         type: string
         example: Fulano da Silva
-      dataDeNascimento:
+      dataNascimento:
         type: string
         format: ISO 8601
         example: "1990-08-31T00:00:00"

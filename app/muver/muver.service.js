@@ -4,12 +4,13 @@ module.exports = {
   createMuver,
   load,
   loadMuver,
+  loadMuverByUser,
   updateMuver,
   removeMuver
 }
 
 function createMuver(muver) {
-  data.user = data.user._id;
+  muver.user = muver.user._id;
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -51,6 +52,22 @@ function loadMuver(id) {
   return new Promise((resolve, reject) => {
     Muver.findById(id)
           .where({deleted: false})
+          .populate('user')
+          .exec((err, user) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            } else {
+              resolve(user);
+            }
+          });
+  });
+}
+
+function loadMuverByUser(id) {
+  return new Promise((resolve, reject) => {
+    Muver.findOne()
+          .where({ deleted: false, user: id })
           .populate('user')
           .exec((err, user) => {
             if (err) {

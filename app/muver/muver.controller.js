@@ -5,6 +5,7 @@ module.exports = {
   createMuver,
   load,
   loadMuver,
+  loadMuverByUser,
   updateMuver,
   removeMuver
 }
@@ -60,12 +61,11 @@ async function loadMuver(req, res) {
   }
 }
 
-async function updateMuver(req, res) {
+async function loadMuverByUser(req, res) {
   const id = req.params.id;
-  const data = req.body;
 
   try {
-    const muver = await MuverService.updateMuver(id, data);
+    const muver = await MuverService.loadMuverByUser(id);
     if (muver) {
       res.status(200).json(muver);
     } else {
@@ -77,6 +77,23 @@ async function updateMuver(req, res) {
   }
 }
 
+async function updateMuver(req, res) {
+  const id = req.params.id;
+  const data = req.body;
+
+  try {
+    const muver = await MuverService.updateMuver(id, data);
+    if (muver) {
+      res.status(200).json(muver);
+    } else {
+      res.status(404).json({ code: "EMV09", message: "Muver não encontrado" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ code: "EMV10", message: "Dados fornecidos inválidos" });
+  }
+}
+
 async function removeMuver(req, res) {
   const id = req.params.id;
 
@@ -85,10 +102,10 @@ async function removeMuver(req, res) {
     if (result) {
       res.status(200).json({ msg: "Muver removido" });
     } else {
-      res.status(404).json({ code: "EMV09", message: "Muver não encontrado" });
+      res.status(404).json({ code: "EMV11", message: "Muver não encontrado" });
     }
   } catch (err) {
     console.log(err);
-    res.status(400).json({ code: "EMV10", message: "Dados fornecidos inválidos" });
+    res.status(400).json({ code: "EMV12", message: "Dados fornecidos inválidos" });
   }
 }
