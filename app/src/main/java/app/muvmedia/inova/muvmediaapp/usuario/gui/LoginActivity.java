@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
+import app.muvmedia.inova.muvmediaapp.infra.MuvMediaException;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 //import app.muvmedia.inova.muvmediaapp.usuario.dominio.Login;
@@ -80,6 +81,8 @@ public class LoginActivity extends AppCompatActivity {
                     login();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                } catch (MuvMediaException e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -88,24 +91,30 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void login() throws InterruptedException {
+    private void login() throws InterruptedException, MuvMediaException {
         if (this.verificarCampos()) {
             if(isOnline()){
                 dialog.show();
                 String usuario = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                 logar(usuario);
-                if(Sessao.instance.getResposta().contains("Usuário ou senha incorreto")){
-                    dialog.dismiss();
-                    Toast.makeText(this, "Usuário ou senha incorreto", Toast.LENGTH_SHORT).show();
-                } else {
-                    getSessaoApi();
-                    dialog.dismiss();
-                    Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
-                    startActivity(intent);
-                    Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
+                try{
+                    if(Sessao.instance.getResposta().contains("Usuário ou senha incorreto")){
+                        dialog.dismiss();
+                        Toast.makeText(this, "Usuário ou senha incorreto", Toast.LENGTH_SHORT).show();
+                    } else {
+                        getSessaoApi();
+                        dialog.dismiss();
+                        Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
+                        startActivity(intent);
+                        Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (NullPointerException e){
+                    throw new MuvMediaException("Conexão interrompida");
                 }
+                dialog.dismiss();
             } else {
                 Toast.makeText(this, "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             }
 
         }
@@ -133,18 +142,27 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void logar(String jason)  throws InterruptedException {
+    private void logar(String jason) throws InterruptedException, MuvMediaException {
         callServer(jason);
 
     }
 
-    private void callServer(final String data) throws InterruptedException{
+    private void callServer(final String data) throws MuvMediaException, InterruptedException {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Sessao.instance.setResposta(HttpConnection.post("http://muvmedia-api.herokuapp.com/auth/login", data));
-                Log.i("Script", "OLHAAA: "+ Sessao.instance
-                .getResposta());
+                try{
+                    Sessao.instance.setResposta(HttpConnection.post("http://muvmedia-api.herokuapp.com/auth/login", data));
+                    Log.i("Script", "OLHAAA: "+ Sessao.instance.getResposta());
+                }catch (Exception e){
+                    try {
+                        throw new MuvMediaException("Conexão interrompida");
+                    } catch (MuvMediaException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+
+
             }
         });
         thread.start();
