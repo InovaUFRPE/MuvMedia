@@ -76,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.show();
                 try {
                     login();
                 } catch (InterruptedException e) {
@@ -111,10 +110,8 @@ public class LoginActivity extends AppCompatActivity {
                 }catch (NullPointerException e){
                     throw new MuvMediaException("Conexão interrompida");
                 }
-                dialog.dismiss();
             } else {
                 Toast.makeText(this, "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
             }
 
         }

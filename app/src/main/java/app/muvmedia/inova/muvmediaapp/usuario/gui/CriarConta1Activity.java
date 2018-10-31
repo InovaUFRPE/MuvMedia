@@ -40,12 +40,13 @@ public class CriarConta1Activity extends AppCompatActivity {
         this.campoEmail = findViewById(R.id.editText);
         this.campoSenha = findViewById(R.id.editText2);
         mprogressDialog = new ProgressDialog(CriarConta1Activity.this);
-        this.mprogressDialog.setMessage("Cadastrando...");
+        this.mprogressDialog.setMessage("Aguarde...");
         botaoProximo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()) {
                     String user = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
+                    mprogressDialog.show();
                     try {
                         cadastrar(user);
                     } catch (InterruptedException e) {
@@ -90,7 +91,7 @@ public class CriarConta1Activity extends AppCompatActivity {
 
 
     private void callServer(final String method, final String data)  throws InterruptedException{
-        Thread thread = new Thread(new Runnable() {
+        final Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 validar = HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/user",data);

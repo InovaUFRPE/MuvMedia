@@ -142,6 +142,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
                     } else {
                         dialog.dismiss();
                         Toast.makeText(EditarPerfilActivity.this, "Editado com sucesso", Toast.LENGTH_SHORT).show();
+
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
