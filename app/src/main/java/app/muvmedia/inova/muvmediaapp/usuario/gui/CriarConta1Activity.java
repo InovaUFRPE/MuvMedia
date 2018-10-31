@@ -53,7 +53,7 @@ public class CriarConta1Activity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     cadastrarUser();
-                    mprogressDialog.show();
+                    mprogressDialog.dismiss();
                 }
                 }
 
@@ -64,12 +64,12 @@ public class CriarConta1Activity extends AppCompatActivity {
         if (this.validar.length()>10){
             String teste = this.validar.substring(2,4);
             if(teste.equals("er")){
-                mprogressDialog.dismiss();
                 campoEmail.requestFocus();
                 campoEmail.setError("Email em uso");
             }else {
                 irSegundaTela();
             }
+            this.mprogressDialog.dismiss();
         }
 
     }
