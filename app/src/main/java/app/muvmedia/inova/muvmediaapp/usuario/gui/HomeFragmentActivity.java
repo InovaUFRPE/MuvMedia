@@ -11,25 +11,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
-
-
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.PermissoesMaps;
 
@@ -94,14 +90,14 @@ public class HomeFragmentActivity extends Fragment implements
 
     private void carregarLocalTeste(GoogleMap mMap){
 
-        LatLng tripla = new LatLng(0.0, 0.0);
-        mMap.addMarker(new MarkerOptions().position(tripla).title("Não Não Não"));
+        LatLng ceagri2 = new LatLng(-8.0169037,-34.9456828);
+        mMap.addMarker(new MarkerOptions().position(ceagri2).title("Ceagri II - UFRPE").icon(BitmapDescriptorFactory.fromResource(R.drawable.flag)));
 
-        LatLng teste1 = new LatLng(-8.0524478, -34.9519173);
-        mMap.addMarker(new MarkerOptions().position(teste1).title("Pegou!!!"));
+        LatLng ufpe = new LatLng(-8.0524478, -34.9519173);
+        mMap.addMarker(new MarkerOptions().position(ufpe).title("UFPE").icon(BitmapDescriptorFactory.fromResource(R.drawable.flag)));
 
-        LatLng teste2 = new LatLng(-7.1377875, -34.8481326);
-        mMap.addMarker(new MarkerOptions().position(teste2).title("UFPB"));
+        LatLng ruRural = new LatLng(-8.014179, -34.951058);
+        mMap.addMarker(new MarkerOptions().position(ruRural).title("RU - UFRPE").icon(BitmapDescriptorFactory.fromResource(R.drawable.flag)));
 
     }
 
