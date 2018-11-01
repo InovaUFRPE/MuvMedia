@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.zxing.Result;
 
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.Manifest.permission.CAMERA;
@@ -124,21 +125,16 @@ public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerVi
     public void handleResult(final Result result) {
         final String meuResultado = result.getText();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Resultado do Scan");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+        builder.setTitle("Anúncio Gerado");
+        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                scannerView.resumeCameraPreview(QrCodeActivity.this);
-
+                Sessao.instance.setCodigo(meuResultado);
+                Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
+                startActivity(intent);
             }
         });
-        builder.setNeutralButton("Visit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(meuResultado));
-            }
-        });
-        builder.setMessage(meuResultado);
+        builder.setMessage("Vá até a tela perfil para ver seu código");
         AlertDialog alert = builder.create();
         alert.show();
 

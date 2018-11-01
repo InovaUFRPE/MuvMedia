@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                         getSessaoApi();
                         dialog.dismiss();
                         Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
+                        Sessao.instance.setCodigo("");
                         startActivity(intent);
                         Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
                     }

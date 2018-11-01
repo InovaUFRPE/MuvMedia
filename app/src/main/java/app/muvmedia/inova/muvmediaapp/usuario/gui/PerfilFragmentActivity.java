@@ -41,12 +41,12 @@ public class PerfilFragmentActivity extends Fragment {
 
     private void setAnuncio(View v){
        anuncio = v.findViewById(R.id.anuncio);
-       anuncio.setText("Seu anúncio é: "); //promocao que o muver está anunciando
+       anuncio.setText("Seu anúncio é:"+  Sessao.instance.getCodigo()); //promocao que o muver está anunciando
     }
 
     private void setConversoes(View v){
         conversoes = v.findViewById(R.id.conversoes);
-        conversoes.setText("Suas conversões: "); //conversoes do muver
+        conversoes.setText("Suas conversões: 0"); //conversoes do muver
     }
 
     private void irEditarPerfil(final View v) {

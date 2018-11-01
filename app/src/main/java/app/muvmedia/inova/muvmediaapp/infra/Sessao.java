@@ -35,6 +35,12 @@ public class Sessao {
         values.put("sessao.muver", valor);
     }
 
+    public void setCodigo(Object valor){ values.put("sessao.codigo", valor); }
+
+    public String getCodigo(){
+        return (String) values.get("sessao.codigo");
+    }
+
     public Muver getMuver(){
         return (Muver) values.get("sessao.muver");
     }
