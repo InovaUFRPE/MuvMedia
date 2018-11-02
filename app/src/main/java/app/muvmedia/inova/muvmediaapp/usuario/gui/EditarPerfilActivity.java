@@ -143,15 +143,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
                     } else {
                         dialog.dismiss();
                         Toast.makeText(EditarPerfilActivity.this, "Editado com sucesso", Toast.LENGTH_SHORT).show();
+                        this.email.setText(email);
                     }
-//                    dialog.dismiss();
-//                    Toast.makeText(EditarPerfilActivity.this, resultado, Toast.LENGTH_SHORT).show();
-//                    if(Sessao.instance.getResposta().contains("Err")){
-//                        changeEmail.setError("EMAIL EM USO");
-//                    } else {
-//                        dialog.dismiss();
-//                        Toast.makeText(EditarPerfilActivity.this, "Editado com sucesso", Toast.LENGTH_SHORT).show();
-//
 //                    }
                 } catch (Exception e) {
                     e.printStackTrace();
