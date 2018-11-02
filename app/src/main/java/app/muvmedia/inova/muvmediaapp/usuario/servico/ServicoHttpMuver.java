@@ -55,12 +55,18 @@ public class ServicoHttpMuver {
         return muver;
     }
 
-    public Usuario updateUsuario(Usuario usuario) {
+    public Usuario updateUsuario(Usuario usuario) throws Exception {
         String idUsuario = usuario.get_id();
         String userUrl = "http://muvmedia-api.herokuapp.com/users/" + idUsuario;
         Gson gson = new Gson();
         String userString = gson.toJson(usuario);
-        String resposta = this.put(userUrl, userString);
+        String resposta;
+        try {
+            resposta = this.put(userUrl, userString);
+        } catch (Exception e){
+            throw new Exception("Erro");
+        }
+//        String resposta = this.put(userUrl, userString);
         if (resposta != null) {
             usuario = gson.fromJson(resposta, Usuario.class);
         }
@@ -122,22 +128,29 @@ public class ServicoHttpMuver {
         httpPut.setHeader("Content-type", "application/json");
         httpPut.addHeader("Authorization", "Bearer "+ Sessao.instance.getSession().getToken());
         String answer;
+        String Erro = null;
         try {
             StringEntity stringEntity = new StringEntity(body);
             httpPut.getRequestLine();
             httpPut.setEntity(stringEntity);
             HttpResponse resposta = httpClient.execute(httpPut);
+            
             int status = resposta.getStatusLine().getStatusCode();
             if (status == 200) {
                 answer = EntityUtils.toString(resposta.getEntity());
                 Log.i("Script", "ANSWER: "+ answer);
             } else if (status == 404) {
-                throw new Exception("Muver não encontrado");
+                Erro = "Muver não encontrado";
+                throw new Exception(Erro);
+            } else if(status == 400) {
+                Erro = "Email em uso";
+                throw new Exception(Erro);
             } else {
-                throw new Exception("Erro inesperado");
+                Erro = "Erro Inesperado";
+                throw new Exception(Erro);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(Erro);
         }
         return answer;
     }

@@ -106,7 +106,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
                     dialog.dismiss();
                     Toast.makeText(EditarPerfilActivity.this, "Editado com sucesso", Toast.LENGTH_SHORT).show();
 
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
@@ -117,7 +117,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
         }
     }
 
-    private void mudarSenhaUsuario(String senha) throws InterruptedException {
+    private void mudarSenhaUsuario(String senha) throws Exception {
         this.usuario.setPassword(senha);
         editar(this.usuario);
     }
@@ -134,21 +134,31 @@ public class EditarPerfilActivity extends AppCompatActivity {
     private void mudarEmail(EditText changeEmail, AlertDialog dialog) {
         if(verificarCampoEmail(changeEmail)){
             if(isOnline()){
+                String resultado = "Editado com sucesso";
                 try {
                     String email = changeEmail.getText().toString().trim();
                     mudarEmailUsuario(email);
-                    if(Sessao.instance.getResposta().contains("Err")){
-                        changeEmail.setError("EMAIL EM USO");
+                    if(Sessao.instance.getResposta().contains("Erro")){
+                        changeEmail.setError("Email em uso");
                     } else {
                         dialog.dismiss();
                         Toast.makeText(EditarPerfilActivity.this, "Editado com sucesso", Toast.LENGTH_SHORT).show();
-
                     }
-                } catch (InterruptedException e) {
+//                    dialog.dismiss();
+//                    Toast.makeText(EditarPerfilActivity.this, resultado, Toast.LENGTH_SHORT).show();
+//                    if(Sessao.instance.getResposta().contains("Err")){
+//                        changeEmail.setError("EMAIL EM USO");
+//                    } else {
+//                        dialog.dismiss();
+//                        Toast.makeText(EditarPerfilActivity.this, "Editado com sucesso", Toast.LENGTH_SHORT).show();
+//
+//                    }
+                } catch (Exception e) {
                     e.printStackTrace();
+                    resultado = e.getMessage();
+                    Toast.makeText(EditarPerfilActivity.this, resultado, Toast.LENGTH_SHORT).show();
+                    changeEmail.setError("Email em uso");
                 }
-                dialog.dismiss();
-
             } else {
                 Toast.makeText(EditarPerfilActivity.this, "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
             }
@@ -158,21 +168,25 @@ public class EditarPerfilActivity extends AppCompatActivity {
         }
     }
 
-    private void mudarEmailUsuario(String email) throws InterruptedException {
+    private void mudarEmailUsuario(String email) throws Exception {
         this.usuario.setEmail(email);
         editar(this.usuario);
     }
 
-    private void editar(Usuario usuario) throws InterruptedException {
+    private void editar(Usuario usuario) throws Exception {
         callServer(usuario);
     }
 
-    private void callServer(final Usuario usuario) throws InterruptedException {
+    private void callServer(final Usuario usuario) throws Exception {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
-                Usuario usuarioEditado = servicoHttpMuver.updateUsuario(usuario);
+                try {
+                    Usuario usuarioEditado = servicoHttpMuver.updateUsuario(usuario);
+                } catch (Exception e) {
+                    Sessao.instance.setResposta("Erro");
+                }
                 //Sessao.instance.setResposta(usuarioEditado);
             }
         });
