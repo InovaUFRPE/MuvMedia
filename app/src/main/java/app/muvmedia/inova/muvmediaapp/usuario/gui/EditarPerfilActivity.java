@@ -184,6 +184,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
                 ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
                 try {
                     Usuario usuarioEditado = servicoHttpMuver.updateUsuario(usuario);
+                    Sessao.instance.setResposta("Sucess");
                 } catch (Exception e) {
                     Sessao.instance.setResposta("Erro");
                 }
