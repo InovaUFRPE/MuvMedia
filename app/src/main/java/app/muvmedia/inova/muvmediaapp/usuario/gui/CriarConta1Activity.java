@@ -149,6 +149,7 @@ private void callServer(final String email)  throws InterruptedException{
         Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);
         it.putExtra("tela1", bundle);
         startActivity(it);
+        finish();
     }
 
     private boolean isOnline() {
