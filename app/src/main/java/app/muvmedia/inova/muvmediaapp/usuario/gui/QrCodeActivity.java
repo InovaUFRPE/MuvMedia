@@ -118,7 +118,6 @@ public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerVi
                 .setNegativeButton("Cancelar", null)
                 .create()
                 .show();
-
     }
 
     @Override
@@ -137,6 +136,5 @@ public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerVi
         builder.setMessage("Vá até a tela perfil para ver seu código");
         AlertDialog alert = builder.create();
         alert.show();
-
     }
 }

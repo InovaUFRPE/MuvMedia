@@ -180,8 +180,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isOnline() {
-        if(ServicoDownload.isNetworkAvailable(getApplicationContext()))
-        {
+        if(ServicoDownload.isNetworkAvailable(getApplicationContext())) {
             return true;
         }else{
            return false;

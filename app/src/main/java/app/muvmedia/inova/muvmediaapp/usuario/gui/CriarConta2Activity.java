@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
+import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
@@ -55,29 +56,43 @@ public class CriarConta2Activity extends AppCompatActivity {
         cadastrarConta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (verificarCampos()){
-//                    dialog.show();
-                    receberDadosTela1();
-                    try{
-                        String cpf = String.valueOf(campoCpf.getText().toString()).replace(".","").replace("-","");
-                        callServerCpf(cpf);
-                        if (retornoCpf.contains(cpf)){
-                            Log.i("Script", Sessao.instance.getResposta());
-                            campoCpf.requestFocus();
-                            campoCpf.setError("CPF JÁ CADASTRADO");
-                        }else{
-                            cadastrarMuverUser();
-                            Log.i("Script", Sessao.instance.getResposta());
-                            Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
-                            finish();
-                        }
-                    }catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
+                cadastro();
             }
         });
+    }
+
+    private void cadastro() {
+        if (verificarCampos()){
+            if(isOnline()){
+                receberDadosTela1();
+                try{
+                    String cpf = String.valueOf(campoCpf.getText().toString()).replace(".","").replace("-","");
+                    callServerCpf(cpf);
+                    if (retornoCpf.contains(cpf)){
+                        Log.i("Script", Sessao.instance.getResposta());
+                        campoCpf.requestFocus();
+                        campoCpf.setError("CPF JÁ CADASTRADO");
+                    }else{
+                        cadastrarMuverUser();
+                        Log.i("Script", Sessao.instance.getResposta());
+                        Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                }catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(this, "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private boolean isOnline() {
+        if(ServicoDownload.isNetworkAvailable(getApplicationContext())) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private void cadastrarMuverUser() throws InterruptedException {

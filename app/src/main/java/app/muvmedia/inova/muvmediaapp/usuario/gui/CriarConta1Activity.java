@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
+import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
@@ -48,29 +49,35 @@ public class CriarConta1Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()) {
-                    String user = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
-                    mprogressDialog.show();
-                    try {
-                        callServer(campoEmail.getText().toString());
-                        if (retornoEmail.contains(campoEmail.getText().toString())){
-                            Log.i("Script", "Email encontrado no banco");
-                            campoEmail.requestFocus();
-                            campoEmail.setError("Email já cadastrado");
-                        }
-                        else {
-                            irSegundaTela();
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-//                        cadastrar(user);
-
-//                    cadastrarUser();
-                    mprogressDialog.dismiss();
+                    verificarEmail();
                 }
                 }
 
         });
+    }
+
+    private void verificarEmail() {
+        if(isOnline()){
+            String user = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
+            mprogressDialog.show();
+            try {
+                callServer(campoEmail.getText().toString());
+                if (retornoEmail.contains(campoEmail.getText().toString())){
+                    Log.i("Script", "Email encontrado no banco");
+                    campoEmail.requestFocus();
+                    campoEmail.setError("Email já cadastrado");
+                }
+                else {
+                    irSegundaTela();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mprogressDialog.dismiss();
+        } else {
+            Toast.makeText(this, "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     private void cadastrarUser() {
@@ -142,6 +149,14 @@ private void callServer(final String email)  throws InterruptedException{
         Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);
         it.putExtra("tela1", bundle);
         startActivity(it);
+    }
+
+    private boolean isOnline() {
+        if(ServicoDownload.isNetworkAvailable(getApplicationContext())) {
+            return true;
+        }else{
+            return false;
+        }
     }
 }
 
