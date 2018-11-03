@@ -29,6 +29,7 @@ public class CriarConta2Activity extends AppCompatActivity {
     private Usuario usuario = new Usuario();
     private ProgressDialog dialog;
     private String retornoCpf;
+    private String jsonUsuarioCadastrado="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,6 @@ public class CriarConta2Activity extends AppCompatActivity {
                 if (verificarCampos()){
 //                    dialog.show();
                     receberDadosTela1();
-                    String muverJson = criarMuver();
                     try{
                         String cpf = String.valueOf(campoCpf.getText().toString()).replace(".","").replace("-","");
                         callServerCpf(cpf);
@@ -66,7 +66,7 @@ public class CriarConta2Activity extends AppCompatActivity {
                             campoCpf.requestFocus();
                             campoCpf.setError("CPF JÁ CADASTRADO");
                         }else{
-                            cadastrarMuverUser(muverJson);
+                            cadastrarMuverUser();
                             Log.i("Script", Sessao.instance.getResposta());
                             Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
                             finish();
@@ -80,14 +80,15 @@ public class CriarConta2Activity extends AppCompatActivity {
         });
     }
 
-    private void cadastrarMuverUser(String muver) throws InterruptedException {
+    private void cadastrarMuverUser() throws InterruptedException {
         Gson gson = new Gson();
         String user = gson.toJson(this.usuario);
-        callServerMuver(muver);
         callServerUser(user);
-
+        Usuario usuario = gson.fromJson(jsonUsuarioCadastrado, Usuario.class);
+        this.muver.setUsuario(usuario);
+        String muverJson=criarMuver();
+        callServerMuver(muverJson);
     }
-
 
     private void callServerMuver(final String data) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
@@ -118,7 +119,7 @@ public class CriarConta2Activity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/user",data);
+                jsonUsuarioCadastrado = HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/user",data);
             }
         });
         thread.start();
@@ -174,7 +175,6 @@ public class CriarConta2Activity extends AppCompatActivity {
 //        muver.setSobrenome(campoSobrenome.getText().toString());
         muver.setCpf(cpf);
         muver.setDataDeNascimento(formatarData());
-        muver.setUsuario(this.usuario);
         Gson gson = new Gson();
         String muver = gson.toJson(this.muver);
         return muver;
