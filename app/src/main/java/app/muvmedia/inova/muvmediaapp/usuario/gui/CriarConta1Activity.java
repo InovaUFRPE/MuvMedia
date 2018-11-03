@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 
 import com.google.gson.Gson;
@@ -20,6 +21,7 @@ import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
+import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class CriarConta1Activity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class CriarConta1Activity extends AppCompatActivity {
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private String validar = "";
     private ProgressDialog mprogressDialog;
+    private String retornoEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +51,21 @@ public class CriarConta1Activity extends AppCompatActivity {
                     String user = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                     mprogressDialog.show();
                     try {
-                        cadastrar(user);
+                        callServer(campoEmail.getText().toString());
+                        if (retornoEmail.contains(campoEmail.getText().toString())){
+                            Log.i("Script", "Email encontrado no banco");
+                            campoEmail.requestFocus();
+                            campoEmail.setError("Email já cadastrado");
+                        }
+                        else {
+                            irSegundaTela();
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    cadastrarUser();
+//                        cadastrar(user);
+
+//                    cadastrarUser();
                     mprogressDialog.dismiss();
                 }
                 }
@@ -86,15 +99,17 @@ public class CriarConta1Activity extends AppCompatActivity {
     }
 
     private void cadastrar(String json) throws InterruptedException{
-        callServer("POST",json);
+//        callServer("POST",json);
     }
 
 
-    private void callServer(final String method, final String data)  throws InterruptedException{
-        final Thread thread = new Thread(new Runnable() {
+//    private void callServer(final String method, final String data)  throws InterruptedException{
+private void callServer(final String email)  throws InterruptedException{
+    final Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                validar = HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/user",data);
+                retornoEmail = ServicoHttpMuver.getEmailUser(email);
+//                validar = HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/user",data);
 //                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
 //                Log.i("Script", "ANSWER: "+ answer);
             }
@@ -119,7 +134,10 @@ public class CriarConta1Activity extends AppCompatActivity {
     private void irSegundaTela(){
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
-        Usuario usuario = gson.fromJson(validar, Usuario.class);
+        Usuario usuario = new Usuario();
+        usuario.setEmail(campoEmail.getText().toString());
+        usuario.setPassword(campoSenha.getText().toString());
+//        gson.fromJson(validar, Usuario.class);
         bundle.putSerializable("tripla", usuario);
         Intent it = new Intent(getApplicationContext(), CriarConta2Activity.class);
         it.putExtra("tela1", bundle);

@@ -22,6 +22,72 @@ public class ServicoHttpMuver {
 
     private static String muverUri = "http://muvmedia-api.herokuapp.com/muvers";
 
+
+    public static String getCpfMuver(String cpf) {
+        String url = "http://muvmedia-api.herokuapp.com/public/verify/muver?cpf=" + cpf;
+        String resposta = getMuverCpf(url);
+        return resposta;
+    }
+
+    public static String getMuverCpf(String url){
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(url);
+        httpGet.setHeader("Content-type", "application/json");
+        String answer;
+        try {
+            HttpResponse resposta = httpClient.execute(httpGet);
+            int status = resposta.getStatusLine().getStatusCode();
+            if (status == 200) {
+//                CPF encontrado
+                answer = EntityUtils.toString(resposta.getEntity());
+                Log.i("Script", "ANSWER: "+ answer);
+            } else if (status == 404) {
+                Log.i("Script", "CPF não encontrado");
+                return "CPF não encontrado";
+//                throw new Exception("404. Email não encontrado");
+            } else {
+                Log.i("Script", "400. Erro inesperado");
+                throw new Exception("Erro inesperado");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return answer;
+    }
+
+    public static String getEmailUser(String email) {
+        String url = "http://muvmedia-api.herokuapp.com/public/verify/user?email=" + email;
+        String resposta = getUserEmail(url);
+        return resposta;
+    }
+
+    public static String getUserEmail(String url){
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(url);
+        httpGet.setHeader("Content-type", "application/json");
+        String answer;
+        try {
+            HttpResponse resposta = httpClient.execute(httpGet);
+            int status = resposta.getStatusLine().getStatusCode();
+            if (status == 200) {
+//                Email encontrado
+                answer = EntityUtils.toString(resposta.getEntity());
+                Log.i("Script", "ANSWER: "+ answer);
+            } else if (status == 404) {
+                Log.i("Script", "Email não encontrado");
+                return "Email não encontrado";
+//                throw new Exception("404. Email não encontrado");
+            } else {
+                Log.i("Script", "400. Erro inesperado");
+                throw new Exception("Erro inesperado");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return answer;
+    }
+
+
     public Muver getMuver(String id) {
         String url = muverUri + "/" + id;
         String resposta = this.get(url);

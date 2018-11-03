@@ -1,9 +1,9 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +18,7 @@ import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
+import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class CriarConta2Activity extends AppCompatActivity {
@@ -27,6 +28,7 @@ public class CriarConta2Activity extends AppCompatActivity {
     private Muver muver = new Muver();
     private Usuario usuario = new Usuario();
     private ProgressDialog dialog;
+    private String retornoCpf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,42 +55,70 @@ public class CriarConta2Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()){
-                    dialog.show();
+//                    dialog.show();
                     receberDadosTela1();
-                    String muver = criarMuver();
-                    try {
-                        cadastrar(muver);
-                        if(Sessao.instance.getResposta().contains("EMV01")){
-                            dialog.dismiss();
+                    String muverJson = criarMuver();
+                    try{
+                        String cpf = String.valueOf(campoCpf.getText().toString()).replace(".","").replace("-","");
+                        callServerCpf(cpf);
+                        if (retornoCpf.contains(cpf)){
+                            Log.i("Script", Sessao.instance.getResposta());
                             campoCpf.requestFocus();
                             campoCpf.setError("CPF JÁ CADASTRADO");
-                        } else{
-                            dialog.dismiss();
+                        }else{
+                            cadastrarMuverUser(muverJson);
+                            Log.i("Script", Sessao.instance.getResposta());
                             Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
                             finish();
                         }
-                    } catch (InterruptedException e) {
+                    }catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
-
                 }
 
             }
         });
     }
 
-    private void cadastrar(String json) throws InterruptedException {
-        callServer(json);
+    private void cadastrarMuverUser(String muver) throws InterruptedException {
+        Gson gson = new Gson();
+        String user = gson.toJson(this.usuario);
+        callServerMuver(muver);
+        callServerUser(user);
+
     }
 
-    private void callServer(final String data) throws InterruptedException {
+
+    private void callServerMuver(final String data) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Sessao.instance.setResposta(HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/muver",data));
 //                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
 //                Log.i("Script", "ANSWER: "+ answer);
+            }
+        });
+        thread.start();
+        thread.join();
+    }
+
+
+    private void callServerCpf(final String cpf)  throws InterruptedException{
+        final Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                retornoCpf = ServicoHttpMuver.getCpfMuver(cpf);
+            }
+        });
+        thread.start();
+        thread.join();
+    }
+
+    private void callServerUser(final String data)  throws InterruptedException{
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpConnection.post("https://muvmedia-api.herokuapp.com/public/register/user",data);
             }
         });
         thread.start();
