@@ -38,7 +38,7 @@ public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerVi
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(checkPermission()){
-                Toast.makeText(QrCodeActivity.this, "Necessário Permissão!", Toast.LENGTH_LONG).show();
+                Toast.makeText(QrCodeActivity.this, "Permissões concedidas", Toast.LENGTH_LONG).show();
 
             }else{
                 requestPermission();
