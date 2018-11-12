@@ -28,8 +28,8 @@ public class PerfilFragmentActivity extends Fragment {
         View v = inflater.inflate(R.layout.fragment_perfil, container, false);
         irEditarPerfil(v);
         setBoasVindas(v);
-        setAnuncio(v);
-        setConversoes(v);
+//        setAnuncio(v);
+//        setConversoes(v);
         return v;
     }
 
@@ -39,15 +39,15 @@ public class PerfilFragmentActivity extends Fragment {
         boasVindas.setText("Olá "+nome+"!"); //+nome do muver
     }
 
-    private void setAnuncio(View v){
-       anuncio = v.findViewById(R.id.anuncio);
-       anuncio.setText("Seu anúncio é:"+  Sessao.instance.getCodigo()); //promocao que o muver está anunciando
-    }
-
-    private void setConversoes(View v){
-        conversoes = v.findViewById(R.id.conversoes);
-        conversoes.setText("Suas conversões: 0"); //conversoes do muver
-    }
+//    private void setAnuncio(View v){
+//       anuncio = v.findViewById(R.id.anuncio);
+//       anuncio.setText("Seu anúncio é:"+  Sessao.instance.getCodigo()); //promocao que o muver está anunciando
+//    }
+//
+//    private void setConversoes(View v){
+//        conversoes = v.findViewById(R.id.conversoes);
+//        conversoes.setText("Suas conversões: 0"); //conversoes do muver
+//    }
 
     private void irEditarPerfil(final View v) {
         botaoEditarPerfil = v.findViewById(R.id.editarPerfilButtton);

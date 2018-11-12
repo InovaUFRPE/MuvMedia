@@ -19,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -79,7 +80,10 @@ public class HomeFragmentActivity extends Fragment implements
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
-
+        boolean sucess = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.style_json));
+        if(!sucess){
+            Log.e("MapFragmet", "Erro na aplicacao do estilo");
+        }
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
         enableMyLocation();

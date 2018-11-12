@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setAppContexto() {
         nomeApp = findViewById(R.id.nomeEmp);
-        String fontPath = "fonts/airstrike.ttf";
+        String fontPath = "fonts/teste1.ttf";
         Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
         nomeApp.setTypeface(typeface);
     }

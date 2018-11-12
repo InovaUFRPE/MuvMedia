@@ -18,7 +18,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="216dp"
         android:contentDescription="@string/img_logo"
-        android:src="@drawable/logo"
+        android:src="@drawable/loguinho"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

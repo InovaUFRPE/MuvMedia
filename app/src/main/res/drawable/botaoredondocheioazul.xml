@@ -4,7 +4,7 @@
         android:radius="50dp"
         />
     <solid
-        android:color="@color/regularText"
+        android:color="@color/iconListingTittles"
         />
     <padding
         android:left="0dp"
@@ -18,6 +18,6 @@
         />
     <stroke
         android:width="3dp"
-        android:color="@color/regularText"
+        android:color="@color/iconListingTittles"
         />
 </shape>

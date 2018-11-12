@@ -3,6 +3,7 @@ package app.muvmedia.inova.muvmediaapp.usuario.gui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -26,8 +28,9 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class CriarConta1Activity extends AppCompatActivity {
-    private EditText campoEmail, campoSenha, campoRepetirSenha;
+    private EditText campoEmail, campoSenha;
     private Button botaoProximo;
+    private TextView textView;
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private String validar = "";
     private ProgressDialog mprogressDialog;
@@ -36,7 +39,16 @@ public class CriarConta1Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criar_conta1);
+        setTextViews();
         irCadastro2();
+    }
+
+    private void setTextViews() {
+        textView = findViewById(R.id.textView7);
+        String fontPath = "fonts/teste1.ttf";
+        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
+        textView.setTypeface(typeface);
+
     }
 
     private void irCadastro2() {
