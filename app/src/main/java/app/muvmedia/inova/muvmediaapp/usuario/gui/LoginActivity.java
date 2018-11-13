@@ -42,17 +42,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
-        setAppContexto();
+//        setAppContexto();
         encontrarElementosView();
         cadastrar();
     }
 
-    private void setAppContexto() {
-        nomeApp = findViewById(R.id.nomeEmp);
-        String fontPath = "fonts/teste1.ttf";
-        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
-        nomeApp.setTypeface(typeface);
-    }
+//    private void setAppContexto() {
+//        nomeApp = findViewById(R.id.nomeEmp);
+//        String fontPath = "fonts/teste1.ttf";
+//        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
+//        nomeApp.setTypeface(typeface);
+//    }
 
     private void cadastrar(){
         //this.botaoCadstrar = findViewById(R.id.button2);
