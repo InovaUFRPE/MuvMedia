@@ -33,11 +33,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
     }
 
     private void setUpView() {
-        email = findViewById(R.id.TextEmail);
-        email.setText(usuario.getEmail());
         mudarEmailButton = findViewById(R.id.mudarEmailButton);
         mudarSenhaButton = findViewById(R.id.mudarSenhaButton);
-        voltarButton = findViewById(R.id.buttonVoltar);
         setListners();
     }
 
@@ -53,12 +50,6 @@ public class EditarPerfilActivity extends AppCompatActivity {
             public void onClick(View view) {
                 crateDialogSenha();
 
-            }
-        });
-        this.voltarButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
             }
         });
     }

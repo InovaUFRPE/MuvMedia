@@ -18,8 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:itemBackground="@color/primary"
-        app:itemIconTint="@color/preto"
-        app:itemTextColor="@color/preto"
+        app:itemIconTint="@color/textoBranco"
+        app:itemTextColor="@color/textoBranco"
         app:menu="@menu/navigation"
         tools:layout_editor_absoluteY="500dp" />
 

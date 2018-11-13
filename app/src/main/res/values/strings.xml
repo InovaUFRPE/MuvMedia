@@ -12,7 +12,7 @@
     <string name="Cadastrar">Cadastrar</string>
     <string name="title_activity_bottom_navigation">BottomNavigation</string>
     <string name="title_home">Home</string>
-    <string name="anunciar">Anunciar</string>
+    <string name="codigo">Código</string>
     <string name="perfil">Perfil</string>
     <string name="userFoto" />
     <string name="resgatar_b_nus">Resgatar Bônus</string>
@@ -28,6 +28,6 @@
     <string name="escolha_sua_bandeira">Escolha sua bandeira</string>
     <string name="verifique_o_qr_code">Verifique o QR code</string>
     <string name="clique_em_anunciar">Clique em \'Anunciar\'</string>
-    <string name="doIT">Vamos Lá!!!!</string>
+    <string name="doIT">Aproveite seu cupom!!!!</string>
     <string name="title_activity_maps">Map</string>
 </resources>

@@ -2,7 +2,6 @@ package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,17 +40,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
-        setAppContexto();
+//        setAppContexto();
         encontrarElementosView();
         cadastrar();
     }
 
-    private void setAppContexto() {
-        nomeApp = findViewById(R.id.nomeEmp);
-        String fontPath = "fonts/teste1.ttf";
-        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
-        nomeApp.setTypeface(typeface);
-    }
+//    private void setAppContexto() {
+//        nomeApp = findViewById(R.id.nomeEmp);
+//        String fontPath = "fonts/teste1.ttf";
+//        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
+//        nomeApp.setTypeface(typeface);
+//    }
 
     private void cadastrar(){
         //this.botaoCadstrar = findViewById(R.id.button2);
@@ -106,7 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                         Sessao.instance.setCodigo("");
                         startActivity(intent);
-                        Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
+                        finish();
+//                        Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
                     }
                 }catch (NullPointerException e){
                     throw new MuvMediaException("Conexão interrompida");
