@@ -2,6 +2,7 @@ package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,6 +50,8 @@ public class HomeFragmentActivity extends Fragment implements
     private GoogleMap mMap;
     private Location mLastKnownLocation;
     private static final int Codigo_Local_User = 99;
+
+    private boolean logado;
 
 
     @Nullable
