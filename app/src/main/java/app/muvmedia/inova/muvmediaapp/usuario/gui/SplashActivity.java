@@ -11,6 +11,7 @@ import android.widget.Toast;
 import app.muvmedia.inova.muvmediaapp.infra.Permissoes;
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
+import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 
 public class SplashActivity extends Activity implements Runnable {
 
@@ -30,14 +31,22 @@ public class SplashActivity extends Activity implements Runnable {
         }
     }
     public void run() {
-        startActivity(new Intent(this, LoginActivity.class));
-
-        finish();
+        if(Sessao.instance.getMuver()==null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            Toast.makeText(getApplicationContext(), "Usuario null", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void isOnline() {
         if(ServicoDownload.isNetworkAvailable(getApplicationContext()))
         {
+            if (Sessao.instance.getMuver() != null){
+                Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
+                startActivity(intent);
+                finish();
+                Toast.makeText(getApplicationContext(), Sessao.instance.getMuver().getUsuario().getEmail(), Toast.LENGTH_LONG).show();
+            }
             Toast.makeText(getApplicationContext(), "ONLINE", Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(getApplicationContext(), "Sem conexão com a internet", Toast.LENGTH_LONG).show();
@@ -54,6 +63,22 @@ public class SplashActivity extends Activity implements Runnable {
                 return;
             }
         }
-        run();
+//        run();
     }
+
+//    private void verificaLogado(){
+//        if (Sessao.instance.getMuver() != null){
+//            Sessao.instance.getMuver().getUsuario().getEmail();
+//            Sessao.instance.getMuver().getUsuario().getPassword();
+//            Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
+//            startActivity(intent);
+//            finish();
+//            Toast.makeText(getApplicationContext(), "LOGOOOU", Toast.LENGTH_LONG).show();
+//        }
+//        else {
+//            startActivity(new Intent(this, LoginActivity.class));
+//            finish();
+//            Toast.makeText(getApplicationContext(), "Usuario null", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 }

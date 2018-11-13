@@ -5,28 +5,28 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.mapa.gui.HomeFragmentActivity;
 
 public class BottomNavigation extends AppCompatActivity {
-    Fragment selectedFragment = new HomeFragmentActivity();
+    private Fragment selectedFragment = new HomeFragmentActivity();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_navigation);
         chamarMapaHome();
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(navListener);
 
 
     }
 
-        private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

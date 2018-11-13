@@ -35,6 +35,7 @@ public class PerfilFragmentActivity extends Fragment {
     private Button mudarEmailButton, mudarSenhaButton, voltarButton;
     private Usuario usuario = Sessao.instance.getMuver().getUsuario();
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
+    private ImageView imSair;
 
     @Nullable
     @Override
@@ -45,7 +46,19 @@ public class PerfilFragmentActivity extends Fragment {
 //        setAnuncio(v);
 //        setConversoes(v);
         setUpView(v);
+        exitApp(v);
         return v;
+    }
+
+    private void exitApp(View v){
+        imSair = v.findViewById(R.id.imageView3);
+        imSair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Sessao.instance.setMuver(null);
+                getActivity().finish();
+            }
+        });
     }
 
     private void setBoasVindas(View v) {
@@ -219,9 +232,4 @@ public class PerfilFragmentActivity extends Fragment {
             return false;
         }
     }
-
-
-
-
-
 }

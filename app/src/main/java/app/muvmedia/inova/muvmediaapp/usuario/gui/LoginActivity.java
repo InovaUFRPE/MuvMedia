@@ -104,7 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                         Sessao.instance.setCodigo("");
                         startActivity(intent);
-                        Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
+                        finish();
+//                        Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
                     }
                 }catch (NullPointerException e){
                     throw new MuvMediaException("Conexão interrompida");
