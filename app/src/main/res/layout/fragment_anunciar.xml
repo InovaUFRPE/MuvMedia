@@ -22,7 +22,7 @@
             android:layout_marginTop="56dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="@string/doIT"
+            android:text="Aproveite seu cupom"
             android:textColor="@color/azulescuro"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -42,7 +42,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_toEndOf="@+id/imageView7"
-            android:text="@string/verifique_o_qr_code"
+            android:text="Escaneie o código da placa"
             android:textColor="@color/azulescuro"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -77,28 +77,6 @@
             app:layout_constraintTop_toBottomOf="@+id/nomeEmp4"
             app:srcCompat="@drawable/instruc" />
 
-        <Button
-            android:id="@+id/buttonAnunciar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="116dp"
-            android:background="@drawable/botaoredondocheio"
-            android:text="Escanear Qr"
-            android:textColor="@color/textoBranco"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView11"
-            app:layout_constraintVertical_bias="0.537"
-            tools:text="Anunciar" />
-
         <TextView
             android:id="@+id/nomeEmp4"
             android:layout_width="319dp"
@@ -107,17 +85,38 @@
             android:layout_centerHorizontal="true"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:gravity="center"
-            android:text="@string/instrucoes"
-            android:textColor="@color/preto"
+            android:text="INSTRUÇÕES"
+            android:textColor="@color/primary"
             android:textSize="36dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.507"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/botaoRegistrar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/btnLogin"
+            android:padding="10dp"
+            android:text="Escanear"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView11"
+            app:layout_constraintVertical_bias="0.0" />
+
     </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>

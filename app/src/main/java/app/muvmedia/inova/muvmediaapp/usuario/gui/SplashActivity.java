@@ -34,7 +34,7 @@ public class SplashActivity extends Activity implements Runnable {
         if(Sessao.instance.getMuver()==null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
-            Toast.makeText(getApplicationContext(), "Usuario null", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Usuario null", Toast.LENGTH_SHORT).show();
         }
     }
 

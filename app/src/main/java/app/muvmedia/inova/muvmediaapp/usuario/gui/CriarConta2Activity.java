@@ -40,10 +40,10 @@ public class CriarConta2Activity extends AppCompatActivity {
     }
 
     private void setItensView() {
-        this.campoNome = findViewById(R.id.editText6);
-        this.campoSobrenome = findViewById(R.id.editText7);
-        this.campoCpf = findViewById(R.id.editText10);
-        this.campoNascimento = findViewById(R.id.editText8);
+        this.campoNome = findViewById(R.id.campoNome);
+        this.campoSobrenome = findViewById(R.id.campoSobrenome);
+        this.campoCpf = findViewById(R.id.campoCPF);
+        this.campoNascimento = findViewById(R.id.campoDataNascimento);
         dialog = new ProgressDialog(CriarConta2Activity.this);
         dialog.setTitle("Cadastrando...");
         setMascaras();
@@ -52,7 +52,7 @@ public class CriarConta2Activity extends AppCompatActivity {
 
 
     private void cadastrarConta(){
-        cadastrarConta = findViewById(R.id.button3);
+        cadastrarConta = findViewById(R.id.botaoRegistrar);
         cadastrarConta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
