@@ -2,7 +2,6 @@ package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void cadastrar(){
         //this.botaoCadstrar = findViewById(R.id.button2);
-        this.textCriarConta = findViewById(R.id.textViewCriarConta);
+        this.textCriarConta = findViewById(R.id.textRegistro);
 
         textCriarConta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,11 +66,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void encontrarElementosView() {
-        this.campoEmail = findViewById(R.id.editText4);
-        this.campoSenha = findViewById(R.id.editText5);
+        this.campoEmail = findViewById(R.id.campoEmail);
+        this.campoSenha = findViewById(R.id.campoSenha);
         dialog = new ProgressDialog(LoginActivity.this);
         dialog.setTitle("Verficando dados...");
-        Button botaoLogar = findViewById(R.id.butaozinho);
+        Button botaoLogar = findViewById(R.id.botaoLogin);
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

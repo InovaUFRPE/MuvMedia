@@ -39,22 +39,22 @@ public class CriarConta1Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criar_conta1);
-        setTextViews();
+//        setTextViews();
         irCadastro2();
     }
 
-    private void setTextViews() {
-        textView = findViewById(R.id.textView7);
-        String fontPath = "fonts/teste1.ttf";
-        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
-        textView.setTypeface(typeface);
-
-    }
+//    private void setTextViews() {
+//        textView = findViewById(R.id.textView7);
+////        String fontPath = "fonts/teste1.ttf";
+//        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
+//        textView.setTypeface(typeface);
+//
+//    }
 
     private void irCadastro2() {
-        this.botaoProximo = findViewById(R.id.button);
-        this.campoEmail = findViewById(R.id.editText);
-        this.campoSenha = findViewById(R.id.editText2);
+        this.botaoProximo = findViewById(R.id.botaoRegistrar);
+        this.campoEmail = findViewById(R.id.campoEmail);
+        this.campoSenha = findViewById(R.id.campoSenha);
         mprogressDialog = new ProgressDialog(CriarConta1Activity.this);
         this.mprogressDialog.setMessage("Aguarde...");
         botaoProximo.setOnClickListener(new View.OnClickListener() {

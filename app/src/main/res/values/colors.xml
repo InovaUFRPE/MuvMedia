@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#e60a20</color>
+
+    <!--PRINCIPAL-->
+    <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#8b000f</color>
-    <color name="colorAccent">#654321</color>
+    <color name="colorAccent">#ffb80e</color>
+
+    <color name="btnLogin">#ffb80e</color>
+
     <color name="botaoVermelho">#f53131</color>
     <color name="botaoLaranja">#f9793e</color>
     <color name="textoBranco">#ffffff</color>
@@ -10,11 +15,12 @@
     <color name="principal">#dd0040</color>
     <color name="marrom">#dd0040</color>
     <color name="transparente">#00000000</color>
-    <color name="azulescuro">#21283a</color>>
-    <color name="regularText">#fcb008</color>>
-    <color name="iconListingTittles">#24abe6</color>>
-    <color name="cinzaBignutto">#666666</color>>
-    <color name="primary">#56abff</color>>
+    <color name="azulescuro">#21283a</color>
+    <color name="regularText">#fcb008</color>
+    <color name="iconListingTittles">#e32929</color>
+    <color name="cinzaBignutto">#666666</color>
+    <color name="primary">#982121</color>
+
 
 
 
