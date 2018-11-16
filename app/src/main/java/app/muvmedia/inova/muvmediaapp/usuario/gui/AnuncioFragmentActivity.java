@@ -28,7 +28,7 @@ public class AnuncioFragmentActivity extends Fragment  {
     }
 
     private void setItensView(View v) {
-        anunciarButton = v.findViewById(R.id.buttonAnunciar);
+        anunciarButton = v.findViewById(R.id.escanear);
         anunciarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

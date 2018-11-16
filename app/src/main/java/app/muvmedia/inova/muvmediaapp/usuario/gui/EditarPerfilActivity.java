@@ -33,8 +33,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
     }
 
     private void setUpView() {
-        mudarEmailButton = findViewById(R.id.mudarEmailButton);
-        mudarSenhaButton = findViewById(R.id.mudarSenhaButton);
+//        mudarEmailButton = findViewById(R.id.mudarEmailButton);
+//        mudarSenhaButton = findViewById(R.id.mudarSenhaButton);
         setListners();
     }
 

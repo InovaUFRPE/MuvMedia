@@ -7,6 +7,7 @@
     android:background="@color/cardview_shadow_end_color">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -20,7 +21,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/primary">
 
             <ImageView
                 android:id="@+id/imageView4"
@@ -28,8 +30,8 @@
                 android:layout_height="92dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:contentDescription="@string/userFoto"
@@ -37,6 +39,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.071"
                 app:srcCompat="@drawable/capita1" />
 
             <TextView
@@ -49,7 +52,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:text="Nome Completo"
-                android:textColor="@color/azulescuro"
+                android:textColor="@color/textoBranco"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
@@ -64,10 +67,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
                 android:text="XP: 10/300"
-                android:textColor="@color/azulescuro"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/textoBranco"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
@@ -90,6 +91,39 @@
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
                 app:layout_constraintTop_toBottomOf="@+id/textView2"
                 app:layout_constraintVertical_bias="0.0" />
+
+
+            <Button
+                android:id="@+id/btnMudarEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="72dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:backgroundTint="@color/btnLogin"
+                android:text="MUDAR EMAIL"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
+            <Button
+                android:id="@+id/btnMudarSenha"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:backgroundTint="@color/botaoLaranja"
+                android:text="MUDAR SENHA"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnMudarEmail" />
 
         </android.support.constraint.ConstraintLayout>
 

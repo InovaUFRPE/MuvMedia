@@ -42,7 +42,7 @@ public class PerfilFragmentActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_perfil, container, false);
 //        irEditarPerfil(v);
-        setBoasVindas(v);
+//        setBoasVindas(v);
 //        setAnuncio(v);
 //        setConversoes(v);
         setUpView(v);
@@ -51,25 +51,25 @@ public class PerfilFragmentActivity extends Fragment {
     }
 
     private void exitApp(View v){
-        imSair = v.findViewById(R.id.imageView3);
-        imSair.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Sessao.instance.setMuver(null);
-                getActivity().finish();
-            }
-        });
+//        imSair = v.findViewById(R.id.imageView3);
+//        imSair.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Sessao.instance.setMuver(null);
+//                getActivity().finish();
+//            }
+//        });
     }
 
-    private void setBoasVindas(View v) {
-        boasVindas = v.findViewById(R.id.nomeMuver);
-        String nome = muver.getNome();
-        boasVindas.setText("Olá "+nome+"!"); //+nome do muver
-    }
+//    private void setBoasVindas(View v) {
+//        boasVindas = v.findViewById(R.id.nomeMuver);
+//        String nome = muver.getNome();
+//        boasVindas.setText("Olá "+nome+"!"); //+nome do muver
+//    }
 
     private void setUpView(View v) {
-        mudarEmailButton = v.findViewById(R.id.mudarEmailButton);
-        mudarSenhaButton = v.findViewById(R.id.mudarSenhaButton);
+        mudarEmailButton = v.findViewById(R.id.btnMudarEmail);
+        mudarSenhaButton = v.findViewById(R.id.btnMudarSenha);
         setListners();
     }
 
