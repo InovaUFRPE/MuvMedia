@@ -45,7 +45,7 @@ public class SplashActivity extends Activity implements Runnable {
                 Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                 startActivity(intent);
                 finish();
-                Toast.makeText(getApplicationContext(), Sessao.instance.getMuver().getUsuario().getEmail(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), Sessao.instance.getMuver().getUsuario().getEmail(), Toast.LENGTH_LONG).show();
             }
 //            Toast.makeText(getApplicationContext(), "ONLINE", Toast.LENGTH_LONG).show();
         }else{
