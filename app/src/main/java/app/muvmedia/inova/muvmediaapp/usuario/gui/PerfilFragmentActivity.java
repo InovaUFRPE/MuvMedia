@@ -31,6 +31,7 @@ public class PerfilFragmentActivity extends Fragment {
     private Button mudarEmailButton, mudarSenhaButton;
     private Usuario usuario = Sessao.instance.getMuver().getUsuario();
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
+    private TextView nome;
     private ImageView imSair;
 
     @Nullable
@@ -58,6 +59,8 @@ public class PerfilFragmentActivity extends Fragment {
     private void setUpView(View v) {
         mudarEmailButton = v.findViewById(R.id.btnMudarEmail);
         mudarSenhaButton = v.findViewById(R.id.btnMudarSenha);
+        nome = v.findViewById(R.id.textView2);
+        nome.setText(Sessao.instance.getMuver().getNome());
         setListners();
     }
 
