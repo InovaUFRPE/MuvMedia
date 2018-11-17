@@ -20,7 +20,6 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class EditarPerfilActivity extends AppCompatActivity {
-    private TextView email;
     private Button mudarEmailButton, mudarSenhaButton, voltarButton;
     private Usuario usuario = Sessao.instance.getMuver().getUsuario();
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
@@ -134,7 +133,6 @@ public class EditarPerfilActivity extends AppCompatActivity {
                     } else {
                         dialog.dismiss();
                         Toast.makeText(EditarPerfilActivity.this, "Editado com sucesso", Toast.LENGTH_SHORT).show();
-                        this.email.setText(email);
                     }
 //                    }
                 } catch (Exception e) {

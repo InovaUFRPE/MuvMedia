@@ -33,20 +33,16 @@ import static android.content.ContentValues.TAG;
 
 public class HomeTeste extends Fragment implements OnMapReadyCallback {
 
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private Boolean locationPermissionGranted = false;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private GoogleMap mapa;
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private static final float ZOOM = 15f;
-
+    private final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private boolean mLocationPermissionGranted = false;
+    private static final int LOCATION_REQUEST_PERMISSION_CODE = 1;
+    private GoogleMap mMap;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-
         return v;
     }
 
@@ -63,89 +59,49 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(getContext(), "Mapa is Ready", Toast.LENGTH_SHORT).show();
-        mapa = googleMap;
-        if (locationPermissionGranted) {
-            getDeviceLocation();
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            mapa.setMyLocationEnabled(true);
-        }
+        Toast.makeText(getContext(), "Ma is Ready", Toast.LENGTH_SHORT).show();
+        mMap = googleMap;
     }
 
 
     private void iniciarMapa(){
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapinha1);
-        mapFragment.getMapAsync(this);
-
-    }
-
-    private void getDeviceLocation(){
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        try{
-            if (locationPermissionGranted){
-                Task location = fusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()){
-                            Log.d(TAG, "onComplete: Encontrou o local");
-                            Location currentLocation = (Location) task.getResult();
-                            moverCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), ZOOM);
-                        }
-                        else{
-                            Log.d(TAG, "onComplete: Não encontrou o local");
-                            Toast.makeText(getContext(), "Não pode encontrar sua localização'", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });
-            }
-        }
-        catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecutiryException"+ e.getMessage());
-        }
-    }
-
-    private void moverCamera(LatLng latLng, float zoom){
-        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        mapFragment.getMapAsync(HomeTeste.this);
     }
 
     private void getLocationPermission(){
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION};
-
-        if(ContextCompat.checkSelfPermission(getContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if (ContextCompat.checkSelfPermission(getContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                locationPermissionGranted = true;
-                iniciarMapa();
+        Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (ContextCompat.checkSelfPermission(getContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(getContext(),
+                    COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                mLocationPermissionGranted = true;
+            } else{
+                ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_REQUEST_PERMISSION_CODE);
             }
-            else{
-                ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            }
-        }
-        else{
-            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
+        } else{
+            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_REQUEST_PERMISSION_CODE);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        locationPermissionGranted = false;
+        mLocationPermissionGranted = false;
+
         switch (requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE:{
-                for (int i=0; i < grantResults.length; i++) {
-                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                        locationPermissionGranted = false;
-                        return;
+            case LOCATION_REQUEST_PERMISSION_CODE:{
+                if (grantResults.length > 0){
+                    for (int i = 0; i < grantResults.length; i++){
+                        if(grantResults[i] == PackageManager.PERMISSION_GRANTED){
+                            mLocationPermissionGranted = false;
+                            return;
+                        }
                     }
+                    mLocationPermissionGranted = true;
+                    //Inicializar mapa
+                    iniciarMapa();
                 }
-                locationPermissionGranted = true;
-                iniciarMapa();
             }
         }
     }

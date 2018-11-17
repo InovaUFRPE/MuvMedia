@@ -24,15 +24,11 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class PerfilFragmentActivity extends Fragment {
-    private TextView boasVindas;
-    private TextView anuncio;
-    private TextView conversoes;
-    private ImageView botaoEditarPerfil;
     private Muver muver = Sessao.instance.getMuver();
 
 
     private TextView email;
-    private Button mudarEmailButton, mudarSenhaButton, voltarButton;
+    private Button mudarEmailButton, mudarSenhaButton;
     private Usuario usuario = Sessao.instance.getMuver().getUsuario();
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private ImageView imSair;
@@ -41,16 +37,14 @@ public class PerfilFragmentActivity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_perfil, container, false);
-//        irEditarPerfil(v);
-//        setBoasVindas(v);
-//        setAnuncio(v);
-//        setConversoes(v);
         setUpView(v);
-        exitApp(v);
+//        exitApp(v);
         return v;
     }
 
-    private void exitApp(View v){
+
+//TODO      Método desativado comentado
+//    private void exitApp(View v){
 //        imSair = v.findViewById(R.id.imageView3);
 //        imSair.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -59,12 +53,6 @@ public class PerfilFragmentActivity extends Fragment {
 //                getActivity().finish();
 //            }
 //        });
-    }
-
-//    private void setBoasVindas(View v) {
-//        boasVindas = v.findViewById(R.id.nomeMuver);
-//        String nome = muver.getNome();
-//        boasVindas.setText("Olá "+nome+"!"); //+nome do muver
 //    }
 
     private void setUpView(View v) {
@@ -175,7 +163,7 @@ public class PerfilFragmentActivity extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                     resultado = e.getMessage();
-                    Toast.makeText(getActivity(), resultado, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), resultado, Toast.LENGTH_SHORT).show();
                     changeEmail.setError("Email em uso");
                 }
             } else {

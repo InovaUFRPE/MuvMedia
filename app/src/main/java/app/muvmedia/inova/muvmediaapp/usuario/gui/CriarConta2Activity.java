@@ -1,17 +1,25 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
 import com.google.gson.Gson;
+
+import java.util.Calendar;
 
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
@@ -23,31 +31,71 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class CriarConta2Activity extends AppCompatActivity {
-    private EditText campoNome, campoSobrenome, campoCpf, campoNascimento;
+    private EditText campoNome, campoSobrenome, campoCpf;
+//    private TextView campoNascimento;
+    private EditText campoNascimento;
     private Button cadastrarConta;
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private Muver muver = new Muver();
     private Usuario usuario = new Usuario();
     private ProgressDialog dialog;
-    private String retornoCpf;
+    private String retornoCpf, nascimento;
     private String jsonUsuarioCadastrado="";
+    private int dia, mes, ano, diaX, mesX, anoX;
+    private DatePickerDialog.OnDateSetListener dateSetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criar_conta2);
         setItensView();
+        setDatePicker();
     }
 
     private void setItensView() {
         this.campoNome = findViewById(R.id.campoNome);
         this.campoSobrenome = findViewById(R.id.campoSobrenome);
         this.campoCpf = findViewById(R.id.campoCPF);
-        this.campoNascimento = findViewById(R.id.campoDataNascimento);
+        this.campoNascimento = findViewById(R.id.campoNascimento2);
         dialog = new ProgressDialog(CriarConta2Activity.this);
         dialog.setTitle("Cadastrando...");
         setMascaras();
         cadastrarConta();
+    }
+
+    private void setDatePicker(){
+        campoNascimento.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar c = Calendar.getInstance();
+                ano = c.get(Calendar.YEAR);
+                mes = c.get(Calendar.MONTH);
+                dia = c.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog nascimentoDialog = new DatePickerDialog(
+                        CriarConta2Activity.this, dateSetListener,
+                        ano, mes, dia);
+                nascimentoDialog.show();
+            }
+        });
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                int mes = new Integer(month);
+                mes = mes+1;
+                String mesStr = String.valueOf(mes);
+                if (mesStr.length() == 1){
+                    mesStr = "0"+mesStr;
+                }
+
+                String dia = String.valueOf(dayOfMonth);
+                if (dia.length() == 1){
+                    dia = "0"+dia;
+                }
+                campoNascimento.setText(dia+"/"+mesStr+"/"+year);
+//                nascimento = dia, mesStr, year);
+                nascimento = year+"-"+mesStr+"-"+dia;
+            }
+        };
     }
 
 
@@ -161,12 +209,15 @@ public class CriarConta2Activity extends AppCompatActivity {
             campoCpf.requestFocus();
             return false;
         }
-        else if (!servicoValidacao.validadorAnoMesDia(nascimento)){
-            campoNascimento.setError("Data de nascimento inválida");
-            return false;
-        }
+//        else if (!servicoValidacao.validadorAnoMesDia(nascimento)){
+//            campoNascimento.setError("Data de nascimento inválida");
+//            campoNascimento.requestFocus();
+//            return false;
+//        }
         else if (!servicoValidacao.validarMaiorIdade(nascimento)){
-            campoNascimento.setError("Precisa ser maior de idade");
+//            campoNascimento.setError("Precisa ser maior de idade");
+            Toast.makeText(getApplicationContext(), "Precisa ser maior de idade", Toast.LENGTH_SHORT).show();
+//            campoNascimento.requestFocus();
             return false;
         }
         else {
@@ -179,9 +230,9 @@ public class CriarConta2Activity extends AppCompatActivity {
         MaskTextWatcher setMaskCpf =  new MaskTextWatcher(campoCpf, cpf);
         campoCpf.addTextChangedListener(setMaskCpf);
 
-        SimpleMaskFormatter nascimento = new SimpleMaskFormatter("NN/NN/NNNN");
-        MaskTextWatcher setMaskNasc =  new MaskTextWatcher(campoNascimento, nascimento);
-        campoNascimento.addTextChangedListener(setMaskNasc);
+//        SimpleMaskFormatter nascimento = new SimpleMaskFormatter("NN/NN/NNNN");
+//        MaskTextWatcher setMaskNasc =  new MaskTextWatcher(campoNascimento, nascimento);
+//        campoNascimento.addTextChangedListener(setMaskNasc);
     }
 
     private String criarMuver(){
@@ -189,20 +240,18 @@ public class CriarConta2Activity extends AppCompatActivity {
         muver.setNome(campoNome.getText().toString());
 //        muver.setSobrenome(campoSobrenome.getText().toString());
         muver.setCpf(cpf);
-        muver.setDataDeNascimento(formatarData());
+        muver.setDataDeNascimento(nascimento);
         Gson gson = new Gson();
         String muver = gson.toJson(this.muver);
         return muver;
     }
 
-    private String formatarData(){
-        String ano = campoNascimento.getText().toString().substring(6, 10);
-        String mes = campoNascimento.getText().toString().substring(3, 5);
-        String dia = campoNascimento.getText().toString().substring(0, 2);
-        String nascimento = ano+"-"+mes+"-"+dia;
-
-        return nascimento;
-    }
+//    private void formatarData(String dia, String mes, int ano){
+////        String ano = campoNascimento.getText().toString().substring(6, 10);
+////        String mes = campoNascimento.getText().toString().substring(3, 5);
+////        String dia = campoNascimento.getText().toString().substring(0, 2);
+//        nascimento = ano+"-"+mes+"-"+dia;
+//    }
 
     private void receberDadosTela1(){
         Bundle bundle = getIntent().getBundleExtra("tela1");
@@ -210,4 +259,20 @@ public class CriarConta2Activity extends AppCompatActivity {
             this.usuario = (Usuario) bundle.getSerializable("tripla");
             }
     }
+//
+//    @Override
+//    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//        int mes = new Integer(month);
+//        mes = mes+1;
+//        String mesStr = String.valueOf(mes);
+//        if (mesStr.length() == 1){
+//            mesStr = "0"+mesStr;
+//        }
+//
+//        String dia = String.valueOf(dayOfMonth);
+//        if (dia.length() == 1){
+//            dia = "0"+dia;
+//        }
+//        campoNascimento.setText(dia+"/"+mesStr+"/"+year);
+//    }
 }

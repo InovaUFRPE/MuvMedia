@@ -47,7 +47,7 @@ public class SplashActivity extends Activity implements Runnable {
                 finish();
                 Toast.makeText(getApplicationContext(), Sessao.instance.getMuver().getUsuario().getEmail(), Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(getApplicationContext(), "ONLINE", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "ONLINE", Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(getApplicationContext(), "Sem conexão com a internet", Toast.LENGTH_LONG).show();
         }
