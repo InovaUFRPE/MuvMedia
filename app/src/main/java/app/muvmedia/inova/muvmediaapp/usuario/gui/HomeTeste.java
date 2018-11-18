@@ -1,6 +1,5 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -45,10 +44,10 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback {
 
     private final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private boolean mLocationPermissionGranted = false;
-    private static final int LOCATION_REQUEST_PERMISSION_CODE = 1234;
+    private boolean permitirLocalizacao = false;
+    private static final int CODIGO_PERMISSAO_SOLICITACAO_RESULTADO = 1234;
     private GoogleMap mMap;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private FusedLocationProviderClient provedorLocalizacaoCliente;
     private static final float ZOOM = 17f;
 
     private EditText buscaMapa;
@@ -73,7 +72,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getLocationPermission();
+        getPermissaoLocalizacao();
     }
 
     private void buscarMapa(){
@@ -92,7 +91,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback {
         gpsMapa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDeviceLocation();
+                getLocalizacaoAparelho();
             }
         });
     }
@@ -108,31 +107,24 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback {
         }
         if (lista.size() > 0){
             Address endereco = lista.get(0);
-//            Toast.makeText(getContext(), endereco.toString(), Toast.LENGTH_SHORT).show();
             moverCamera(new LatLng(endereco.getLatitude(), endereco.getLongitude()), ZOOM, endereco.getAddressLine(0));
         }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-//        Toast.makeText(getContext(), "Map is Ready", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
-        if (mLocationPermissionGranted) {
-            getDeviceLocation();
+        if (permitirLocalizacao) {
+            getLocalizacaoAparelho();
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
+            //setar minha localização
             mMap.setMyLocationEnabled(true);
+            //desativar o botão de localização do google maps para não ficar atrás da barra de pesquisa
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             buscarMapa();
 
@@ -146,11 +138,11 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback {
     }
 
 
-    private void getDeviceLocation(){
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+    private void getLocalizacaoAparelho(){
+        provedorLocalizacaoCliente = LocationServices.getFusedLocationProviderClient(getActivity());
         try{
-            if (mLocationPermissionGranted){
-                final Task location = mFusedLocationProviderClient.getLastLocation();
+            if (permitirLocalizacao){
+                final Task location = provedorLocalizacaoCliente.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
@@ -185,38 +177,37 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback {
     }
 
 
-    private void getLocationPermission(){
+    private void getPermissaoLocalizacao(){
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION};
         if (ContextCompat.checkSelfPermission(getContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             if (ContextCompat.checkSelfPermission(getContext(),
                     COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                mLocationPermissionGranted = true;
+                permitirLocalizacao = true;
                 iniciarMapa();
             } else{
-                ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_REQUEST_PERMISSION_CODE);
+                ActivityCompat.requestPermissions(getActivity(), permissions, CODIGO_PERMISSAO_SOLICITACAO_RESULTADO);
             }
         } else{
-            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_REQUEST_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(getActivity(), permissions, CODIGO_PERMISSAO_SOLICITACAO_RESULTADO);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        mLocationPermissionGranted = false;
+        permitirLocalizacao = false;
 
         switch (requestCode){
-            case LOCATION_REQUEST_PERMISSION_CODE:{
+            case CODIGO_PERMISSAO_SOLICITACAO_RESULTADO:{
                 if (grantResults.length > 0){
                     for (int i = 0; i < grantResults.length; i++){
                         if(grantResults[i] == PackageManager.PERMISSION_GRANTED){
-                            mLocationPermissionGranted = false;
+                            permitirLocalizacao = false;
                             return;
                         }
                     }
-                    mLocationPermissionGranted = true;
-                    //Inicializar mapa
+                    permitirLocalizacao = true;
                     iniciarMapa();
                 }
             }
