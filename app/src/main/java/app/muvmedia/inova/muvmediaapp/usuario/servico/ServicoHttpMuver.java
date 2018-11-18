@@ -1,5 +1,6 @@
 package app.muvmedia.inova.muvmediaapp.usuario.servico;
 
+import android.renderscript.Script;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -138,6 +139,26 @@ public class ServicoHttpMuver {
             usuario = gson.fromJson(resposta, Usuario.class);
         }
         return usuario;
+    }
+
+
+    public Muver updateMuver(Muver muver) throws Exception {
+        String idMuver = muver.getId();
+//        String muverUrl = muverUri + "/" + idMuver;
+        Gson gson = new Gson();
+        String muverString = gson.toJson(muver);
+        String resposta;
+        try {
+            resposta = this.put(muverUri, muverString);
+        } catch (Exception e){
+            throw new Exception("Erro");
+        }
+//        String resposta = this.put(userUrl, userString);
+        if (resposta != null) {
+            muver = gson.fromJson(resposta, Muver.class);
+        }
+        Log.i("Script", "Resposta: "+ resposta);
+        return muver;
     }
 
     private static String get(String url) {

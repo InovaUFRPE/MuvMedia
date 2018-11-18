@@ -2,8 +2,6 @@ package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
@@ -39,9 +35,9 @@ public class CriarConta2Activity extends AppCompatActivity {
     private Muver muver = new Muver();
     private Usuario usuario = new Usuario();
     private ProgressDialog dialog;
-    private String retornoCpf, nascimento;
+    private String retornoCpf, nascimentoVerificar, nascimento;
     private String jsonUsuarioCadastrado="";
-    private int dia, mes, ano, diaX, mesX, anoX;
+    private int dia, mes, ano;
     private DatePickerDialog.OnDateSetListener dateSetListener;
 
     @Override
@@ -92,7 +88,9 @@ public class CriarConta2Activity extends AppCompatActivity {
                     dia = "0"+dia;
                 }
                 campoNascimento.setText(dia+"/"+mesStr+"/"+year);
-//                nascimento = dia, mesStr, year);
+//                nascimentoVerificar = dia, mesStr, year);
+//                nascimentoVerificar = year+"-"+mesStr+"-"+dia;
+                nascimentoVerificar = dia+"-"+mesStr+"-"+year;
                 nascimento = year+"-"+mesStr+"-"+dia;
             }
         };
@@ -123,7 +121,7 @@ public class CriarConta2Activity extends AppCompatActivity {
                     }else{
                         cadastrarMuverUser();
                         Log.i("Script", Sessao.instance.getResposta());
-                        Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(CriarConta2Activity.this, "Conta Criada", Toast.LENGTH_LONG).show();
                         finish();
                     }
                 }catch (InterruptedException e) {
@@ -209,8 +207,8 @@ public class CriarConta2Activity extends AppCompatActivity {
             campoCpf.requestFocus();
             return false;
         }
-//        else if (!servicoValidacao.validadorAnoMesDia(nascimento)){
-//            campoNascimento.setError("Data de nascimento inválida");
+//        else if (!servicoValidacao.validadorAnoMesDia(nascimentoVerificar)){
+//            campoNascimento.setError("Data de nascimentoVerificar inválida");
 //            campoNascimento.requestFocus();
 //            return false;
 //        }
@@ -230,8 +228,8 @@ public class CriarConta2Activity extends AppCompatActivity {
         MaskTextWatcher setMaskCpf =  new MaskTextWatcher(campoCpf, cpf);
         campoCpf.addTextChangedListener(setMaskCpf);
 
-//        SimpleMaskFormatter nascimento = new SimpleMaskFormatter("NN/NN/NNNN");
-//        MaskTextWatcher setMaskNasc =  new MaskTextWatcher(campoNascimento, nascimento);
+//        SimpleMaskFormatter nascimentoVerificar = new SimpleMaskFormatter("NN/NN/NNNN");
+//        MaskTextWatcher setMaskNasc =  new MaskTextWatcher(campoNascimento, nascimentoVerificar);
 //        campoNascimento.addTextChangedListener(setMaskNasc);
     }
 
@@ -250,7 +248,7 @@ public class CriarConta2Activity extends AppCompatActivity {
 ////        String ano = campoNascimento.getText().toString().substring(6, 10);
 ////        String mes = campoNascimento.getText().toString().substring(3, 5);
 ////        String dia = campoNascimento.getText().toString().substring(0, 2);
-//        nascimento = ano+"-"+mes+"-"+dia;
+//        nascimentoVerificar = ano+"-"+mes+"-"+dia;
 //    }
 
     private void receberDadosTela1(){
