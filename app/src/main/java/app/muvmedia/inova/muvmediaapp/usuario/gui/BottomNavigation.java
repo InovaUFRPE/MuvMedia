@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import app.muvmedia.inova.muvmediaapp.R;
-import app.muvmedia.inova.muvmediaapp.mapa.gui.HomeFragmentActivity;
 
 public class BottomNavigation extends AppCompatActivity {
     private Fragment selectedFragment = new HomeTeste();

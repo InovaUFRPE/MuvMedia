@@ -143,7 +143,7 @@ public class ServicoHttpMuver {
 
 
     public Muver updateMuver(Muver muver) throws Exception {
-        String idMuver = muver.getId();
+//        String idMuver = muver.getId();
 //        String muverUrl = muverUri + "/" + idMuver;
         Gson gson = new Gson();
         String muverString = gson.toJson(muver);

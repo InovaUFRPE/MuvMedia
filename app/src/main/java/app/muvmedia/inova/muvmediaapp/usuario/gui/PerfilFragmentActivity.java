@@ -19,7 +19,6 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 import app.muvmedia.inova.muvmediaapp.R;
-import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
@@ -32,14 +31,17 @@ public class PerfilFragmentActivity extends Fragment {
 
 
     private TextView email;
-    private Button mudarEmailButton, mudarSenhaButton, mudarDataNascimento;
-    private Usuario usuario = Sessao.instance.getMuver().getUsuario();
+    private Button alterarInformações;
+    private Usuario usuario = Sessao.instance.getSailor().getUser();
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private TextView nome;
     private ImageView imSair;
     private int dia, mes, ano;
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private String nascimento;
+
+    private EditText changeEmail, changeSenha, changeNome, changeNascimento;
+
 
     @Nullable
     @Override
@@ -64,39 +66,23 @@ public class PerfilFragmentActivity extends Fragment {
 //    }
 
     private void setUpView(View v) {
-        mudarEmailButton = v.findViewById(R.id.btnMudarEmail);
-        mudarSenhaButton = v.findViewById(R.id.btnMudarSenha);
-        mudarDataNascimento= v.findViewById(R.id.dataNascimento);
+        alterarInformações = v.findViewById(R.id.btnAlterarInfo);
         nome = v.findViewById(R.id.textView2);
-        nome.setText(Sessao.instance.getMuver().getNome());
+//        nome.setText(Sessao.instance.getMuver().getNome());
         setListners();
     }
 
     private void setListners() {
-        this.mudarEmailButton.setOnClickListener(new View.OnClickListener() {
+        this.alterarInformações.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createDialogEmail();
-            }
-        });
-        this.mudarSenhaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                crateDialogSenha();
-
-            }
-        });
-
-        this.mudarDataNascimento.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setDatePicker();
+                createDialogInformacoes();
             }
         });
     }
 
     private void setDatePicker(){
-        mudarDataNascimento.setOnClickListener(new View.OnClickListener() {
+        changeNascimento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar c = Calendar.getInstance();
@@ -123,67 +109,41 @@ public class PerfilFragmentActivity extends Fragment {
                 if (dia.length() == 1){
                     dia = "0"+dia;
                 }
-//                campoNascimento.setText(dia+"/"+mesStr+"/"+year);
-//                nascimento = dia, mesStr, year);
-//                nascimento = year+"-"+mesStr+"-"+dia;
                 nascimento = dia+"-"+mesStr+"-"+year;
                 if (!servicoValidacao.validarIdade(nascimento)){
                     Toast.makeText(getActivity(), "Precisa ser maior de idade", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    nascimento = year+"-"+mesStr+"-"+dia;
-                    alterarNascimento(nascimento);
+                    nascimento = dia+"-"+mesStr+"-"+year;
+                    changeNascimento.setText(nascimento);
                 }
             }
         };
     }
 
-    private void alterarNascimento(String nascimento){
-        if(isOnline()){
-            muver.setDataDeNascimento(nascimento);
-            try{
-                mudarNascimento(nascimento);
-                Toast.makeText(getActivity(), "Editado com sucesso", Toast.LENGTH_SHORT).show();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(getActivity(), "Erro inesperado", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else {
-            Toast.makeText(getActivity(), "Sem conexão com a Internet", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    private void crateDialogSenha() {
+    private void createDialogInformacoes() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
-        View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_senha, null);
-        final EditText changeSenha = mView.findViewById(R.id.senhaChange);
-        Button buttonChangeSenha = mView.findViewById(R.id.buttonConfirmarMudarSenha);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_inform, null);
+        changeEmail = mView.findViewById(R.id.emailChange);
+        changeSenha = mView.findViewById(R.id.novaSenha);
+        changeNome = mView.findViewById(R.id.novoNome);
+        changeNascimento = mView.findViewById(R.id.novoNascimento);
+        Button buttonChangeInfo = mView.findViewById(R.id.buttonConfirmarAlteracoes);
+        changeEmail.setText(usuario.getEmail());
+        changeNome.setText(Sessao.instance.getSailor().getName());
+        formatarNasc(Sessao.instance.getSailor().getBirthday());
+        changeNascimento.setText(nascimento);
+        setDatePicker();
         mBuilder.setView(mView);
         final AlertDialog dialog = mBuilder.create();
         dialog.show();
-        buttonChangeSenha.setOnClickListener(new View.OnClickListener() {
+        buttonChangeInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarSenha(changeSenha,dialog);
-            }
-        });
-
-    }
-
-    private void createDialogEmail() {
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
-        View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_email, null);
-        final EditText changeEmail = mView.findViewById(R.id.emailChange);
-        Button buttonChangeEmail = mView.findViewById(R.id.buttonConfirmarMudarEmail);
-        mBuilder.setView(mView);
-        final AlertDialog dialog = mBuilder.create();
-        dialog.show();
-        buttonChangeEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mudarEmail(changeEmail,dialog);
+//                mudarEmail(changeEmail,dialog);
+//                mudarSenha(changeSenha, dialog);
+//                mudarDataNascimento(changeNascimento, dialog);
+//                mudarNome(changeNome, dialog);
             }
         });
     }
@@ -212,11 +172,6 @@ public class PerfilFragmentActivity extends Fragment {
     private void mudarSenhaUsuario(String senha) throws Exception {
         this.usuario.setPassword(senha);
         editarUsuario(this.usuario);
-    }
-
-    private void mudarNascimento(String nascimento) throws Exception{
-        this.muver.setDataDeNascimento(nascimento);
-        callServerMuver(this.muver);
     }
 
     private boolean verificarCampoSenha(EditText changeSenha) {
@@ -263,31 +218,11 @@ public class PerfilFragmentActivity extends Fragment {
         editarUsuario(this.usuario);
     }
 
-    private void callServerMuver(final Muver muver) throws InterruptedException {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
-                try {
-                    Muver muverEditado = servicoHttpMuver.updateMuver(muver);
-                } catch (Exception e) {
-                    Sessao.instance.setResposta("Erro");
-                }
-//                String answer = HttpConnection.getSetDataWeb("https://muvmedia-api.herokuapp.com/public/register/user", method, data);
-//                Log.i("Script", "ANSWER: "+ answer);
-            }
-        });
-        thread.start();
-        thread.join();
-    }
-
-
-
     private void editarUsuario(Usuario usuario) throws Exception {
-        callServer(usuario);
+        callServerUser(usuario);
     }
 
-    private void callServer(final Usuario usuario) throws Exception {
+    private void callServerUser(final Usuario usuario) throws Exception {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -298,7 +233,6 @@ public class PerfilFragmentActivity extends Fragment {
                 } catch (Exception e) {
                     Sessao.instance.setResposta("Erro");
                 }
-                //Sessao.instance.setResposta(usuarioEditado);
             }
         });
         thread.start();
@@ -322,5 +256,15 @@ public class PerfilFragmentActivity extends Fragment {
         }else{
             return false;
         }
+    }
+
+
+    private void formatarNasc(String nasc){
+        String ano = nasc.substring(0, 4);
+
+        String dia = nasc.substring(8, 10);
+
+        String mes = nasc.substring(5, 7);
+        nascimento = dia+"/"+mes+"/"+ano;
     }
 }

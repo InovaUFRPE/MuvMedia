@@ -6,13 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import app.muvmedia.inova.muvmediaapp.R;
-import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
@@ -20,7 +16,7 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class EditarPerfilActivity extends AppCompatActivity {
-    private Button mudarEmailButton, mudarSenhaButton, voltarButton;
+    private Button mudarInformacoes, mudarSenhaButton, voltarButton;
     private Usuario usuario = Sessao.instance.getMuver().getUsuario();
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
 
@@ -32,49 +28,49 @@ public class EditarPerfilActivity extends AppCompatActivity {
     }
 
     private void setUpView() {
-//        mudarEmailButton = findViewById(R.id.mudarEmailButton);
+        mudarInformacoes = findViewById(R.id.btnAlterarInfo);
 //        mudarSenhaButton = findViewById(R.id.mudarSenhaButton);
         setListners();
     }
 
     private void setListners() {
-        this.mudarEmailButton.setOnClickListener(new View.OnClickListener() {
+        this.mudarInformacoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createDialogEmail();
             }
         });
-        this.mudarSenhaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                crateDialogSenha();
-
-            }
-        });
+//        this.mudarSenhaButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                crateDialogSenha();
+//
+//            }
+//        });
     }
 
-    private void crateDialogSenha() {
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditarPerfilActivity.this);
-        View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_senha, null);
-        final EditText changeSenha = mView.findViewById(R.id.senhaChange);
-        Button buttonChangeSenha = mView.findViewById(R.id.buttonConfirmarMudarSenha);
-        mBuilder.setView(mView);
-        final AlertDialog dialog = mBuilder.create();
-        dialog.show();
-        buttonChangeSenha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mudarSenha(changeSenha,dialog);
-            }
-        });
-
-    }
+//    private void crateDialogSenha() {
+//        AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditarPerfilActivity.this);
+//        View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_senha, null);
+//        final EditText changeSenha = mView.findViewById(R.id.senhaChange);
+//        Button buttonChangeSenha = mView.findViewById(R.id.buttonConfirmarMudarSenha);
+//        mBuilder.setView(mView);
+//        final AlertDialog dialog = mBuilder.create();
+//        dialog.show();
+//        buttonChangeSenha.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mudarSenha(changeSenha,dialog);
+//            }
+//        });
+//
+//    }
 
     private void createDialogEmail() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(EditarPerfilActivity.this);
-        View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_email, null);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_inform, null);
         final EditText changeEmail = mView.findViewById(R.id.emailChange);
-        Button buttonChangeEmail = mView.findViewById(R.id.buttonConfirmarMudarEmail);
+        Button buttonChangeEmail = mView.findViewById(R.id.buttonConfirmarAlteracoes);
         mBuilder.setView(mView);
         final AlertDialog dialog = mBuilder.create();
         dialog.show();
