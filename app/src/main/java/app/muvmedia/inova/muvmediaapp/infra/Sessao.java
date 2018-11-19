@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.SessionApi;
 
 public class Sessao {
@@ -36,6 +37,14 @@ public class Sessao {
     }
 
     public void setCodigo(Object valor){ values.put("sessao.codigo", valor); }
+
+    public void setSailor(Object valor){
+        values.put("sessao.sailor", valor);
+    }
+
+    public Sailor getSailor(){
+        return (Sailor) values.get("sessao.sailor");
+    }
 
     public String getCodigo(){
         return (String) values.get("sessao.codigo");

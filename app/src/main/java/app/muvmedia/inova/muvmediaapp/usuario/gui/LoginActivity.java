@@ -13,16 +13,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.MuvMediaException;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 //import app.muvmedia.inova.muvmediaapp.usuario.dominio.Login;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.AppSession;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.SessionApi;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
@@ -59,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         textCriarConta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CriarConta1Activity.class);
+                Intent intent = new Intent(getApplicationContext(), NewCadastroActivity.class);
                 startActivity(intent);
             }
         });
@@ -105,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
                         Sessao.instance.setCodigo("");
                         startActivity(intent);
                         finish();
-//                        Toast.makeText(this, "Logado", Toast.LENGTH_SHORT).show();
                     }
                 }catch (NullPointerException e){
                     throw new MuvMediaException("Conexão interrompida");
@@ -120,9 +116,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getSessaoApi() throws InterruptedException {
         Gson gson = new Gson();
-        SessionApi sessionApi = gson.fromJson(Sessao.instance.getResposta(), SessionApi.class);
-        Sessao.instance.setSession(sessionApi);
-        setMuverApi(sessionApi.getUser());
+        String jj = Sessao.instance.getResposta();
+        AppSession sessionApi = gson.fromJson(Sessao.instance.getResposta(), AppSession.class);
+        Sessao.instance.setSession(sessionApi.getSessionApi());
+        Sessao.instance.setSailor(sessionApi.getSailor());
     }
 
     private void setMuverApi(final Usuario usuario) throws InterruptedException {
@@ -140,16 +137,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void logar(String jason) throws InterruptedException, MuvMediaException {
-        callServer(jason);
+        callServerLogin(jason);
 
     }
 
-    private void callServer(final String data) throws MuvMediaException, InterruptedException {
+    private void callServerLogin(final String data) throws MuvMediaException, InterruptedException {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
-                    Sessao.instance.setResposta(HttpConnection.post("http://muvmedia-api.herokuapp.com/auth/login", data));
+                    Sessao.instance.setResposta(HttpConnection.post("https://capitao-api.herokuapp.com/auth/app/login", data));
                     Log.i("Script", "OLHAAA: "+ Sessao.instance.getResposta());
                 }catch (Exception e){
                     try {
@@ -202,17 +199,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
-    private void montarUsuario(JSONArray jsonArray) throws JSONException {
-        JSONObject jsonObject = jsonArray.getJSONObject(0);
-        Usuario usuario = new Usuario();
-        usuario.set_id(jsonObject.optString("_id"));
-        usuario.setEmail(jsonObject.optString("email"));
-        usuario.setPassword(jsonObject.optString("senha"));
-        //usuario.setMuver()...
-
-        //Sessao.setUsuarioLogado...
-    }
 
 
 

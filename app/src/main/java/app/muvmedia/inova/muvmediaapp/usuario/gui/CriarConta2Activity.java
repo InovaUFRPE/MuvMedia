@@ -212,7 +212,7 @@ public class CriarConta2Activity extends AppCompatActivity {
 //            campoNascimento.requestFocus();
 //            return false;
 //        }
-        else if (!servicoValidacao.validarMaiorIdade(nascimento)){
+        else if (!servicoValidacao.validarIdade(nascimento)){
 //            campoNascimento.setError("Precisa ser maior de idade");
             Toast.makeText(getApplicationContext(), "Precisa ser maior de idade", Toast.LENGTH_SHORT).show();
 //            campoNascimento.requestFocus();

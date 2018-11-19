@@ -127,7 +127,7 @@ public class PerfilFragmentActivity extends Fragment {
 //                nascimento = dia, mesStr, year);
 //                nascimento = year+"-"+mesStr+"-"+dia;
                 nascimento = dia+"-"+mesStr+"-"+year;
-                if (!servicoValidacao.validarMaiorIdade(nascimento)){
+                if (!servicoValidacao.validarIdade(nascimento)){
                     Toast.makeText(getActivity(), "Precisa ser maior de idade", Toast.LENGTH_SHORT).show();
                 }
                 else {

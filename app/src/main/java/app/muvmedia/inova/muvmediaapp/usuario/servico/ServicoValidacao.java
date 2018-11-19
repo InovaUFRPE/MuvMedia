@@ -126,7 +126,7 @@ public class ServicoValidacao {
         }
     }
 
-    public boolean validarMaiorIdade(String nascimento){
+    public boolean validarIdade(String nascimento){
         String ano = nascimento.substring(6, 10);
         int anoDigitado = Integer.parseInt(ano);
 
@@ -141,13 +141,13 @@ public class ServicoValidacao {
         int mesAtual = cal.get(Calendar.MONTH)+1;
         int anoAtual = cal.get(Calendar.YEAR);
 
-        if (anoAtual - anoDigitado > 18) {
+        if (anoAtual - anoDigitado > 10) {
             return true;
         }
-        else if (anoAtual - anoDigitado == 18 && mesDigitado < mesAtual){
+        else if (anoAtual - anoDigitado == 10 && mesDigitado < mesAtual){
             return true;
         }
-        else if(anoAtual - anoDigitado == 18 && mesDigitado == mesAtual && diaDigitado <= diaAtual){
+        else if(anoAtual - anoDigitado == 10 && mesDigitado == mesAtual && diaDigitado <= diaAtual){
             return true;
         }
 
