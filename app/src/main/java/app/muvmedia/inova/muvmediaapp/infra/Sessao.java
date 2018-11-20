@@ -1,13 +1,13 @@
 package app.muvmedia.inova.muvmediaapp.infra;
 
-import java.util.ArrayList;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
-import app.muvmedia.inova.muvmediaapp.usuario.dominio.SessionApi;
-
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Session;
 public class Sessao {
     public static final Sessao instance = new Sessao();
     private final Map<String, Object> values = new HashMap<>();
@@ -28,8 +28,8 @@ public class Sessao {
         values.put("sessao.Session", valor);
     }
 
-    public SessionApi getSession(){
-        return (SessionApi) values.get("sessao.Session");
+    public Session getSession(){
+        return (Session) values.get("sessao.Session");
     }
 
     public void setMuver(Object valor){

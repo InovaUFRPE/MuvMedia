@@ -22,6 +22,7 @@ import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
@@ -33,6 +34,7 @@ public class PerfilFragmentActivity extends Fragment {
     private TextView email;
     private Button alterarInformações;
     private Usuario usuario = Sessao.instance.getSailor().getUser();
+    private Sailor sailor = Sessao.instance.getSailor();
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private TextView nome;
     private ImageView imSair;
@@ -111,7 +113,7 @@ public class PerfilFragmentActivity extends Fragment {
                 }
                 nascimento = dia+"-"+mesStr+"-"+year;
                 if (!servicoValidacao.validarIdade(nascimento)){
-                    Toast.makeText(getActivity(), "Precisa ser maior de idade", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Idade inválida", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     nascimento = dia+"-"+mesStr+"-"+year;
@@ -140,6 +142,24 @@ public class PerfilFragmentActivity extends Fragment {
         buttonChangeInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(validarDados(changeNome, changeNascimento,changeEmail,changeSenha, dialog)){
+                    try {
+                        editarSailor(changeNome, changeNascimento,changeEmail,changeSenha);
+                        if(Sessao.instance.getResposta().equals("Erro")){
+                            changeEmail.setError("Email em uso");
+
+                        }else{
+                            changeEmail.setError("Email em uso");
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), "Editado com sucesso", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (Exception e) {
+                        changeEmail.setError("Erro inesperado");
+                    }
+
+                }
+
 //                mudarEmail(changeEmail,dialog);
 //                mudarSenha(changeSenha, dialog);
 //                mudarDataNascimento(changeNascimento, dialog);
@@ -148,32 +168,80 @@ public class PerfilFragmentActivity extends Fragment {
         });
     }
 
-    private void mudarSenha(EditText changeSenha, AlertDialog dialog){
-        if(verificarCampoSenha(changeSenha)){
-            if(isOnline()){
-                String senha = changeSenha.getText().toString().trim();
-                usuario.setPassword(senha);
-                try {
-                    mudarSenhaUsuario(senha);
-                    dialog.dismiss();
-                    Toast.makeText(getActivity(), "Editado com sucesso", Toast.LENGTH_SHORT).show();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Toast.makeText(getActivity(), "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
-
-            }
-
+    private void editarSailor(EditText changeNome, EditText changeNascimento, EditText changeEmail, EditText changeSenha) throws Exception {
+        this.sailor.setName(changeNome.getText().toString());
+        this.sailor.setBirthday(putBackNasc(nascimento));
+        this.sailor.getUser().setEmail(changeEmail.getText().toString().trim());
+        String password = changeSenha.getText().toString().trim();
+        if(!this.servicoValidacao.verificarCampoVazio(password)){
+            this.sailor.getUser().setPassword(password);
         }
+        if(isOnline()){
+            callServerUser(sailor);
+        } else{
+            Toast.makeText(getActivity(), "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
-    private void mudarSenhaUsuario(String senha) throws Exception {
-        this.usuario.setPassword(senha);
-        editarUsuario(this.usuario);
+//    private void mudarSenha(EditText changeSenha, AlertDialog dialog){
+//        if(verificarCampoSenha(changeSenha)){
+//            if(isOnline()){
+//                String senha = changeSenha.getText().toString().trim();
+//                usuario.setPassword(senha);
+//                try {
+//                    mudarSenhaUsuario(senha);
+//                    dialog.dismiss();
+//                    Toast.makeText(getActivity(), "Editado com sucesso", Toast.LENGTH_SHORT).show();
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                Toast.makeText(getActivity(), "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+//
+//            }
+//
+//        }
+//    }
+
+    private boolean validarDados(EditText nome, EditText data,EditText email, EditText senha, AlertDialog dialog ){
+        if(!verificarCampoNome(nome)){
+            nome.setError("Campo não pode ser vazio");
+            nome.requestFocus();
+            return false;
+        } else if(!verificarCampoEmail(email)){
+            email.setError("Email inválido");
+            return false;
+        } else if(!vefificarSenhaVazia(senha)){
+            if(!verificarCampoSenha(senha)){
+                senha.setError("Sua senha deve ter no mínmo 6 dígitos");
+                return false;
+            }
+        }
+        return true;
     }
 
+    private boolean vefificarSenhaVazia(EditText senha) {
+        String nSenha = senha.getText().toString().trim();
+        if(this.servicoValidacao.verificarCampoVazio(nSenha)) {
+            return true;
+        }
+        return false;
+    }
+
+//    private void mudarSenhaUsuario(String senha) throws Exception {
+//        this.usuario.setPassword(senha);
+//        editarUsuario(this.usuario);
+//    }
+
+    private boolean verificarCampoNome(EditText Changenome){
+        String nome = Changenome.getText().toString();
+        if(this.servicoValidacao.verificarCampoVazio(nome)){
+            return false;
+        }
+        return true;
+    }
     private boolean verificarCampoSenha(EditText changeSenha) {
         String senha = changeSenha.getText().toString().trim();
         if(this.servicoValidacao.verificarCampoSenha(senha)){
@@ -183,52 +251,51 @@ public class PerfilFragmentActivity extends Fragment {
         return true;
     }
 
-    private void mudarEmail(EditText changeEmail, AlertDialog dialog) {
-        if(verificarCampoEmail(changeEmail)){
-            if(isOnline()){
-                String resultado = "Editado com sucesso";
-                try {
-                    String email = changeEmail.getText().toString().trim();
-                    mudarEmailUsuario(email);
-                    if(Sessao.instance.getResposta().contains("Erro")){
-                        changeEmail.setError("Email em uso");
-                    } else {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), "Editado com sucesso", Toast.LENGTH_SHORT).show();
-                        this.email.setText(email);
-                    }
+//    private void mudarEmail(EditText changeEmail, AlertDialog dialog) {
+//        if(verificarCampoEmail(changeEmail)){
+//            if(isOnline()){
+//                String resultado = "Editado com sucesso";
+//                try {
+//                    String email = changeEmail.getText().toString().trim();
+//                    mudarEmailUsuario(email);
+//                    if(Sessao.instance.getResposta().contains("Erro")){
+//                        changeEmail.setError("Email em uso");
+//                    } else {
+//                        dialog.dismiss();
+//                        Toast.makeText(getActivity(), "Editado com sucesso", Toast.LENGTH_SHORT).show();
+//                        this.email.setText(email);
 //                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    resultado = e.getMessage();
-//                    Toast.makeText(getActivity(), resultado, Toast.LENGTH_SHORT).show();
-                    changeEmail.setError("Email em uso");
-                }
-            } else {
-                Toast.makeText(getActivity(), "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
-            }
+////                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    resultado = e.getMessage();
+//                    changeEmail.setError("Email em uso");
+//                }
+//            } else {
+//                Toast.makeText(getActivity(), "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        } else {
+//            changeEmail.setError("Email inválido");
+//        }
+//    }
 
-        } else {
-            changeEmail.setError("Email inválido");
-        }
-    }
+//    private void mudarEmailUsuario(String email) throws Exception {
+//        this.usuario.setEmail(email);
+//        editarUsuario(this.usuario);
+//    }
 
-    private void mudarEmailUsuario(String email) throws Exception {
-        this.usuario.setEmail(email);
-        editarUsuario(this.usuario);
-    }
+//    private void editarUsuario(Sailor usuario) throws Exception {
+//        callServerUser(usuario);
+//    }
 
-    private void editarUsuario(Usuario usuario) throws Exception {
-        callServerUser(usuario);
-    }
-
-    private void callServerUser(final Usuario usuario) throws Exception {
+    private void callServerUser(final Sailor sailor) throws Exception {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
                 try {
-                    Usuario usuarioEditado = servicoHttpMuver.updateUsuario(usuario);
+                    Sailor usuarioEditado = servicoHttpMuver.updateSailor(sailor);
                     Sessao.instance.setResposta("Sucess");
                 } catch (Exception e) {
                     Sessao.instance.setResposta("Erro");
@@ -266,5 +333,16 @@ public class PerfilFragmentActivity extends Fragment {
 
         String mes = nasc.substring(5, 7);
         nascimento = dia+"/"+mes+"/"+ano;
+    }
+
+    private String putBackNasc(String nasc){
+        String ano = nasc.substring(6, 10);
+
+        String dia = nasc.substring(0, 2);
+
+        String mes = nasc.substring(3, 5);
+
+        return ano+"-"+mes+"-"+dia;
+
     }
 }

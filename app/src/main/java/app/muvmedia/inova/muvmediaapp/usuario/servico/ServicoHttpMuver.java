@@ -1,6 +1,5 @@
 package app.muvmedia.inova.muvmediaapp.usuario.servico;
 
-import android.renderscript.Script;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -16,7 +15,7 @@ import org.apache.http.util.EntityUtils;
 
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
-import app.muvmedia.inova.muvmediaapp.usuario.dominio.SessionApi;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 
 public class ServicoHttpMuver {
@@ -123,11 +122,11 @@ public class ServicoHttpMuver {
         return muver;
     }
 
-    public Usuario updateUsuario(Usuario usuario) throws Exception {
-        String idUsuario = usuario.get_id();
-        String userUrl = "http://muvmedia-api.herokuapp.com/users/" + idUsuario;
+    public Sailor updateSailor(Sailor sailor) throws Exception {
+        String idSailor = sailor.get_id();
+        String userUrl = "http://capitao-api.herokuapp.com/sailors/" + idSailor;
         Gson gson = new Gson();
-        String userString = gson.toJson(usuario);
+        String userString = gson.toJson(sailor);
         String resposta;
         try {
             resposta = this.put(userUrl, userString);
@@ -136,9 +135,9 @@ public class ServicoHttpMuver {
         }
 //        String resposta = this.put(userUrl, userString);
         if (resposta != null) {
-            usuario = gson.fromJson(resposta, Usuario.class);
+            sailor = gson.fromJson(resposta, Sailor.class);
         }
-        return usuario;
+        return sailor;
     }
 
 
@@ -228,7 +227,7 @@ public class ServicoHttpMuver {
                 answer = EntityUtils.toString(resposta.getEntity());
                 Log.i("Script", "ANSWER: "+ answer);
             } else if (status == 404) {
-                Erro = "Muver não encontrado";
+                Erro = "Sailor não encontrado";
                 throw new Exception(Erro);
             } else if(status == 400) {
                 Erro = "Email em uso";

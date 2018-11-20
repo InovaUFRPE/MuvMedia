@@ -1,6 +1,6 @@
 package app.muvmedia.inova.muvmediaapp.usuario.dominio;
 
-public class SessionApi {
+public class Session {
     private String token;
     private String _id;
     private Usuario user;

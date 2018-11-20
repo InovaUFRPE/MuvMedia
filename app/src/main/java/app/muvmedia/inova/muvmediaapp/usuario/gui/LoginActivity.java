@@ -21,7 +21,7 @@ import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 //import app.muvmedia.inova.muvmediaapp.usuario.dominio.Login;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.AppSession;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
-import app.muvmedia.inova.muvmediaapp.usuario.dominio.SessionApi;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Session;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
@@ -116,9 +116,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getSessaoApi() throws InterruptedException {
         Gson gson = new Gson();
-        String jj = Sessao.instance.getResposta();
         AppSession sessionApi = gson.fromJson(Sessao.instance.getResposta(), AppSession.class);
-        Sessao.instance.setSession(sessionApi.getSessionApi());
+        Session session = sessionApi.getSession();
+        Sessao.instance.setSession(sessionApi.getSession());
         Sessao.instance.setSailor(sessionApi.getSailor());
     }
 
