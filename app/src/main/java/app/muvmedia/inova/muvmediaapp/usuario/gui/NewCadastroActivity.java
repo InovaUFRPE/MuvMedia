@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -88,6 +89,8 @@ public class NewCadastroActivity extends AppCompatActivity {
                     cadastrar();
                     if (Sessao.instance.getResposta().contains("Usuário já existe")){
                         campoEmail.setError("Email em uso");
+                        Log.i("Teste Cadastro", "Email em uso: "+ Sessao.instance.getResposta());
+
                         campoEmail.requestFocus();
                     } else {
                         finish();

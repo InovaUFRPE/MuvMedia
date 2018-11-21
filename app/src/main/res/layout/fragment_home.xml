@@ -28,7 +28,7 @@
             android:layout_marginLeft="10dp"
             android:src="@drawable/ic_search"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/editBuscaMapa"
             android:layout_width="match_parent"
             android:layout_height="47dp"
@@ -38,6 +38,7 @@
             android:layout_toRightOf="@+id/ic_search"
             android:background="@null"
             android:hint="Buscar um local"
+            android:inputType="textPersonName"
             android:imeOptions="actionSearch"
             android:textColor="@color/preto"
             android:textSize="15sp" />

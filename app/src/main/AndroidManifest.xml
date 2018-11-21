@@ -55,7 +55,6 @@
         <activity
             android:name=".usuario.gui.BottomNavigation"
             android:label="@string/title_activity_bottom_navigation" />
-        <activity android:name=".usuario.gui.EditarPerfilActivity" />
         <activity android:name=".usuario.gui.QrCodeActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -72,10 +71,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name=".mapa.gui.HomeFragmentActivity"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".usuario.gui.NewCadastroActivity"></activity>
+        <activity android:name=".usuario.gui.HomeTeste"/>
+        <activity android:name=".usuario.gui.NewCadastroActivity">
+
+        </activity>
     </application>
 
 </manifest>

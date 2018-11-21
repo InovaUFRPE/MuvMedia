@@ -15,62 +15,51 @@
         android:textSize="25dp"
         android:textStyle="bold" />
 
-    <EditText
+    <TextView
         android:id="@+id/novoNome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:textSize="20sp"
+        android:textColor="@color/preto"
         android:ems="10"
-        android:hint="Novo Nome"
-        android:inputType="textPersonName" />
+        android:text="@string/Nome" />
 
-    <EditText
+    <TextView
         android:id="@+id/novoNascimento"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:hint="@string/DatadeNascimento"
+        android:text="@string/Email"
+        android:textColor="@color/preto"
+        android:textSize="20sp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"/>
 
-    <EditText
+    <TextView
         android:id="@+id/emailChange"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="10"
-        android:hint="@string/novo_email"
-        android:inputType="textEmailAddress"
+        android:textSize="20sp"
+        android:text="@string/DatadeNascimento"
         android:textColor="@color/azulescuro"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"/>
 
-    <EditText
+    <TextView
         android:id="@+id/novaSenha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/nova_senha"
+        android:text="@string/Senha"
+        android:textSize="20sp"
         android:inputType="textPassword"
         android:textColor="@color/azulescuro"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="" />
+        />
 
-    <Button
-        android:id="@+id/buttonConfirmarAlteracoes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/btnLogin"
-        android:padding="10dp"
-        android:text="Confirmar"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
 </LinearLayout>

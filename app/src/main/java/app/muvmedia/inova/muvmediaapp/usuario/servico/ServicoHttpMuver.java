@@ -1,6 +1,8 @@
 package app.muvmedia.inova.muvmediaapp.usuario.servico;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -131,13 +133,15 @@ public class ServicoHttpMuver {
         try {
             resposta = this.put(userUrl, userString);
         } catch (Exception e){
-            throw new Exception("Erro");
+            throw new Exception("Erro Email");
+
         }
 //        String resposta = this.put(userUrl, userString);
         if (resposta != null) {
             sailor = gson.fromJson(resposta, Sailor.class);
         }
         return sailor;
+
     }
 
 
@@ -225,12 +229,14 @@ public class ServicoHttpMuver {
             int status = resposta.getStatusLine().getStatusCode();
             if (status == 200) {
                 answer = EntityUtils.toString(resposta.getEntity());
-                Log.i("Script", "ANSWER: "+ answer);
+                Log.i("Put", "ANSWER: "+ answer);
             } else if (status == 404) {
                 Erro = "Sailor não encontrado";
+                Log.i("Put", "Sailor não encontrado, Status - " + status);
                 throw new Exception(Erro);
             } else if(status == 400) {
                 Erro = "Email em uso";
+                Log.i("Put", "Email em uso, Status - " + status);
                 throw new Exception(Erro);
             } else {
                 Erro = "Erro Inesperado";
