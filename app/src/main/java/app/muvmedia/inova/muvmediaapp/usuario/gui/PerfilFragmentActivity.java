@@ -39,7 +39,7 @@ public class PerfilFragmentActivity extends Fragment {
     private int dia, mes, ano;
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private String nascimento;
-
+    private String ultimoEmail = sailor.getUser().getEmail();
     private TextView changeEmail, changeSenha, changeNome, changeNascimento;
     private EditText edtNome, edtEmail, edtSenha;
 
@@ -203,6 +203,7 @@ public class PerfilFragmentActivity extends Fragment {
                             Toast.makeText(getActivity(), "Editado com sucesso", Toast.LENGTH_SHORT).show();
                         }else{
                             edtEmail.setError("Email em uso");
+                            edtEmail.setText(ultimoEmail);
                             Log.i("Script Update", "Email em uso: "+ Sessao.instance.getResposta());
 
                         }
@@ -290,9 +291,8 @@ public class PerfilFragmentActivity extends Fragment {
                 ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
                 try {
                     servicoHttpMuver.updateSailor(sailor);
-                    Sessao.instance.setResposta("Sucess");
                 } catch (Exception e) {
-                    Sessao.instance.setResposta("Erro");
+                    e.printStackTrace();
                 }
                 //Sessao.instance.setResposta(usuarioEditado);
             }

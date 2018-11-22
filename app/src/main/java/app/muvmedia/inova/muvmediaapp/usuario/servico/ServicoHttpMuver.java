@@ -129,14 +129,13 @@ public class ServicoHttpMuver {
         String userUrl = "http://capitao-api.herokuapp.com/sailors/" + idSailor;
         Gson gson = new Gson();
         String userString = gson.toJson(sailor);
-        String resposta;
+        String resposta = null;
         try {
             resposta = this.put(userUrl, userString);
         } catch (Exception e){
-            throw new Exception("Erro Email");
-
+            e.printStackTrace();
+//            throw new Exception("Erro Email");
         }
-//        String resposta = this.put(userUrl, userString);
         if (resposta != null) {
             sailor = gson.fromJson(resposta, Sailor.class);
         }
@@ -150,11 +149,11 @@ public class ServicoHttpMuver {
 //        String muverUrl = muverUri + "/" + idMuver;
         Gson gson = new Gson();
         String muverString = gson.toJson(muver);
-        String resposta;
+        String resposta = null;
         try {
             resposta = this.put(muverUri, muverString);
         } catch (Exception e){
-            throw new Exception("Erro");
+            e.printStackTrace();
         }
 //        String resposta = this.put(userUrl, userString);
         if (resposta != null) {
@@ -218,7 +217,7 @@ public class ServicoHttpMuver {
         HttpPut httpPut = new HttpPut(url);
         httpPut.setHeader("Content-type", "application/json");
         httpPut.addHeader("Authorization", "Bearer "+ Sessao.instance.getSession().getToken());
-        String answer;
+        String answer = null;
         String Erro = null;
         try {
             StringEntity stringEntity = new StringEntity(body);
@@ -229,21 +228,21 @@ public class ServicoHttpMuver {
             int status = resposta.getStatusLine().getStatusCode();
             if (status == 200) {
                 answer = EntityUtils.toString(resposta.getEntity());
+                Sessao.instance.setResposta("Sucess");
                 Log.i("Put", "ANSWER: "+ answer);
-            } else if (status == 404) {
-                Erro = "Sailor não encontrado";
-                Log.i("Put", "Sailor não encontrado, Status - " + status);
-                throw new Exception(Erro);
-            } else if(status == 400) {
-                Erro = "Email em uso";
-                Log.i("Put", "Email em uso, Status - " + status);
-                throw new Exception(Erro);
+//            } else if (status == 404) {
+//                Erro = "Sailor não encontrado";
+//                Log.i("Put", "Sailor não encontrado, Status - " + status);
+//                throw new Exception(Erro);
+//            } else if(status == 400) {
+//                Erro = "Email em uso";
+//                Log.i("Put", "Email em uso, Status - " + status);
+//                throw new Exception(Erro);
             } else {
-                Erro = "Erro Inesperado";
-                throw new Exception(Erro);
+                Sessao.instance.setResposta("Error");
             }
         } catch (Exception e) {
-            throw new RuntimeException(Erro);
+            e.printStackTrace();
         }
         return answer;
     }
