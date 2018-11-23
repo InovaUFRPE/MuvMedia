@@ -1,6 +1,7 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,10 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
@@ -41,7 +45,7 @@ public class PerfilFragmentActivity extends Fragment {
     private String nascimento;
     private String ultimoEmail = sailor.getUser().getEmail();
     private TextView changeEmail, changeSenha, changeNome, changeNascimento;
-    private EditText edtNome, edtEmail, edtSenha;
+    private EditText edtNome, edtEmail, edtSenha, edtNascimento;
 
 
     @Nullable
@@ -77,10 +81,9 @@ public class PerfilFragmentActivity extends Fragment {
         changeSenha = mView.findViewById(R.id.novaSenha);
         changeNome = mView.findViewById(R.id.novoNome);
         changeNascimento = mView.findViewById(R.id.novoNascimento);
-        changeEmail.setText(usuario.getEmail());
+        changeEmail.setText(ultimoEmail);
         changeNome.setText(Sessao.instance.getSailor().getName());
-        formatarNasc(Sessao.instance.getSailor().getBirthday());
-        changeNascimento.setText(nascimento);
+        changeNascimento.setText(formatarNasc(Sessao.instance.getSailor().getBirthday()));
         mBuilder.setView(mView);
         final AlertDialog dialog = mBuilder.create();
         dialog.show();
@@ -143,6 +146,7 @@ public class PerfilFragmentActivity extends Fragment {
                         }
                         else {
                             Log.i("Script Nome", "Sucesso: "+ Sessao.instance.getResposta());
+                            nome.setText(Sessao.instance.getSailor().getName());
                             dialog.dismiss();
                             Toast.makeText(getActivity(), "Nome Alterado", Toast.LENGTH_SHORT).show();
                         }
@@ -156,25 +160,94 @@ public class PerfilFragmentActivity extends Fragment {
 
     private void dialogNascimento(){
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
-        View mView = getLayoutInflater().inflate(R.layout.dialog_nome_email, null);
-        dialogText = mView.findViewById(R.id.textView6);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_birthday, null);
 
-        dialogText.setText("Alterar Nascimento");
-        edtNome = mView.findViewById(R.id.edtNomeEmailDialog);
-        edtNome.setText(nascimento);
+        edtNascimento = mView.findViewById(R.id.edtDataNascimento);
+        edtNascimento.setText(formatarNasc(Sessao.instance.getSailor().getBirthday()));
 
         mBuilder.setView(mView);
         final AlertDialog dialog = mBuilder.create();
         dialog.show();
 
-        confirmarButton = mView.findViewById(R.id.btnConfirmar);
+
+        edtNascimento.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDatePicker();
+//                Toast.makeText(getActivity(), nascimento, Toast.LENGTH_SHORT).show();
+//                edtNascimento.setText(formatarNasc(nascimento));
+            }
+        });
+
+        confirmarButton = mView.findViewById(R.id.btnConfirmarData);
         confirmarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                salvarDataNascimento(dialog);
             }
         });
     }
+
+
+    private void salvarDataNascimento(AlertDialog dialog){
+        if (!servicoValidacao.validarIdade(nascimento)){
+            Toast.makeText(getActivity(), "Idade inválida", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            try {
+                editarSailorNascimento(putBackNasc(nascimento));
+                dialog.dismiss();
+                Toast.makeText(getActivity(), "Nascimento alterado", Toast.LENGTH_SHORT).show();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "Erro", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    private void setDatePicker(){
+        Calendar c = Calendar.getInstance();
+        ano = c.get(Calendar.YEAR);
+        mes = c.get(Calendar.MONTH);
+        dia = c.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog nascimentoDialog = new DatePickerDialog(
+                getActivity(), dateSetListener,
+                ano, mes, dia);
+        nascimentoDialog.show();
+
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                int mes = new Integer(month);
+                mes = mes+1;
+                String mesStr = String.valueOf(mes);
+                if (mesStr.length() == 1){
+                    mesStr = "0"+mesStr;
+                }
+
+                String dia = String.valueOf(dayOfMonth);
+                if (dia.length() == 1){
+                    dia = "0"+dia;
+                }
+                nascimento = dia+"-"+mesStr+"-"+year;
+                edtNascimento.setText(dia+"/"+mesStr+"/"+year);
+            }
+        };
+//        edtNascimento.setText(formatarNasc(nascimento));
+    }
+
+    private void editarSailorNascimento(String novoNasc) throws Exception {
+        this.sailor.setBirthday(novoNasc);
+        if(isOnline()){
+            callServer(sailor);
+        } else{
+            Toast.makeText(getActivity(), "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     private void dialogEmail(){
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
@@ -313,13 +386,14 @@ public class PerfilFragmentActivity extends Fragment {
     }
 
 
-    private void formatarNasc(String nasc){
+    private String formatarNasc(String nasc){
         String ano = nasc.substring(0, 4);
 
         String dia = nasc.substring(8, 10);
 
         String mes = nasc.substring(5, 7);
-        nascimento = dia+"/"+mes+"/"+ano;
+        String nascimento2 = dia+"/"+mes+"/"+ano;
+        return nascimento2;
     }
 
     private String putBackNasc(String nasc){

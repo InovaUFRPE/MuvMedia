@@ -1,6 +1,7 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -28,6 +29,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -73,6 +77,8 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
     private ImageView gpsMapa;
 
+    private Location minhaLocalizacao;
+
 
 
     @Nullable
@@ -97,16 +103,6 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     }
 
     private void buscarMapa(){
-
-//        googleApiClient = new GoogleApiClient
-//                .Builder(getContext())
-//                .addApi(Places.GEO_DATA_API)
-//                .addApi(Places.PLACE_DETECTION_API)
-//                .enableAutoManage(getActivity(), this)
-//                .build();
-//        placeAutocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), googleApiClient, BOUNDS_GREATER_SYDNEY, null);
-//        buscaMapa.setAdapter(placeAutocompleteAdapter);
-
         buscaMapa.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -123,6 +119,14 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             @Override
             public void onClick(View v) {
                 getLocalizacaoAparelho();
+//                ArrayList<Float>  meuLocal= calcularMinhaDistancia(minhaLocalizacao);
+//                Toast.makeText(getActivity(),
+//                        String.valueOf(meuLocal.get(0)) + " " +
+//                        String.valueOf(meuLocal.get(1)) + " " +
+//                        String.valueOf(meuLocal.get(2)) + "\n" +
+//                        String.valueOf(meuLocal.get(3)) + " " +
+//                        String.valueOf(meuLocal.get(4)) + " " +
+//                        String.valueOf(meuLocal.get(5)), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -158,7 +162,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             //desativar o botão de localização do google maps para não ficar atrás da barra de pesquisa
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             buscarMapa();
-
+            setRaioQr(mMap);
         }
     }
 
@@ -183,7 +187,9 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                                 Toast.makeText(getContext(), "GPS desligado", Toast.LENGTH_SHORT).show();
                             }
                             else{
+                                minhaLocalizacao = currentLocation;
                                 moverCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), ZOOM, "Estou aqui");
+
                             }
                         }
                         else {
@@ -249,4 +255,57 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
+    private void setRaioQr(GoogleMap mMap){
+        ArrayList<LatLng> locais = new ArrayList<LatLng>();
+
+        locais.add(new LatLng(-8.064054, -34.937031));
+        locais.add(new LatLng(-8.061719, -34.934452));
+        locais.add(new LatLng(-8.017752, -34.944756));
+        for (LatLng local : locais){
+            mMap.addCircle(new CircleOptions()
+                    .center(local)
+                    .radius(150)
+                    .strokeColor(Color.RED)
+                    .fillColor(Color.TRANSPARENT));
+            mMap.addMarker(new MarkerOptions().position(local).icon(BitmapDescriptorFactory.fromResource(R.drawable.treasuse)));
+        }
+
+    }
+
+    private ArrayList<Float> calcularMinhaDistancia(Location minhaLocalizacao){
+        ArrayList<Float> meuLocal = new ArrayList<Float>();
+        float minhaLatitude = (float) minhaLocalizacao.getLatitude();
+        float meuGrauLat;
+        float meuMinutoLat;
+        float meuMinutoTempLat;
+        float meuSegundoLat;
+        float minhaLongitude = (float) minhaLocalizacao.getLongitude();
+        float meuGrauLong;
+        float meuMinutoLong;
+        float meuMinutoTempLong;
+        float meuSegundoLong;
+
+        meuGrauLat = (int) minhaLatitude;
+        meuMinutoLat = (int)((minhaLatitude - meuGrauLat)*60);
+        meuMinutoTempLat = (minhaLatitude - meuGrauLat)*60;
+        meuSegundoLat = (int)((meuMinutoTempLat - meuMinutoLat)*60);
+
+        meuGrauLong = (int) minhaLongitude;
+        meuMinutoLong = (int) ((minhaLongitude - meuGrauLong)*60);
+        meuMinutoTempLong = (minhaLongitude - meuGrauLong)*60;
+        meuSegundoLong = (int) ((meuMinutoTempLong - meuMinutoLong)*60);
+
+
+        meuLocal.add(meuGrauLat);
+        meuLocal.add(meuMinutoLat);
+        meuLocal.add(meuSegundoLat);
+        meuLocal.add(meuGrauLong);
+        meuLocal.add(meuMinutoLong);
+        meuLocal.add(meuSegundoLong);
+
+        return meuLocal;
+    }
+
 }
