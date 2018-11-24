@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import app.muvmedia.inova.muvmediaapp.R;
@@ -13,6 +14,7 @@ import app.muvmedia.inova.muvmediaapp.mapa.gui.HomeFragmentActivity;
 
 public class BottomNavigation extends AppCompatActivity {
     private Fragment selectedFragment = new HomeTeste();
+    private int tela ;
 //    private Fragment selectedFragment = new HomeFragmentActivity();
 
 
@@ -38,13 +40,19 @@ public class BottomNavigation extends AppCompatActivity {
 //                                FragmentManager manager1 = getSupportFragmentManager();
 //                                manager1.beginTransaction().replace(R.id.fragment_container, homeFragmentActivity).commit();
 
+                            if (tela != 1){
+                                HomeTeste homeTeste = new HomeTeste();
+                                FragmentManager manager1 = getSupportFragmentManager();
+                                manager1.beginTransaction().replace(R.id.fragment_container, homeTeste).commit();
+                                tela = 1;
 
-                            HomeTeste homeTeste = new HomeTeste();
-                            FragmentManager manager1 = getSupportFragmentManager();
-                            manager1.beginTransaction().replace(R.id.fragment_container, homeTeste).commit();
-                            break;
+                            }
+                            else{Log.e("E","Fragmento já Aberto"); return false;}break;
                         case R.id.navigation_anunciar:
-                            selectedFragment = new AnuncioFragmentActivity();
+                            if (tela != 2) {
+                                selectedFragment = new AnuncioFragmentActivity();
+                                tela = 2;
+                            }
                             break;
                         case R.id.navigation_perfil:
                             selectedFragment = new PerfilFragmentActivity();
@@ -65,6 +73,7 @@ public class BottomNavigation extends AppCompatActivity {
         HomeTeste homeTeste = new HomeTeste();
         FragmentManager manager1 = getSupportFragmentManager();
         manager1.beginTransaction().replace(R.id.fragment_container, homeTeste).commit();
+        tela = 1;
     }
 
 }

@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
@@ -37,12 +38,14 @@ public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerVi
         setContentView(scannerView);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            try{
             if(checkPermission()){
-                Toast.makeText(QrCodeActivity.this, "Permissões concedidas", Toast.LENGTH_LONG).show();
+                //Toast.makeText(QrCodeActivity.this, "Permissões concedidas", Toast.LENGTH_LONG).show();
 
             }else{
                 requestPermission();
             }
+            }catch (Exception e){Log.e("E","Cliente Tirou a Permissão da Camera");}
         }
     }
 
@@ -57,29 +60,31 @@ public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerVi
     public void  onRequestPermissionsResult(int requestCode, String permission[], int grantResults[]){
         switch (requestCode){
             case REQUEST_CAMERA:
+                try{
                 if(grantResults.length >0){
                     boolean cameraAceita = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     if(cameraAceita){
                         Toast.makeText(QrCodeActivity.this, "Permissão concedida", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(QrCodeActivity.this, "Permissão não concedida", Toast.LENGTH_LONG).show();
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                            if(shouldShowRequestPermissionRationale(CAMERA)) {
-                                displayAlertMenssage("Você tem que aceitar todas as permissões",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                                                    requestPermissions(new String[]{CAMERA}, REQUEST_CAMERA);
-                                                }
-
-                                            }
-                                        });
-                                return;
-                            }
-                        }
                     }
-                }
+                    else {
+                        Toast.makeText(QrCodeActivity.this, "Permissão não concedida", Toast.LENGTH_LONG).show();
+//                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+//                            if(shouldShowRequestPermissionRationale(CAMERA)) {
+//                                displayAlertMenssage("Você tem que aceitar todas as permissões",
+//                                        new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+//                                                    requestPermissions(new String[]{CAMERA}, REQUEST_CAMERA);
+//                                                }
+//
+//                                            }
+//                                        });
+//                                return;
+//                            }
+//                        }
+                    }
+                }}catch(Exception e){Log.e("E","Cliente tirou a Permissão enquanto APP aberto");}
                 break;
         }
 

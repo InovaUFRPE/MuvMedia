@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -184,7 +185,8 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                         if (task.isSuccessful()){
                             Location currentLocation = (Location) task.getResult();
                             if (currentLocation == null){
-                                Toast.makeText(getContext(), "GPS desligado", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Ative o GPS Porfavor", Toast.LENGTH_SHORT).show();
+                                Log.e("E","Cliente desligou GPS desligado");
                             }
                             else{
                                 minhaLocalizacao = currentLocation;
@@ -193,7 +195,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                             }
                         }
                         else {
-                            Toast.makeText(getContext(), "Não pode encontrar sua localização atual", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Não podemos encontrar sua localização atual", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
