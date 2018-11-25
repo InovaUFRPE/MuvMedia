@@ -15,6 +15,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import app.muvmedia.inova.muvmediaapp.cupom.dominio.Campaign;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
@@ -143,25 +144,59 @@ public class ServicoHttpMuver {
 
     }
 
-
-    public Muver updateMuver(Muver muver) throws Exception {
-//        String idMuver = muver.getId();
-//        String muverUrl = muverUri + "/" + idMuver;
-        Gson gson = new Gson();
-        String muverString = gson.toJson(muver);
+    public Campaign getCampanha(String idTotem){
+        String camapanhaString = "http://capitao-api.herokuapp.com/totens/campaign/" + idTotem;
         String resposta = null;
         try {
-            resposta = this.put(muverUri, muverString);
+            resposta = get(camapanhaString);
         } catch (Exception e){
             e.printStackTrace();
         }
-//        String resposta = this.put(userUrl, userString);
-        if (resposta != null) {
-            muver = gson.fromJson(resposta, Muver.class);
+        if(resposta!=null){
+            Gson gson = new Gson();
+            Campaign campaign = gson.fromJson(resposta, Campaign.class);
+            return campaign;
+        }else {
+            return null;
         }
-        Log.i("Script", "Resposta: "+ resposta);
-        return muver;
     }
+
+    public Sailor checkSailor(String idSailor){
+        String camapanhaString = "http://capitao-api.herokuapp.com/sailors/" + idSailor;
+        String resposta = null;
+        try {
+            resposta = get(camapanhaString);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if(resposta!=null){
+            Gson gson = new Gson();
+            Sailor sailor = gson.fromJson(resposta, Sailor.class);
+            return sailor;
+        }else {
+            return null;
+        }
+    }
+
+
+//    public Muver updateMuver(Muver muver) throws Exception {
+////        String idMuver = muver.getId();
+////        String muverUrl = muverUri + "/" + idMuver;
+//        Gson gson = new Gson();
+//        String muverString = gson.toJson(muver);
+//        String resposta = null;
+//        try {
+//            resposta = this.put(muverUri, muverString);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+////        String resposta = this.put(userUrl, userString);
+//        if (resposta != null) {
+//            muver = gson.fromJson(resposta, Muver.class);
+//        }
+//        Log.i("Script", "Resposta: "+ resposta);
+//        return muver;
+//    }
 
     private static String get(String url) {
         HttpClient httpClient = new DefaultHttpClient();
@@ -175,10 +210,14 @@ public class ServicoHttpMuver {
             if (status == 200) {
                 answer = EntityUtils.toString(resposta.getEntity());
                 Log.i("Script", "ANSWER: "+ answer);
+                Sessao.instance.setResposta("200");
             } else if (status == 404) {
-                throw new Exception("Muver não encontrado");
+                throw new Exception("Não temos campanhas para você hoje, volte depois");
+            } else if (status == 206){
+                answer = EntityUtils.toString(resposta.getEntity());
+                Sessao.instance.setResposta("206");
             } else {
-                throw new Exception("Erro inesperado");
+                throw new Exception("Erro");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

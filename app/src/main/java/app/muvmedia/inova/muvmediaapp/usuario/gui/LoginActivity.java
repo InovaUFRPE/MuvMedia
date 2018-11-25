@@ -122,18 +122,6 @@ public class LoginActivity extends AppCompatActivity {
         Sessao.instance.setSailor(sessionApi.getSailor());
     }
 
-    private void setMuverApi(final Usuario usuario) throws InterruptedException {
-        final ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Muver muver = servicoHttpMuver.getMuverByUser(usuario);
-                Sessao.instance.setMuver(muver);
-            }
-        });
-        thread.start();
-        thread.join();
-    }
 
 
     private void logar(String jason) throws InterruptedException, MuvMediaException {

@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 import java.util.Map;
 
+import app.muvmedia.inova.muvmediaapp.cupom.dominio.Campaign;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Session;
@@ -45,6 +46,16 @@ public class Sessao {
     public Sailor getSailor(){
         return (Sailor) values.get("sessao.sailor");
     }
+
+    public Campaign getUltimaCampanha(){
+        return (Campaign) values.get("sessao.lastCampanha");
+
+    }
+
+    public void setUltimaCampanha(Object valor){
+        values.put("sessao.lastCampanha", valor);
+    }
+
 
     public String getCodigo(){
         return (String) values.get("sessao.codigo");

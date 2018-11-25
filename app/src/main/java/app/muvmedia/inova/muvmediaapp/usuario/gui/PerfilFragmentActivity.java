@@ -1,7 +1,8 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,57 +12,112 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.cupom.dominio.Campaign;
+import app.muvmedia.inova.muvmediaapp.cupom.gui.CampanhaAdapter;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
-import app.muvmedia.inova.muvmediaapp.usuario.dominio.Muver;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class PerfilFragmentActivity extends Fragment {
-    private Muver muver = Sessao.instance.getMuver();
-
-
-    private TextView email;
     private Button alterarInformações, confirmarButton;
     private Usuario usuario = Sessao.instance.getSailor().getUser();
     private Sailor sailor = Sessao.instance.getSailor();
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private TextView nome, dialogText;
-    private ImageView imSair;
     private int dia, mes, ano;
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private String nascimento;
-    private String ultimoEmail = sailor.getUser().getEmail();
-    private TextView changeEmail, changeSenha, changeNome, changeNascimento;
+    private String emailAtual = sailor.getUser().getEmail();
+    private TextView changeEmail, changeSenha, changeNome, changeNascimento,xp, level;
+    ProgressBar progressBar;
     private EditText edtNome, edtEmail, edtSenha, edtNascimento;
+    private ListView listaCampanha;
+    private List<Campaign> campanhas = sailor.getCampaigns();
+    private CampanhaAdapter campanhaAdapter;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_perfil, container, false);
+        try {
+            callSailor();
+        } catch (InterruptedException e) {
+            Toast.makeText(getActivity(), "Erro Inesperado", Toast.LENGTH_SHORT).show();
+        }
         setUpView(v);
-        //        exitApp(v);
+        setUpListView(v);
         return v;
+    }
+
+    private void setUpListView(View v) {
+        listaCampanha = v.findViewById(R.id.listacara);
+        if(campanhas == null){
+            campanhas = new ArrayList<Campaign>();
+        }
+        campanhaAdapter = new CampanhaAdapter(getContext(), campanhas);
+        listaCampanha.setAdapter(campanhaAdapter);
+        listaCampanha.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+              Campaign campaign = campanhas.get(i);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(campaign.getUrl()));
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     private void setUpView(View v) {
         alterarInformações = v.findViewById(R.id.btnAlterarInfo);
         nome = v.findViewById(R.id.textView2);
         nome.setText(Sessao.instance.getSailor().getName());
+        xp = v.findViewById(R.id.textViewXp);
+        xp.setText("XP:"+String.valueOf(Sessao.instance.getSailor().getXp())+"/"+getMaxToBar());
+        level = v.findViewById(R.id.textViewLevel);
+        level.setText("LEVEL:"+String.valueOf(Sessao.instance.getSailor().getLevel()));
+        progressBar = v.findViewById(R.id.progressBar);
+        progressBar.setMax(getMaxToBar());
+        progressBar.setProgress(sailor.getXp());
         setListners();
+    }
+
+    public void callSailor() throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
+                try {
+                    Sailor sailor = servicoHttpMuver.checkSailor(Sessao.instance.getSailor().get_id());
+                    Sessao.instance.setSailor(sailor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //Sessao.instance.setResposta(usuarioEditado);
+            }
+        });
+        thread.start();
+        thread.join();
+
+
     }
 
     private void setListners() {
@@ -81,7 +137,7 @@ public class PerfilFragmentActivity extends Fragment {
         changeSenha = mView.findViewById(R.id.novaSenha);
         changeNome = mView.findViewById(R.id.novoNome);
         changeNascimento = mView.findViewById(R.id.novoNascimento);
-        changeEmail.setText(ultimoEmail);
+        changeEmail.setText(emailAtual);
         changeNome.setText(Sessao.instance.getSailor().getName());
         changeNascimento.setText(formatarNasc(Sessao.instance.getSailor().getBirthday()));
         mBuilder.setView(mView);
@@ -276,7 +332,7 @@ public class PerfilFragmentActivity extends Fragment {
                             Toast.makeText(getActivity(), "Editado com sucesso", Toast.LENGTH_SHORT).show();
                         }else{
                             edtEmail.setError("Email em uso");
-                            edtEmail.setText(ultimoEmail);
+                            edtEmail.setText(emailAtual);
                             Log.i("Script Update", "Email em uso: "+ Sessao.instance.getResposta());
 
                         }
@@ -441,4 +497,7 @@ public class PerfilFragmentActivity extends Fragment {
         }
     }
 
+    public int getMaxToBar() {
+            return (int) Math.floor(175*Math.pow((double)sailor.getLevel(),1.5));
+        }
 }
