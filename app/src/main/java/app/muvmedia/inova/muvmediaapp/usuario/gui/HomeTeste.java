@@ -1,13 +1,22 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
@@ -21,11 +30,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBufferResponse;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -48,6 +52,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,11 +60,19 @@ import android.widget.Toast;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import app.muvmedia.inova.muvmediaapp.R;
-import app.muvmedia.inova.muvmediaapp.usuario.servico.PlaceAutocompleteAdapter;
+import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
+import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
+import app.muvmedia.inova.muvmediaapp.infra.Sessao;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
@@ -72,14 +85,11 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     private static final float ZOOM = 17f;
 
     private AutoCompleteTextView buscaMapa;
-    private PlaceAutocompleteAdapter placeAutocompleteAdapter;
     private GoogleApiClient googleApiClient;
-    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
     private ImageView gpsMapa;
 
-    private Location minhaLocalizacao;
-
+    private static boolean cont;
+    private static Location minhaLocalizacao;
 
 
     @Nullable
@@ -88,6 +98,8 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         buscaMapa = v.findViewById(R.id.editBuscaMapa);
         gpsMapa = v.findViewById(R.id.ic_gps);
+//        iniciarCont();
+//        receberNotificacao();
         return v;
     }
 
@@ -111,9 +123,9 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                         || event.getAction() == KeyEvent.ACTION_DOWN
                         || event.getAction() == KeyEvent.KEYCODE_ENTER){
                     geoLocalizacao();
+                }
+                return false;
             }
-            return false;
-        }
         });
 
         gpsMapa.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +143,25 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             }
         });
     }
+
+//    private void iniciarCont(){
+//        if (!cont) {
+//            final Handler handler = new Handler();
+//            Log.i("Contador", "Iniciou contador");
+//            Runnable runnable = new Runnable() {
+//                @Override
+//                public void run() {
+////                Toast.makeText(getContext(), "5 segundos", Toast.LENGTH_SHORT).show();
+//                    handler.postDelayed(this, 5000);
+//                    if (minhaLocalizacao != null) {
+//                        Log.i("Contador", "Lat/Lon: " + minhaLocalizacao.getLatitude() + " " + minhaLocalizacao.getLongitude());
+//                    }
+//                }
+//            };
+//            handler.postDelayed(runnable, 0);
+//        }
+//    }
+
 
     private void geoLocalizacao(){
         String busca = buscaMapa.getText().toString();
@@ -189,9 +220,9 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                                 Log.e("E","Cliente desligou GPS desligado");
                             }
                             else{
-                                minhaLocalizacao = currentLocation;
+                                local(currentLocation);
                                 moverCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), ZOOM, "Estou aqui");
-
+                                Log.i("Contador","Lat/Lon: " + currentLocation.getLatitude() + " " + currentLocation.getLongitude());
                             }
                         }
                         else {
@@ -206,6 +237,11 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
         }
     }
 
+    private Location local(Location location){
+        minhaLocalizacao = location;
+        return minhaLocalizacao;
+    }
+
     private void moverCamera(LatLng latLng, float zoom, String titulo){
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
@@ -215,10 +251,9 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
         }
     }
 
-
     private void getPermissaoLocalizacao(){
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION};
+                Manifest.permission.ACCESS_COARSE_LOCATION};
         if (ContextCompat.checkSelfPermission(getContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             if (ContextCompat.checkSelfPermission(getContext(),
@@ -276,38 +311,49 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
 
     }
 
-    private ArrayList<Float> calcularMinhaDistancia(Location minhaLocalizacao){
-        ArrayList<Float> meuLocal = new ArrayList<Float>();
-        float minhaLatitude = (float) minhaLocalizacao.getLatitude();
-        float meuGrauLat;
-        float meuMinutoLat;
-        float meuMinutoTempLat;
-        float meuSegundoLat;
-        float minhaLongitude = (float) minhaLocalizacao.getLongitude();
-        float meuGrauLong;
-        float meuMinutoLong;
-        float meuMinutoTempLong;
-        float meuSegundoLong;
+//    private ArrayList<Float> calcularMinhaDistancia(Location minhaLocalizacao){
+//        ArrayList<Float> meuLocal = new ArrayList<Float>();
+//        float minhaLatitude = (float) minhaLocalizacao.getLatitude();
+//        float meuGrauLat;
+//        float meuMinutoLat;
+//        float meuMinutoTempLat;
+//        float meuSegundoLat;
+//        float minhaLongitude = (float) minhaLocalizacao.getLongitude();
+//        float meuGrauLong;
+//        float meuMinutoLong;
+//        float meuMinutoTempLong;
+//        float meuSegundoLong;
+//
+//        meuGrauLat = (int) minhaLatitude;
+//        meuMinutoLat = (int)((minhaLatitude - meuGrauLat)*60);
+//        meuMinutoTempLat = (minhaLatitude - meuGrauLat)*60;
+//        meuSegundoLat = (int)((meuMinutoTempLat - meuMinutoLat)*60);
+//
+//        meuGrauLong = (int) minhaLongitude;
+//        meuMinutoLong = (int) ((minhaLongitude - meuGrauLong)*60);
+//        meuMinutoTempLong = (minhaLongitude - meuGrauLong)*60;
+//        meuSegundoLong = (int) ((meuMinutoTempLong - meuMinutoLong)*60);
+//
+//
+//        meuLocal.add(meuGrauLat);
+//        meuLocal.add(meuMinutoLat);
+//        meuLocal.add(meuSegundoLat);
+//        meuLocal.add(meuGrauLong);
+//        meuLocal.add(meuMinutoLong);
+//        meuLocal.add(meuSegundoLong);
+//
+//        return meuLocal;
+//    }
 
-        meuGrauLat = (int) minhaLatitude;
-        meuMinutoLat = (int)((minhaLatitude - meuGrauLat)*60);
-        meuMinutoTempLat = (minhaLatitude - meuGrauLat)*60;
-        meuSegundoLat = (int)((meuMinutoTempLat - meuMinutoLat)*60);
 
-        meuGrauLong = (int) minhaLongitude;
-        meuMinutoLong = (int) ((minhaLongitude - meuGrauLong)*60);
-        meuMinutoTempLong = (minhaLongitude - meuGrauLong)*60;
-        meuSegundoLong = (int) ((meuMinutoTempLong - meuMinutoLong)*60);
-
-
-        meuLocal.add(meuGrauLat);
-        meuLocal.add(meuMinutoLat);
-        meuLocal.add(meuSegundoLat);
-        meuLocal.add(meuGrauLong);
-        meuLocal.add(meuMinutoLong);
-        meuLocal.add(meuSegundoLong);
-
-        return meuLocal;
+    public static void setCont(){
+        cont = true;
     }
 
+    public static void setMinhaLocalizacao(){
+        minhaLocalizacao=null;
+    }
+    public static Location getMinhaLocalizacao(){
+        return minhaLocalizacao;
+    }
 }
