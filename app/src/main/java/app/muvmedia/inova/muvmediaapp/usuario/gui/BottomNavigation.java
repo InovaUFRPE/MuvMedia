@@ -5,10 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,21 +15,26 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Chronometer;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
+
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
-
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.AppSession;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Session;
 
 public class BottomNavigation extends AppCompatActivity {
     private Fragment selectedFragment = new HomeTeste();
     private int tela ;
+    //    private Fragment selectedFragment = new HomeFragmentActivity();
     private Chronometer contador;
     private boolean enviar = true;
 
@@ -63,6 +65,9 @@ public class BottomNavigation extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()){
                         case R.id.navigation_home2:
+//                                HomeFragmentActivity homeFragmentActivity = new HomeFragmentActivity();
+//                                FragmentManager manager1 = getSupportFragmentManager();
+//                                manager1.beginTransaction().replace(R.id.fragment_container, homeFragmentActivity).commit();
                             HomeTeste.setMinhaLocalizacao();
 //                            HomeTeste.cont = false;
                             if (tela != 1){
@@ -77,12 +82,12 @@ public class BottomNavigation extends AppCompatActivity {
                             if (tela != 2) {
                                 selectedFragment = new AnuncioFragmentActivity();
                                 tela = 2;
-//                                HomeTeste.setCont();
+                                HomeTeste.setCont();
                             }
                             break;
                         case R.id.navigation_perfil:
                             selectedFragment = new PerfilFragmentActivity();
-//                            HomeTeste.setCont();
+                            HomeTeste.setCont();
                             break;
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
@@ -90,7 +95,13 @@ public class BottomNavigation extends AppCompatActivity {
                 }
             };
 
+
+
     private void chamarMapaHome(){
+//        HomeFragmentActivity homeFragmentActivity = new HomeFragmentActivity();
+//        FragmentManager manager1 = getSupportFragmentManager();
+//        manager1.beginTransaction().replace(R.id.fragment_container, homeFragmentActivity).commit();
+
         HomeTeste homeTeste = new HomeTeste();
         FragmentManager manager1 = getSupportFragmentManager();
         manager1.beginTransaction().replace(R.id.fragment_container, homeTeste).commit();
@@ -104,7 +115,7 @@ public class BottomNavigation extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 10000);
+                handler.postDelayed(this, 40000);
                 if (HomeTeste.getMinhaLocalizacao() != null) {
                     try {
                         enviarLocalizacao();
@@ -130,9 +141,10 @@ public class BottomNavigation extends AppCompatActivity {
         if (Sessao.instance.getResposta().contains("Sucess")){
             if (enviar){
                 enviarNotificacao();
-//                notinha();
                 receber();
             }
+//            Toast.makeText(this, "Notificação Sucesso", Toast.LENGTH_SHORT).show();
+            //Chama notificação;
         }
         enviar=false;
     }
@@ -157,36 +169,40 @@ public class BottomNavigation extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void enviarNotificacao(){
         Intent intent = new Intent(BottomNavigation.this, BottomNavigation.class);
-        intent.putExtra(String.valueOf(R.drawable.logo), "Um novo tesouro próximo de você");
+        intent.putExtra(Sessao.instance.getSailor().get_id(), "Um novo tesouro próximo de você");
         int id = (int) (Math.random()*1000);
         PendingIntent pi = PendingIntent.getActivity(BottomNavigation.this, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new Notification.Builder(BottomNavigation.this)
                 .setContentTitle("Capitão Cupom")
-                .setContentText("Um novo tesouro próximo de você")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo))
+                .setContentText("Um novo tesouro próximo de você").setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pi).build();
-
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notification.vibrate = new long[]{150, 300, 150, 600};
-//        notification.flags = Notification.FLAG_AUTO_CANCEL;
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(id, notification);
-
-
-        try {
-            Uri som  = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone toque = RingtoneManager.getRingtone(this, som);
-            toque.play();
-        }catch (Exception e){
-
-        }
 //        finish();
     }
 
     private void receber(){
-        getIntent().getStringExtra(String.valueOf(R.drawable.logo));
+        getIntent().getStringExtra(Sessao.instance.getSailor().get_id());
         Sessao.instance.setCodigo("");
+//        try {
+//            getSessaoApi();
+//        } catch (InterruptedException e) {
+//            Toast.makeText(this, "Erro de Notificação", Toast.LENGTH_SHORT).show();
+//            e.printStackTrace();
+//        }
     }
+
+
+    private void getSessaoApi() throws InterruptedException {
+        Gson gson = new Gson();
+        AppSession sessionApi = gson.fromJson(Sessao.instance.getResposta(), AppSession.class);
+        Session session = sessionApi.getSession();
+        Sessao.instance.setSession(sessionApi.getSession());
+        Sessao.instance.setSailor(sessionApi.getSailor());
+    }
+
+
 
 
     private boolean isOnline() {
@@ -194,35 +210,6 @@ public class BottomNavigation extends AppCompatActivity {
             return true;
         }else{
             return false;
-        }
-    }
-
-
-    public void notinha(){
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent intent = new Intent(BottomNavigation.this, BottomNavigation.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setTicker("Textinho");
-        builder.setContentTitle("Capitão Cupom");
-        builder.setContentText("Um novo tesouro próximo de você");
-        builder.setSmallIcon(R.drawable.logo);
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
-        builder.setContentIntent(pendingIntent);
-
-        Notification n = builder.build();
-        n.vibrate = new long[]{150, 300, 150, 600};
-        n.flags = Notification.FLAG_AUTO_CANCEL;
-        notificationManager.notify(R.drawable.logo, n);
-
-        try {
-            Uri som  = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone toque = RingtoneManager.getRingtone(this, som);
-            toque.play();
-        }catch (Exception e){
-
         }
     }
 
