@@ -20,7 +20,10 @@ import android.widget.Toast;
 import com.google.zxing.Result;
 
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.cupom.dominio.Campaign;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
+import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.Manifest.permission.CAMERA;
@@ -125,20 +128,60 @@ public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerVi
                 .show();
     }
 
+    public void callCampanha(final String mensagem) throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ServicoHttpMuver servicoHttpMuver = new ServicoHttpMuver();
+                try {
+                    Campaign campaign = servicoHttpMuver.getCampanha(mensagem);
+//                    Sessao.instance.getSailor().setCampaigns(campaign);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //Sessao.instance.setResposta(usuarioEditado);
+            }
+        });
+        thread.start();
+        thread.join();
+
+
+    }
+
+
+
     @Override
     public void handleResult(final Result result) {
         final String meuResultado = result.getText();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Anúncio Gerado");
+        builder.setTitle("NOVO CUPOM!?");
         builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Sessao.instance.setCodigo(meuResultado);
+                try {
+                    callCampanha(meuResultado);
+                    finish();
+                } catch (InterruptedException e) {
+                    Toast.makeText(QrCodeActivity.this, "Erro Inesperado", Toast.LENGTH_LONG).show();
+                    finish();
+                }
                 Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                 startActivity(intent);
             }
         });
-        builder.setMessage("Vá até a tela perfil para ver seu código");
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        if(Sessao.instance.getResposta().equals("200")){
+            builder.setMessage("YOOOOOOOOO, PARABÉNS MARUJO VOCÊ RECEBEU UM NOME CUPOM... VÁ ATÉ SEU PERFIL E APROVEITE HOHOHOHO");
+        } else {
+            builder.setMessage("ARRRRGHHHH, TA ACHANDO QUE SOU BOBO? VOLTE AMANHÃ!!!");
+        }
+
         AlertDialog alert = builder.create();
         alert.show();
     }

@@ -19,7 +19,6 @@ import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
-import app.muvmedia.inova.muvmediaapp.usuario.dominio.NewUser;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Usuario;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
