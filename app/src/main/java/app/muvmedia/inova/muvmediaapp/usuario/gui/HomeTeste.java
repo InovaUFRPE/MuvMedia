@@ -1,31 +1,17 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
-import android.annotation.TargetApi;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -35,44 +21,26 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.RuntimeRemoteException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Chronometer;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import app.muvmedia.inova.muvmediaapp.R;
-import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
-import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
-import app.muvmedia.inova.muvmediaapp.infra.Sessao;
-import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
@@ -91,7 +59,6 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     private static boolean cont;
     private static Location minhaLocalizacao;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -99,7 +66,6 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
         buscaMapa = v.findViewById(R.id.editBuscaMapa);
         gpsMapa = v.findViewById(R.id.ic_gps);
 //        iniciarCont();
-//        receberNotificacao();
         return v;
     }
 
@@ -132,36 +98,9 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             @Override
             public void onClick(View v) {
                 getLocalizacaoAparelho();
-//                ArrayList<Float>  meuLocal= calcularMinhaDistancia(minhaLocalizacao);
-//                Toast.makeText(getActivity(),
-//                        String.valueOf(meuLocal.get(0)) + " " +
-//                        String.valueOf(meuLocal.get(1)) + " " +
-//                        String.valueOf(meuLocal.get(2)) + "\n" +
-//                        String.valueOf(meuLocal.get(3)) + " " +
-//                        String.valueOf(meuLocal.get(4)) + " " +
-//                        String.valueOf(meuLocal.get(5)), Toast.LENGTH_LONG).show();
             }
         });
     }
-
-//    private void iniciarCont(){
-//        if (!cont) {
-//            final Handler handler = new Handler();
-//            Log.i("Contador", "Iniciou contador");
-//            Runnable runnable = new Runnable() {
-//                @Override
-//                public void run() {
-////                Toast.makeText(getContext(), "5 segundos", Toast.LENGTH_SHORT).show();
-//                    handler.postDelayed(this, 5000);
-//                    if (minhaLocalizacao != null) {
-//                        Log.i("Contador", "Lat/Lon: " + minhaLocalizacao.getLatitude() + " " + minhaLocalizacao.getLongitude());
-//                    }
-//                }
-//            };
-//            handler.postDelayed(runnable, 0);
-//        }
-//    }
-
 
     private void geoLocalizacao(){
         String busca = buscaMapa.getText().toString();
@@ -189,9 +128,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                     != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            //setar minha localização
             mMap.setMyLocationEnabled(true);
-            //desativar o botão de localização do google maps para não ficar atrás da barra de pesquisa
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             buscarMapa();
             setRaioQr(mMap);
@@ -304,47 +241,11 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             mMap.addCircle(new CircleOptions()
                     .center(local)
                     .radius(150)
-                    .strokeColor(Color.RED)
+                    .strokeColor(Color.TRANSPARENT)
                     .fillColor(Color.TRANSPARENT));
             mMap.addMarker(new MarkerOptions().position(local).icon(BitmapDescriptorFactory.fromResource(R.drawable.treasuse)));
         }
-
     }
-
-//    private ArrayList<Float> calcularMinhaDistancia(Location minhaLocalizacao){
-//        ArrayList<Float> meuLocal = new ArrayList<Float>();
-//        float minhaLatitude = (float) minhaLocalizacao.getLatitude();
-//        float meuGrauLat;
-//        float meuMinutoLat;
-//        float meuMinutoTempLat;
-//        float meuSegundoLat;
-//        float minhaLongitude = (float) minhaLocalizacao.getLongitude();
-//        float meuGrauLong;
-//        float meuMinutoLong;
-//        float meuMinutoTempLong;
-//        float meuSegundoLong;
-//
-//        meuGrauLat = (int) minhaLatitude;
-//        meuMinutoLat = (int)((minhaLatitude - meuGrauLat)*60);
-//        meuMinutoTempLat = (minhaLatitude - meuGrauLat)*60;
-//        meuSegundoLat = (int)((meuMinutoTempLat - meuMinutoLat)*60);
-//
-//        meuGrauLong = (int) minhaLongitude;
-//        meuMinutoLong = (int) ((minhaLongitude - meuGrauLong)*60);
-//        meuMinutoTempLong = (minhaLongitude - meuGrauLong)*60;
-//        meuSegundoLong = (int) ((meuMinutoTempLong - meuMinutoLong)*60);
-//
-//
-//        meuLocal.add(meuGrauLat);
-//        meuLocal.add(meuMinutoLat);
-//        meuLocal.add(meuSegundoLat);
-//        meuLocal.add(meuGrauLong);
-//        meuLocal.add(meuMinutoLong);
-//        meuLocal.add(meuSegundoLong);
-//
-//        return meuLocal;
-//    }
-
 
     public static void setCont(){
         cont = true;
@@ -356,4 +257,5 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     public static Location getMinhaLocalizacao(){
         return minhaLocalizacao;
     }
+
 }
