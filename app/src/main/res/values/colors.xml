@@ -11,7 +11,6 @@
     <color name="botaoVermelho">#f53131</color>
     <color name="botaoLaranja">#f9793e</color>
     <color name="textoBranco">#ffffff</color>
-    <color name="preto">#000000</color>
     <color name="principal">#dd0040</color>
     <color name="marrom">#dd0040</color>
     <color name="transparente">#00000000</color>
@@ -19,9 +18,16 @@
     <color name="regularText">#fcb008</color>
     <color name="iconListingTittles">#e32929</color>
     <color name="cinzaBignutto">#666666</color>
-    <color name="primary">#982121</color>
+    <color name="primary">#000000</color>
 
 
+    <!-- new design -->
+
+    <color name="preto">#000000</color>
+    <color name="aouro">#ffd700</color>
+    <color name="verde">#46612C</color>
+    <color name="dourado">#d0b942</color>
+    <color name="rubro">#952c26</color>
 
 
 

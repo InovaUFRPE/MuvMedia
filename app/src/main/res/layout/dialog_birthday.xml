@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5dp">
@@ -32,10 +33,10 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/btnLogin"
+        android:background="@color/aouro"
         android:padding="10dp"
         android:text="Confirmar"
-        android:textColor="@android:color/white"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         android:textStyle="bold" />
 
 

@@ -2,6 +2,7 @@ package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +41,13 @@ public class LoginActivity extends AppCompatActivity {
 //        setAppContexto();
         encontrarElementosView();
         cadastrar();
+
+        //design
+        nomeApp = findViewById(R.id.nomeappCap);
+        String fontPath = "fonts/pieces.ttf";
+        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
+        nomeApp.setTypeface(typeface);
+
     }
 
 //    private void setAppContexto() {
