@@ -50,7 +50,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     private static final int CODIGO_PERMISSAO_SOLICITACAO_RESULTADO = 1234;
     private GoogleMap mMap;
     private FusedLocationProviderClient provedorLocalizacaoCliente;
-    private static final float ZOOM = 17f;
+    private static final float ZOOM = 15f;
 
     private AutoCompleteTextView buscaMapa;
     private GoogleApiClient googleApiClient;
@@ -142,7 +142,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     }
 
 
-    private void getLocalizacaoAparelho(){
+    public void getLocalizacaoAparelho(){
         provedorLocalizacaoCliente = LocationServices.getFusedLocationProviderClient(getActivity());
         try{
             if (permitirLocalizacao){
@@ -159,7 +159,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                             else{
                                 local(currentLocation);
                                 moverCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), ZOOM, "Estou aqui");
-                                Log.i("Contador","Lat/Lon: " + currentLocation.getLatitude() + " " + currentLocation.getLongitude());
+//                                Log.i("Contador","Lat/Lon: " + currentLocation.getLatitude() + " " + currentLocation.getLongitude());
                             }
                         }
                         else {

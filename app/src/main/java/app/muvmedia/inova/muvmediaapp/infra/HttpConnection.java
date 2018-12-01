@@ -62,26 +62,6 @@ public class HttpConnection {
     }
 
 
-    public static String post(String completeUrl, String bodyLocation, String bodySailor) {
-        HttpClient httpClient = new DefaultHttpClient();
-        String answer;
-        HttpPost httpPost = new HttpPost(completeUrl);
-        httpPost.setHeader("Content-type", "application/json");
-        try {
-            StringEntity stringEntity = new StringEntity(bodyLocation);
-            httpPost.getRequestLine();
-            httpPost.setEntity(stringEntity);
-
-            HttpResponse resposta = httpClient.execute(httpPost);
-            answer = EntityUtils.toString(resposta.getEntity());
-            Log.i("Script", "ANSWER: "+ answer);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return answer;
-    }
-
-
     public static String get(String completeUrl) {
         HttpClient httpClient = new DefaultHttpClient();
         String answer;
