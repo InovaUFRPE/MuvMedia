@@ -3,9 +3,12 @@ package app.muvmedia.inova.muvmediaapp.usuario.gui;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -40,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.cupom.dominio.Toten;
 
 
 public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
@@ -65,6 +69,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         buscaMapa = v.findViewById(R.id.editBuscaMapa);
         gpsMapa = v.findViewById(R.id.ic_gps);
+
 //        iniciarCont();
         return v;
     }
@@ -131,7 +136,8 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             buscarMapa();
-            setRaioQr(mMap);
+//            setRaioQr(mMap);
+//            chamarTesouros(mMap);
         }
     }
 
@@ -159,6 +165,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                             else{
                                 local(currentLocation);
                                 moverCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), ZOOM, "Estou aqui");
+                                chamarTesouros(mMap);
 //                                Log.i("Contador","Lat/Lon: " + currentLocation.getLatitude() + " " + currentLocation.getLongitude());
                             }
                         }
@@ -231,21 +238,6 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     }
 
 
-    private void setRaioQr(GoogleMap mMap){
-        ArrayList<LatLng> locais = new ArrayList<LatLng>();
-
-        locais.add(new LatLng(-8.064054, -34.937031));
-        locais.add(new LatLng(-8.061719, -34.934452));
-        locais.add(new LatLng(-8.017752, -34.944756));
-        for (LatLng local : locais){
-            mMap.addCircle(new CircleOptions()
-                    .center(local)
-                    .radius(150)
-                    .strokeColor(Color.TRANSPARENT)
-                    .fillColor(Color.TRANSPARENT));
-            mMap.addMarker(new MarkerOptions().position(local).icon(BitmapDescriptorFactory.fromResource(R.drawable.treasuse)));
-        }
-    }
 
     public static void setCont(){
         cont = true;
@@ -256,6 +248,33 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     }
     public static Location getMinhaLocalizacao(){
         return minhaLocalizacao;
+    }
+
+
+    private void setTotensMap(GoogleMap mMap){
+        if (BottomNavigation.getTotens().size() != 0){
+            List<Toten> totens = BottomNavigation.getTotens();
+            for (int i = 0; i < totens.size(); i++){
+                LatLng localToten = new LatLng(totens.get(i).getLocation().getLongitude(), totens.get(i).getLocation().getLatitude());
+                mMap.addMarker(new MarkerOptions().position(localToten).title(totens.get(i).getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.treasuse)));
+                Log.i("Totem", String.valueOf(localToten.latitude + " " + localToten.longitude));
+            }
+        }
+    }
+
+
+    private void chamarTesouros(final GoogleMap mapa){
+        final Handler handler = new Handler();
+        Log.i("Contador", "Iniciou contador");
+        Runnable runnable = new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void run() {
+                handler.postDelayed(this, 5000);
+                setTotensMap(mapa);
+            }
+        };
+        handler.postDelayed(runnable, 0);
     }
 
 }
