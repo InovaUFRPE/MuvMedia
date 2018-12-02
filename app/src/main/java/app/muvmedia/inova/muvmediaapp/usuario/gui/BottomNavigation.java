@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.muvmedia.inova.muvmediaapp.R;
+import app.muvmedia.inova.muvmediaapp.cupom.dominio.ArrayTotens;
 import app.muvmedia.inova.muvmediaapp.cupom.dominio.Toten;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
@@ -118,7 +119,7 @@ public class BottomNavigation extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 60000);
+                handler.postDelayed(this, 30000);
                 if (minhaLocalizacao2 != null) {
 //                    Log.i("Resposta", minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
                     try {
@@ -126,8 +127,11 @@ public class BottomNavigation extends AppCompatActivity {
 
                         Log.i("ListaToten Size", String.valueOf(locaisToten.size()));
                         if (locaisToten.size() != 0){
-                            Toast.makeText(BottomNavigation.this, String.valueOf(locaisToten.get(0).getLocation().get(0).getLatitude() + " "
-                                    + locaisToten.get(0).getLocation().get(0).getLongitude()), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(BottomNavigation.this, String.valueOf(locaisToten.get(0).getLocation().get(0).getLatitude() + " "
+//                                    + locaisToten.get(0).getLocation().get(0).getLongitude()), Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(BottomNavigation.this, String.valueOf(locaisToten.get(0).getLocation().getLongitude() + " "
+                                    + locaisToten.get(0).getLocation().getLatitude()), Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -189,21 +193,20 @@ public class BottomNavigation extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                //testando localização falsa
-//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.058969 + "&lon=" + -34.935671));
+                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.062549 + "&lon=" + -34.934970));
 
-                //testando localização verdadeira
-                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ location.getLatitude() +"&lon=" + location.getLongitude()));
+//                //testando localização verdadeira
+//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ location.getLatitude() +"&lon=" + location.getLongitude()));
 
-                Type type = new TypeToken<List<Toten>>(){}.getType();
+//                Type type = new TypeToken<List<Toten>>(){}.getType();
                 Gson gson = new Gson();
                 if (!Sessao.instance.getResposta().contains("location")) {
                     Log.i("Resposta Json vazio", Sessao.instance.getResposta());
                 }
                 else{
                     Log.i("Resposta Json correto", Sessao.instance.getResposta());
-                    locaisToten = gson.fromJson(Sessao.instance.getResposta(), type);
-                    Toast.makeText(BottomNavigation.this, String.valueOf(locaisToten.get(0)), Toast.LENGTH_SHORT).show();
+//                    locaisToten = gson.fromJson(Sessao.instance.getResposta(), List<Toten>.class);
+                    locaisToten = new Gson().fromJson(Sessao.instance.getResposta(), new TypeToken<List<Toten>>(){}.getType());
                 }
             }
         });
@@ -296,7 +299,7 @@ public class BottomNavigation extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, 1000000);
                 if (minhaLocalizacao2 != null) {
                     getLocalizacaoAparelho2();
                     Log.i("Contador", "Lat/Lon: " + minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
