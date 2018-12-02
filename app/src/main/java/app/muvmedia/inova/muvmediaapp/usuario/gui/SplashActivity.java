@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import app.muvmedia.inova.muvmediaapp.infra.Permissoes;
@@ -14,11 +16,15 @@ import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 
 public class SplashActivity extends Activity implements Runnable {
+    ProgressBar progress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        progress = findViewById(R.id.loader);
+        progress.setVisibility(View.VISIBLE);
         isOnline();
         String permissions[] = new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,

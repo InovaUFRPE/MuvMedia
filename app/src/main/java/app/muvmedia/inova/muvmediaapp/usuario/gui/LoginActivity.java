@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,10 +29,11 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class LoginActivity extends AppCompatActivity {
+    private ProgressBar progress;
     private EditText campoSenha, campoEmail;
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
     private TextView nomeApp,textCriarConta;
-    private ProgressDialog dialog;
+
 
 
     @Override
@@ -41,12 +43,13 @@ public class LoginActivity extends AppCompatActivity {
 //        setAppContexto();
         encontrarElementosView();
         cadastrar();
-
         //design
         nomeApp = findViewById(R.id.nomeappCap);
         String fontPath = "fonts/pieces.ttf";
         Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
         nomeApp.setTypeface(typeface);
+        progress = findViewById(R.id.loader2);
+        progress.setVisibility(View.GONE);
 
     }
 
@@ -60,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
     private void cadastrar(){
         //this.botaoCadstrar = findViewById(R.id.button2);
         this.textCriarConta = findViewById(R.id.textRegistro);
-
         textCriarConta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,13 +75,12 @@ public class LoginActivity extends AppCompatActivity {
     private void encontrarElementosView() {
         this.campoEmail = findViewById(R.id.campoEmail);
         this.campoSenha = findViewById(R.id.campoSenha);
-        dialog = new ProgressDialog(LoginActivity.this);
-        dialog.setTitle("Verficando dados...");
         Button botaoLogar = findViewById(R.id.botaoLogin);
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
+                    progress.setVisibility(View.VISIBLE);
                     login();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -96,16 +97,15 @@ public class LoginActivity extends AppCompatActivity {
     private void login() throws InterruptedException, MuvMediaException {
         if (this.verificarCampos()) {
             if(isOnline()){
-                dialog.show();
                 String usuario = setarUsuario(campoEmail.getText().toString().trim(), campoSenha.getText().toString().trim());
                 logar(usuario);
                 try{
                     if(Sessao.instance.getResposta().contains("Usuário ou senha incorreto")){
-                        dialog.dismiss();
+                        progress.setVisibility(View.GONE);
                         Toast.makeText(this, "Usuário ou senha incorreto", Toast.LENGTH_SHORT).show();
                     } else {
                         getSessaoApi();
-                        dialog.dismiss();
+
                         Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                         Sessao.instance.setCodigo("");
                         startActivity(intent);
@@ -157,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         thread.start();
         thread.join();
-        dialog.cancel();
+
     }
 
     private String setarUsuario(String email, String senha){
@@ -183,12 +183,12 @@ public class LoginActivity extends AppCompatActivity {
         String email = this.campoEmail.getText().toString().trim();
         String senha = this.campoSenha.getText().toString().trim();
         if (this.servicoValidacao.verificarCampoEmail(email)) {
+            progress.setVisibility(View.GONE);
             this.campoEmail.setError("Email Inválido");
-            dialog.dismiss();
             return false;
         } else if (this.servicoValidacao.verificarCampoVazio(senha)) {
+            progress.setVisibility(View.GONE);
             this.campoSenha.setError("Senha Inválida");
-            dialog.dismiss();
             return false;
         } else {
             return true;

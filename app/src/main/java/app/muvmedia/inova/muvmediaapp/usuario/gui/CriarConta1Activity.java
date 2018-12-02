@@ -28,6 +28,7 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class CriarConta1Activity extends AppCompatActivity {
+    private ProgressBar progress;
     private EditText campoEmail, campoSenha;
     private Button botaoProximo;
     private TextView textView;
@@ -40,6 +41,8 @@ public class CriarConta1Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criar_conta1);
 //        setTextViews();
+        progress = findViewById(R.id.loader3);
+        progress.setVisibility(View.GONE);
         irCadastro2();
     }
 
@@ -61,6 +64,7 @@ public class CriarConta1Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (verificarCampos()) {
+                    progress.setVisibility(View.VISIBLE);
                     verificarEmail();
                 }
                 }
@@ -76,6 +80,7 @@ public class CriarConta1Activity extends AppCompatActivity {
                 callServer(campoEmail.getText().toString());
                 if (retornoEmail.contains(campoEmail.getText().toString())){
                     Log.i("Script", "Email encontrado no banco");
+                    progress.setVisibility(View.GONE);
                     campoEmail.requestFocus();
                     campoEmail.setError("Email já cadastrado");
                 }
@@ -142,9 +147,11 @@ private void callServer(final String email)  throws InterruptedException{
         String senha = this.campoSenha.getText().toString().trim();
         if (servicoValidacao.verificarCampoEmail(email)) {
             this.campoEmail.setError("Email inválido");
+            progress.setVisibility(View.GONE);
             return false;
         } else if (servicoValidacao.verificarCampoSenha(senha)) {
             this.campoSenha.setError("Senha inválida");
+            progress.setVisibility(View.GONE);
             return false;
         } else {
             return true;

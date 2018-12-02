@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.muvmedia.inova.muvmediaapp.R;
-import app.muvmedia.inova.muvmediaapp.cupom.dominio.ArrayTotens;
 import app.muvmedia.inova.muvmediaapp.cupom.dominio.Toten;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
