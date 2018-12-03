@@ -47,10 +47,9 @@ public class BottomNavigation extends AppCompatActivity {
     private int tela ;
     private boolean enviar = true;
 
-
-
     private Location minhaLocalizacao2;
     private List<Toten> locaisToten = new ArrayList<>();
+    private static List<Toten> listaDefinitiva = new ArrayList<>();
 
 
     @Override
@@ -118,22 +117,24 @@ public class BottomNavigation extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 30000);
+                handler.postDelayed(this, 5000);
                 if (minhaLocalizacao2 != null) {
-//                    Log.i("Resposta", minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
                     try {
                         enviarLocalizacao();
 
-                        Log.i("ListaToten Size", String.valueOf(locaisToten.size()));
                         if (locaisToten.size() != 0){
-//                            Toast.makeText(BottomNavigation.this, String.valueOf(locaisToten.get(0).getLocation().get(0).getLatitude() + " "
-//                                    + locaisToten.get(0).getLocation().get(0).getLongitude()), Toast.LENGTH_SHORT).show();
-
-                            Toast.makeText(BottomNavigation.this, String.valueOf(locaisToten.get(0).getLocation().getLongitude() + " "
-                                    + locaisToten.get(0).getLocation().getLatitude()), Toast.LENGTH_SHORT).show();
+                            if(listaDefinitiva.size() == 0){
+                                listaDefinitiva.add(locaisToten.get(0));
+                            }
+                            else{
+                                if(listaContemToten()){
+                                    listaDefinitiva.add(locaisToten.get(0));
+                                }
+                            }
+//                            Toast.makeText(BottomNavigation.this, String.valueOf(locaisToten.get(0).getLocation().getLongitude() + " "
+//                                    + locaisToten.get(0).getLocation().getLatitude()), Toast.LENGTH_SHORT).show();
                         }
-
-
+                        Log.i("Lista Definitiva Size", String.valueOf(listaDefinitiva.size()));
                     } catch (InterruptedException e) {
                         Toast.makeText(BottomNavigation.this, "Erro inesperado", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
@@ -192,10 +193,10 @@ public class BottomNavigation extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.062549 + "&lon=" + -34.934970));
+//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.062549 + "&lon=" + -34.934970));
 
 //                //testando localização verdadeira
-//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ location.getLatitude() +"&lon=" + location.getLongitude()));
+                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ location.getLatitude() +"&lon=" + location.getLongitude()));
 
 //                Type type = new TypeToken<List<Toten>>(){}.getType();
                 Gson gson = new Gson();
@@ -289,8 +290,6 @@ public class BottomNavigation extends AppCompatActivity {
     }
 
 
-
-
     private void atualizarLocalizacao(){
         final Handler handler = new Handler();
         Log.i("Contador", "Iniciou contador");
@@ -298,7 +297,7 @@ public class BottomNavigation extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 1000000);
+                handler.postDelayed(this, 5000);
                 if (minhaLocalizacao2 != null) {
                     getLocalizacaoAparelho2();
                     Log.i("Contador", "Lat/Lon: " + minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
@@ -310,6 +309,17 @@ public class BottomNavigation extends AppCompatActivity {
 
 
 
+    private boolean listaContemToten(){
+        for (int i=0; i<listaDefinitiva.size(); i++){
+            if(listaDefinitiva.get(i).getName() == locaisToten.get(0).getName()){
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public static List<Toten> getTotens(){
+        return listaDefinitiva;
+    }
 
 }
