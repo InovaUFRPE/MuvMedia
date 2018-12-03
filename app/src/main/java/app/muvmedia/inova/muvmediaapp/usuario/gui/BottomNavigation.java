@@ -92,9 +92,12 @@ public class BottomNavigation extends AppCompatActivity {
                             }
                             break;
                         case R.id.navigation_perfil:
+                            if (tela!= 3){
                             selectedFragment = new PerfilFragmentActivity();
                             getLocalizacaoAparelho2();
+                            tela = 3;
 //                            HomeTeste.setCont();
+                            }
                             break;
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
