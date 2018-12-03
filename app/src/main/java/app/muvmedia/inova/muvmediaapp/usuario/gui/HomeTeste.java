@@ -159,7 +159,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                         if (task.isSuccessful()){
                             Location currentLocation = (Location) task.getResult();
                             if (currentLocation == null){
-                                Toast.makeText(getContext(), "Ative o GPS Porfavor", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Carregando seu local", Toast.LENGTH_SHORT).show();
                                 Log.e("E","Cliente desligou GPS desligado");
                             }
                             else{
@@ -265,7 +265,6 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
 
     private void chamarTesouros(final GoogleMap mapa){
         final Handler handler = new Handler();
-        Log.i("Contador", "Iniciou contador");
         Runnable runnable = new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override

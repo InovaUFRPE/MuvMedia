@@ -45,12 +45,11 @@ import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 public class BottomNavigation extends AppCompatActivity {
     private Fragment selectedFragment = new HomeTeste();
     private int tela ;
-    private boolean enviar = true;
+    private boolean novoTotem = false;
 
     private Location minhaLocalizacao2;
     private List<Toten> locaisToten = new ArrayList<>();
     private static List<Toten> listaDefinitiva = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,21 +119,23 @@ public class BottomNavigation extends AppCompatActivity {
                 handler.postDelayed(this, 5000);
                 if (minhaLocalizacao2 != null) {
                     try {
-                        enviarLocalizacao();
+                        if (isOnline()) {
+                            enviarLocalizacao();
 
-                        if (locaisToten.size() != 0){
-                            if(listaDefinitiva.size() == 0){
-                                listaDefinitiva.add(locaisToten.get(0));
-                            }
-                            else{
-                                if(listaContemToten()){
+                            if (locaisToten.size() != 0) {
+                                if (listaDefinitiva.size() == 0) {
                                     listaDefinitiva.add(locaisToten.get(0));
+                                    novoTotem = true;
+                                } else {
+                                    if (listaContemToten()) {
+                                        listaDefinitiva.add(locaisToten.get(0));
+                                        novoTotem = true;
+                                    }
                                 }
                             }
-//                            Toast.makeText(BottomNavigation.this, String.valueOf(locaisToten.get(0).getLocation().getLongitude() + " "
-//                                    + locaisToten.get(0).getLocation().getLatitude()), Toast.LENGTH_SHORT).show();
+                            Log.i("Lista Definitiva Size", String.valueOf(listaDefinitiva.size()));
+                            notificacao();
                         }
-                        Log.i("Lista Definitiva Size", String.valueOf(listaDefinitiva.size()));
                     } catch (InterruptedException e) {
                         Toast.makeText(BottomNavigation.this, "Erro inesperado", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
@@ -179,14 +180,17 @@ public class BottomNavigation extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void enviarLocalizacao() throws InterruptedException {
-        callServerPostLocalizacao(minhaLocalizacao2);
-
         if (isOnline()){
-//                enviarNotificacao();
-//                notinha();
-//                receber();
+            try{
+                callServerPostLocalizacao(minhaLocalizacao2);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
-//        enviar=false;
+        else{
+            Toast.makeText(this, "Sem conexão com a internet", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void callServerPostLocalizacao(final Location location) throws InterruptedException {
@@ -261,6 +265,15 @@ public class BottomNavigation extends AppCompatActivity {
     }
 
 
+    private void notificacao(){
+        if (isOnline() && novoTotem){
+            notinha();
+            novoTotem=false;
+//            receber();
+        }
+    }
+
+
     public void notinha(){
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -268,12 +281,12 @@ public class BottomNavigation extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setTicker("Textinho");
+        builder.setTicker("Olá Marujo!!!");
         builder.setContentTitle("Capitão Cupom");
         builder.setContentText("Um novo tesouro próximo de você");
         builder.setSmallIcon(R.drawable.logo);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
-        builder.setContentIntent(pendingIntent);
+//        builder.setContentIntent(pendingIntent);
 
         Notification n = builder.build();
         n.vibrate = new long[]{150, 300, 150, 600};
