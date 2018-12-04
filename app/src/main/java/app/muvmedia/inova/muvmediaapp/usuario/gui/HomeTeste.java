@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.cupom.dominio.Toten;
+import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 
 
 public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
@@ -159,7 +160,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                         if (task.isSuccessful()){
                             Location currentLocation = (Location) task.getResult();
                             if (currentLocation == null){
-                                Toast.makeText(getContext(), "Carregando seu local", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Ative o GPS por favor", Toast.LENGTH_SHORT).show();
                                 Log.e("E","Cliente desligou GPS desligado");
                             }
                             else{
@@ -274,6 +275,14 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             }
         };
         handler.postDelayed(runnable, 0);
+    }
+
+    private boolean isOnline() {
+        if(ServicoDownload.isNetworkAvailable(getContext())) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }

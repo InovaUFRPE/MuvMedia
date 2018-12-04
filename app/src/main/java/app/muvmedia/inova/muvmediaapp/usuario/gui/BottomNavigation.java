@@ -31,7 +31,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class BottomNavigation extends AppCompatActivity {
     private boolean novoTotem = false;
 
     private Location minhaLocalizacao2;
-    private List<Toten> locaisToten = new ArrayList<>();
+    private List<Toten> listaTotem = new ArrayList<>();
     private static List<Toten> listaDefinitiva = new ArrayList<>();
 
     @Override
@@ -60,10 +59,20 @@ public class BottomNavigation extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(navListener);
 
-        if (isOnline()){
-            atualizarLocalizacao();
-            iniciarCont();
-        }
+
+        Toten toten = new Toten();
+        app.muvmedia.inova.muvmediaapp.mapa.dominio.Location locationLoc = new app.muvmedia.inova.muvmediaapp.mapa.dominio.Location();
+        ArrayList<Double> a = new ArrayList<Double>();
+        a.add(0.0);
+        a.add(1.1);
+        locationLoc.setCoordinates(a);
+        toten.setLocation(locationLoc);
+        toten.setName("hahaha");
+//        listaDefinitiva.add(toten);
+
+
+        atualizarLocalizacao();
+        iniciarCont();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -124,24 +133,12 @@ public class BottomNavigation extends AppCompatActivity {
                     try {
                         if (isOnline()) {
                             enviarLocalizacao();
-
-                            if (locaisToten.size() != 0) {
-                                if (listaDefinitiva.size() == 0) {
-                                    listaDefinitiva.add(locaisToten.get(0));
-                                    novoTotem = true;
-                                } else {
-                                    if (listaContemToten()) {
-                                        listaDefinitiva.add(locaisToten.get(0));
-                                        novoTotem = true;
-                                    }
-                                }
-                            }
+                            setListaDefinitiva();
                             Log.i("Lista Definitiva Size", String.valueOf(listaDefinitiva.size()));
-                            notificacao();
                         }
                     } catch (InterruptedException e) {
-                        Toast.makeText(BottomNavigation.this, "Erro inesperado", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
+                        Toast.makeText(BottomNavigation.this, "Erro inesperado", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -162,7 +159,7 @@ public class BottomNavigation extends AppCompatActivity {
                         if (task.isSuccessful()){
                             Location currentLocation = (Location) task.getResult();
                             if (currentLocation == null){
-                                Toast.makeText(getApplicationContext(), "Ative o GPS Porfavor", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "Ative o GPS Porfavor", Toast.LENGTH_SHORT).show();
                                 Log.e("E","Cliente desligou GPS desligado");
                             }
                             else{
@@ -200,7 +197,7 @@ public class BottomNavigation extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.062549 + "&lon=" + -34.934970));
+//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.017297 + "&lon=" + -34.944933));
 
 //                //testando localização verdadeira
                 Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ location.getLatitude() +"&lon=" + location.getLongitude()));
@@ -212,8 +209,8 @@ public class BottomNavigation extends AppCompatActivity {
                 }
                 else{
                     Log.i("Resposta Json correto", Sessao.instance.getResposta());
-//                    locaisToten = gson.fromJson(Sessao.instance.getResposta(), List<Toten>.class);
-                    locaisToten = new Gson().fromJson(Sessao.instance.getResposta(), new TypeToken<List<Toten>>(){}.getType());
+//                    listaTotem = gson.fromJson(Sessao.instance.getResposta(), List<Toten>.class);
+                    listaTotem = new Gson().fromJson(Sessao.instance.getResposta(), new TypeToken<List<Toten>>(){}.getType());
                 }
             }
         });
@@ -314,9 +311,11 @@ public class BottomNavigation extends AppCompatActivity {
             @Override
             public void run() {
                 handler.postDelayed(this, 5000);
-                if (minhaLocalizacao2 != null) {
-                    getLocalizacaoAparelho2();
-                    Log.i("Contador", "Lat/Lon: " + minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
+                if (isOnline()){
+                    if (minhaLocalizacao2 != null) {
+                        getLocalizacaoAparelho2();
+                        Log.i("Contador", "Lat/Lon: " + minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
+                    }
                 }
             }
         };
@@ -324,18 +323,42 @@ public class BottomNavigation extends AppCompatActivity {
     }
 
 
-
-    private boolean listaContemToten(){
-        for (int i=0; i<listaDefinitiva.size(); i++){
-            if(listaDefinitiva.get(i).getName() == locaisToten.get(0).getName()){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static List<Toten> getTotens(){
         return listaDefinitiva;
+    }
+
+    private void setListaDefinitiva(){
+        if (listaDefinitiva.size() == 0) {
+            for (Toten toten : listaTotem) {
+                listaDefinitiva.add(toten);
+                novoTotem = true;
+                notificacao();
+            }
+        }
+        else{
+            boolean adicionou = false;
+            ArrayList<Toten> provisoria = new ArrayList<Toten>();
+            for (int i = 0; i < listaTotem.size(); i++) {
+                for (int j = 0; j < listaDefinitiva.size(); j++) {
+                    if (listaTotem.get(i).getName().equals(listaDefinitiva.get(j).getName())) {
+                        provisoria.add(listaTotem.get(i));
+                    }
+                }
+            }
+            for (int i = 0; i < provisoria.size(); i++) {
+                if (listaTotem.contains(provisoria.get(i))) {
+                    listaTotem.remove(provisoria.get(i));
+                }
+            }
+            for (Toten toten : listaTotem) {
+                listaDefinitiva.add(toten);
+                adicionou = true;
+            }
+            if (adicionou){
+                novoTotem = true;
+                notificacao();
+            }
+        }
     }
 
 }
