@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
@@ -39,6 +40,7 @@ import app.muvmedia.inova.muvmediaapp.cupom.dominio.Toten;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
+import app.muvmedia.inova.muvmediaapp.mapa.gui.HomeFragmentActivity;
 
 
 public class BottomNavigation extends AppCompatActivity {
@@ -46,7 +48,7 @@ public class BottomNavigation extends AppCompatActivity {
     private int tela ;
     private boolean novoTotem = false;
 
-    private Location minhaLocalizacao2;
+    private static Location minhaLocalizacao2;
     private List<Toten> listaTotem = new ArrayList<>();
     private static List<Toten> listaDefinitiva = new ArrayList<>();
 
@@ -58,18 +60,6 @@ public class BottomNavigation extends AppCompatActivity {
         chamarMapaHome();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(navListener);
-
-
-        Toten toten = new Toten();
-        app.muvmedia.inova.muvmediaapp.mapa.dominio.Location locationLoc = new app.muvmedia.inova.muvmediaapp.mapa.dominio.Location();
-        ArrayList<Double> a = new ArrayList<Double>();
-        a.add(0.0);
-        a.add(1.1);
-        locationLoc.setCoordinates(a);
-        toten.setLocation(locationLoc);
-        toten.setName("hahaha");
-//        listaDefinitiva.add(toten);
-
 
         atualizarLocalizacao();
         iniciarCont();
@@ -102,9 +92,9 @@ public class BottomNavigation extends AppCompatActivity {
                             break;
                         case R.id.navigation_perfil:
                             if (tela!= 3){
-                            selectedFragment = new PerfilFragmentActivity();
-                            getLocalizacaoAparelho2();
-                            tela = 3;
+                                selectedFragment = new PerfilFragmentActivity();
+                                getLocalizacaoAparelho2();
+                                tela = 3;
 //                            HomeTeste.setCont();
                             }
                             break;
@@ -128,12 +118,17 @@ public class BottomNavigation extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, 20000);
                 if (minhaLocalizacao2 != null) {
                     try {
                         if (isOnline()) {
                             enviarLocalizacao();
-                            setListaDefinitiva();
+                            if (listaTotem.size() == 0){
+                                listaDefinitiva = listaTotem;
+                            }
+                            else{
+                                setListaDefinitiva();
+                            }
                             Log.i("Lista Definitiva Size", String.valueOf(listaDefinitiva.size()));
                         }
                     } catch (InterruptedException e) {
@@ -152,26 +147,26 @@ public class BottomNavigation extends AppCompatActivity {
 
         provedorLocalizacaoCliente = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         try{
-                final Task location = provedorLocalizacaoCliente.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()){
-                            Location currentLocation = (Location) task.getResult();
-                            if (currentLocation == null){
-//                                Toast.makeText(getApplicationContext(), "Ative o GPS Porfavor", Toast.LENGTH_SHORT).show();
-                                Log.e("E","Cliente desligou GPS desligado");
-                            }
-                            else{
-                                minhaLocalizacao2 = currentLocation;
-                            }
+            final Task location = provedorLocalizacaoCliente.getLastLocation();
+            location.addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if (task.isSuccessful()){
+                        Location currentLocation = (Location) task.getResult();
+                        if (currentLocation == null){
+                            atualizarLocalizacao();
+//                            Toast.makeText(getApplicationContext(), "Ative o GPS Porfavor", Toast.LENGTH_SHORT).show();
+                            Log.e("E","Cliente desligou GPS desligado");
                         }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Não podemos encontrar sua localização atual", Toast.LENGTH_LONG).show();
+                        else{
+                            minhaLocalizacao2 = currentLocation;
                         }
                     }
-                });
-
+                    else {
+                        Toast.makeText(getApplicationContext(), "Não podemos encontrar sua localização atual", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }catch (SecurityException e){
             e.getMessage();
         }
@@ -273,6 +268,12 @@ public class BottomNavigation extends AppCompatActivity {
         }
     }
 
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        notinha();
+//    }
+
 
     public void notinha(){
 
@@ -312,9 +313,9 @@ public class BottomNavigation extends AppCompatActivity {
             public void run() {
                 handler.postDelayed(this, 5000);
                 if (isOnline()){
-                    if (minhaLocalizacao2 != null) {
+                    if (minhaLocalizacao2 == null) {
                         getLocalizacaoAparelho2();
-                        Log.i("Contador", "Lat/Lon: " + minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
+//                        Log.i("Contador", "Lat/Lon: " + minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
                     }
                 }
             }
@@ -359,6 +360,26 @@ public class BottomNavigation extends AppCompatActivity {
                 notificacao();
             }
         }
+    }
+
+
+    private void localizacao(){
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void run() {
+                handler.postDelayed(this, 5000);
+                if (minhaLocalizacao2 == null){
+                    getLocalizacaoAparelho2();
+                }
+            }
+        };
+        handler.postDelayed(runnable, 0);
+    }
+
+    public static Location getMinhaLocalizacao(){
+        return minhaLocalizacao2;
     }
 
 }

@@ -54,11 +54,11 @@ public class HomeFragmentActivity extends Fragment implements
     private boolean logado;
 
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-
         return v;
     }
 
@@ -91,24 +91,10 @@ public class HomeFragmentActivity extends Fragment implements
         mMap.setOnMyLocationClickListener(this);
         enableMyLocation();
         getLocationPermission();
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         updateLocationUI();
-        carregarLocalTeste(mMap);
+//        carregarLocalTeste(mMap);
     }
-
-    private void carregarLocalTeste(GoogleMap mMap){
-
-        LatLng ceagri2 = new LatLng(-8.0169037,-34.9456828);
-        mMap.addMarker(new MarkerOptions().position(ceagri2).title("Ceagri II - UFRPE").icon(BitmapDescriptorFactory.fromResource(R.drawable.treasuse)));
-
-        LatLng ufpe = new LatLng(-8.0524478, -34.9519173);
-        mMap.addMarker(new MarkerOptions().position(ufpe).title("UFPE").icon(BitmapDescriptorFactory.fromResource(R.drawable.treasuse)));
-
-        LatLng ruRural = new LatLng(-8.014179, -34.951058);
-        mMap.addMarker(new MarkerOptions().position(ruRural).title("RU - UFRPE").icon(BitmapDescriptorFactory.fromResource(R.drawable.treasuse)));
-
-    }
-
-
     /**
      * Enables the My Location layer if the fine location permission has been granted.
      */

@@ -19,13 +19,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,13 +59,11 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     private GoogleMap mMap;
     private FusedLocationProviderClient provedorLocalizacaoCliente;
     private static final float ZOOM = 15f;
-
     private AutoCompleteTextView buscaMapa;
-    private GoogleApiClient googleApiClient;
     private ImageView gpsMapa;
 
     private static boolean cont;
-    private static Location minhaLocalizacao;
+    private Location minhaLocalizacao;
 
     @Nullable
     @Override
@@ -70,8 +71,6 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         buscaMapa = v.findViewById(R.id.editBuscaMapa);
         gpsMapa = v.findViewById(R.id.ic_gps);
-
-//        iniciarCont();
         return v;
     }
 
@@ -126,6 +125,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+//        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.style_json));
         if (permitirLocalizacao) {
             getLocalizacaoAparelho();
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -137,9 +137,19 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             buscarMapa();
-//            setRaioQr(mMap);
-//            chamarTesouros(mMap);
         }
+    }
+
+    private void grauCamera(LatLng latLng, GoogleMap mMap){
+        CameraPosition position = CameraPosition.builder()
+                .target(latLng)
+                .zoom( ZOOM )
+                .bearing( 0.0f )
+                .tilt( 90f )
+                .build();
+
+        mMap.animateCamera(
+                CameraUpdateFactory.newCameraPosition( position ), null );
     }
 
 
@@ -160,14 +170,16 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
                         if (task.isSuccessful()){
                             Location currentLocation = (Location) task.getResult();
                             if (currentLocation == null){
-                                Toast.makeText(getContext(), "Ative o GPS por favor", Toast.LENGTH_SHORT).show();
-                                Log.e("E","Cliente desligou GPS desligado");
+                                minhaLocalizacao = BottomNavigation.getMinhaLocalizacao();
+                                Log.i("ContGPS", "GPS ligado mas dando erro");
+//                                Log.e("E","Cliente desligou GPS desligado");
                             }
                             else{
-                                local(currentLocation);
-                                moverCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), ZOOM, "Estou aqui");
+                                Log.i("Susesso GPS", "GPS Sucesso");
+                                minhaLocalizacao = currentLocation;
+                                grauCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), mMap);
+//                                moverCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), ZOOM, "Estou aqui");
                                 chamarTesouros(mMap);
-//                                Log.i("Contador","Lat/Lon: " + currentLocation.getLatitude() + " " + currentLocation.getLongitude());
                             }
                         }
                         else {
@@ -180,11 +192,6 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
         }catch (SecurityException e){
             e.getMessage();
         }
-    }
-
-    private Location local(Location location){
-        minhaLocalizacao = location;
-        return minhaLocalizacao;
     }
 
     private void moverCamera(LatLng latLng, float zoom, String titulo){
@@ -238,28 +245,22 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
 
     }
 
-
-
     public static void setCont(){
         cont = true;
     }
 
-    public static void setMinhaLocalizacao(){
-        minhaLocalizacao=null;
-    }
-    public static Location getMinhaLocalizacao(){
-        return minhaLocalizacao;
-    }
-
-
     private void setTotensMap(GoogleMap mMap){
         if (BottomNavigation.getTotens().size() != 0){
             List<Toten> totens = BottomNavigation.getTotens();
+            mMap.clear();
             for (int i = 0; i < totens.size(); i++){
                 LatLng localToten = new LatLng(totens.get(i).getLocation().getLongitude(), totens.get(i).getLocation().getLatitude());
                 mMap.addMarker(new MarkerOptions().position(localToten).title(totens.get(i).getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.treasuse)));
                 Log.i("Totem", String.valueOf(localToten.latitude + " " + localToten.longitude));
             }
+        }
+        else{
+            mMap.clear();
         }
     }
 
@@ -270,19 +271,11 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, 21000);
                 setTotensMap(mapa);
             }
         };
         handler.postDelayed(runnable, 0);
-    }
-
-    private boolean isOnline() {
-        if(ServicoDownload.isNetworkAvailable(getContext())) {
-            return true;
-        }else{
-            return false;
-        }
     }
 
 }
