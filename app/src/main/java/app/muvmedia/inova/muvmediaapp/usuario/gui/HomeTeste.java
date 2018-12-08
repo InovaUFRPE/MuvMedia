@@ -264,14 +264,13 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
         }
     }
 
-
     private void chamarTesouros(final GoogleMap mapa){
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 21000);
+                handler.postDelayed(this, 9000);
                 setTotensMap(mapa);
             }
         };

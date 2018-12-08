@@ -23,6 +23,7 @@ public class SplashActivity extends Activity implements Runnable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         progress = findViewById(R.id.loader);
         progress.setVisibility(View.VISIBLE);
         isOnline();
@@ -37,7 +38,7 @@ public class SplashActivity extends Activity implements Runnable {
         }
     }
     public void run() {
-        if(Sessao.instance.getMuver()==null) {
+        if(Sessao.instance.getSailor() == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             //Toast.makeText(getApplicationContext(), "Usuario null", Toast.LENGTH_SHORT).show();
@@ -47,7 +48,7 @@ public class SplashActivity extends Activity implements Runnable {
     private void isOnline() {
         if(ServicoDownload.isNetworkAvailable(getApplicationContext()))
         {
-            if (Sessao.instance.getMuver() != null){
+            if (Sessao.instance.getSailor() != null){
                 Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                 startActivity(intent);
                 finish();

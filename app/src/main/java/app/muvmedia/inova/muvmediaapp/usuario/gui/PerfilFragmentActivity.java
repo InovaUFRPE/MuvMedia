@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class PerfilFragmentActivity extends Fragment {
     private Button alterarInformações, confirmarButton;
+    private ImageView sair;
     private Usuario usuario = Sessao.instance.getSailor().getUser();
     private Sailor sailor = Sessao.instance.getSailor();
     private ServicoValidacao servicoValidacao = new ServicoValidacao();
@@ -64,6 +66,7 @@ public class PerfilFragmentActivity extends Fragment {
         }
         setUpView(v);
         setUpListView(v);
+        logout(v);
         return v;
     }
 
@@ -82,8 +85,6 @@ public class PerfilFragmentActivity extends Fragment {
                 startActivity(intent);
             }
         });
-
-
     }
 
     private void setUpView(View v) {
@@ -121,8 +122,6 @@ public class PerfilFragmentActivity extends Fragment {
         });
         thread.start();
         thread.join();
-
-
     }
 
     private void setListners() {
@@ -523,5 +522,18 @@ public class PerfilFragmentActivity extends Fragment {
 
     public int getMaxToBar() {
             return (int) Math.floor(175*Math.pow((double)sailor.getLevel(),1.5));
-        }
+    }
+
+
+    private void logout(View v){
+        sair = v.findViewById(R.id.imSair);
+        sair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//TODO          Adicionar dialog de confirmação para sair
+                Sessao.instance.setSailor(null);
+                getActivity().finish();
+            }
+        });
+    }
 }

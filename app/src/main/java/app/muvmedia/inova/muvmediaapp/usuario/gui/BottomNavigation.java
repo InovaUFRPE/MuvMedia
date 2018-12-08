@@ -13,15 +13,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,6 +36,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +46,7 @@ import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
 import app.muvmedia.inova.muvmediaapp.mapa.gui.HomeFragmentActivity;
+import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 
 
 public class BottomNavigation extends AppCompatActivity {
@@ -49,13 +55,17 @@ public class BottomNavigation extends AppCompatActivity {
     private boolean novoTotem = false;
 
     private static Location minhaLocalizacao2;
-    private List<Toten> listaTotem = new ArrayList<>();
+    private ArrayList<Toten> listaTotem = new ArrayList<>();
     private static List<Toten> listaDefinitiva = new ArrayList<>();
+    private ArrayList<Toten> teste = new ArrayList<>();
+    private Sailor sailor = Sessao.instance.getSailor();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_navigation);
+
         getLocalizacaoAparelho2();
         chamarMapaHome();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -63,6 +73,9 @@ public class BottomNavigation extends AppCompatActivity {
 
         atualizarLocalizacao();
         iniciarCont();
+
+//        Bundle bundle = getIntent().getExtras();
+//        teste = getIntent().getSerializableExtra("totens");
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -118,7 +131,7 @@ public class BottomNavigation extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 20000);
+                handler.postDelayed(this, 8000);
                 if (minhaLocalizacao2 != null) {
                     try {
                         if (isOnline()) {
@@ -128,6 +141,7 @@ public class BottomNavigation extends AppCompatActivity {
                             }
                             else{
                                 setListaDefinitiva();
+                                notificacao();
                             }
                             Log.i("Lista Definitiva Size", String.valueOf(listaDefinitiva.size()));
                         }
@@ -144,7 +158,6 @@ public class BottomNavigation extends AppCompatActivity {
 
     public void getLocalizacaoAparelho2(){
         FusedLocationProviderClient provedorLocalizacaoCliente;
-
         provedorLocalizacaoCliente = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         try{
             final Task location = provedorLocalizacaoCliente.getLastLocation();
@@ -192,10 +205,10 @@ public class BottomNavigation extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.017297 + "&lon=" + -34.944933));
+                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.017297 + "&lon=" + -34.944933));
 
 //                //testando localização verdadeira
-                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ location.getLatitude() +"&lon=" + location.getLongitude()));
+//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ location.getLatitude() +"&lon=" + location.getLongitude()));
 
 //                Type type = new TypeToken<List<Toten>>(){}.getType();
                 Gson gson = new Gson();
@@ -214,43 +227,6 @@ public class BottomNavigation extends AppCompatActivity {
 
     }
 
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void enviarNotificacao(){
-        Intent intent = new Intent(BottomNavigation.this, BottomNavigation.class);
-        intent.putExtra(String.valueOf(R.drawable.logo), "Um novo tesouro próximo de você");
-        int id = (int) (Math.random()*1000);
-        PendingIntent pi = PendingIntent.getActivity(BottomNavigation.this, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notification = new Notification.Builder(BottomNavigation.this)
-                .setContentTitle("Capitão Cupom")
-                .setContentText("Um novo tesouro próximo de você")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo))
-                .setContentIntent(pi).build();
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notification.vibrate = new long[]{150, 300, 150, 600};
-        notification.flags = Notification.FLAG_AUTO_CANCEL;
-        notificationManager.notify(id, notification);
-
-
-        try {
-            Uri som  = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone toque = RingtoneManager.getRingtone(this, som);
-            toque.play();
-        }catch (Exception e){
-
-        }
-//        finish();
-    }
-
-    private void receber(){
-        getIntent().getStringExtra(String.valueOf(R.drawable.logo));
-//        Sessao.instance.setCodigo("");
-    }
-
-
     private boolean isOnline() {
         if(ServicoDownload.isNetworkAvailable(getApplicationContext())) {
             return true;
@@ -260,38 +236,75 @@ public class BottomNavigation extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void notificacao(){
         if (isOnline() && novoTotem){
-            notinha();
+            enviarNotificacao();
             novoTotem=false;
-//            receber();
         }
+        Sessao.instance.setSailor(sailor);
     }
 
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        notinha();
+//    public void notinha(){
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        Intent intent = new Intent(this, BottomNavigation.class);
+//        Bundle bundle = new Bundle();
+//        intent.setAction(Intent.ACTION_MAIN);
+//        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+//        intent.putExtra("totens", listaTotem);
+////        bundle.putSerializable("totens", listaTotem);
+////        intent.putExtras(bundle);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+//
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+//        builder.setTicker("Olá Marujo!!!");
+//        builder.setContentTitle("Capitão Cupom");
+//        builder.setContentText("Um novo tesouro próximo de você");
+//        builder.setSmallIcon(R.drawable.logo);
+//        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
+//        builder.setContentIntent(pendingIntent);
+//
+//
+//        Notification n = builder.build();
+//        n.vibrate = new long[]{150, 300, 150, 600};
+//        n.flags = Notification.FLAG_AUTO_CANCEL;
+//        notificationManager.notify(R.drawable.logo, n);
+//
+//        try {
+//            Uri som  = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//            Ringtone toque = RingtoneManager.getRingtone(this, som);
+//            toque.play();
+//        }catch (Exception e){
+//
+//        }
 //    }
 
 
-    public void notinha(){
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void enviarNotificacao(){
+        Intent intent = new Intent(this, BottomNavigation.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        intent.putExtra("totens", listaTotem);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent intent = new Intent(BottomNavigation.this, BottomNavigation.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
+        int id = (int) (Math.random()*1000);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setTicker("Olá Marujo!!!");
         builder.setContentTitle("Capitão Cupom");
         builder.setContentText("Um novo tesouro próximo de você");
         builder.setSmallIcon(R.drawable.logo);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
-//        builder.setContentIntent(pendingIntent);
+        builder.setContentIntent(pi);
+        builder.setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(id, builder.build());
 
         Notification n = builder.build();
         n.vibrate = new long[]{150, 300, 150, 600};
-        n.flags = Notification.FLAG_AUTO_CANCEL;
+//      n.flags = Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(R.drawable.logo, n);
 
         try {
@@ -301,6 +314,7 @@ public class BottomNavigation extends AppCompatActivity {
         }catch (Exception e){
 
         }
+        Sessao.instance.setSailor(sailor);
     }
 
 
@@ -315,7 +329,9 @@ public class BottomNavigation extends AppCompatActivity {
                 if (isOnline()){
                     if (minhaLocalizacao2 == null) {
                         getLocalizacaoAparelho2();
-//                        Log.i("Contador", "Lat/Lon: " + minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
+                    }
+                    else{
+                        Log.i("Contador", "Lat/Lon: " + minhaLocalizacao2.getLatitude() + " " + minhaLocalizacao2.getLongitude());
                     }
                 }
             }
@@ -333,7 +349,6 @@ public class BottomNavigation extends AppCompatActivity {
             for (Toten toten : listaTotem) {
                 listaDefinitiva.add(toten);
                 novoTotem = true;
-                notificacao();
             }
         }
         else{
@@ -357,29 +372,18 @@ public class BottomNavigation extends AppCompatActivity {
             }
             if (adicionou){
                 novoTotem = true;
-                notificacao();
             }
         }
-    }
-
-
-    private void localizacao(){
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void run() {
-                handler.postDelayed(this, 5000);
-                if (minhaLocalizacao2 == null){
-                    getLocalizacaoAparelho2();
-                }
-            }
-        };
-        handler.postDelayed(runnable, 0);
     }
 
     public static Location getMinhaLocalizacao(){
         return minhaLocalizacao2;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//TODO      Adicionar dialog de confirmação para sair
+        Sessao.instance.setSailor(null);
+    }
 }

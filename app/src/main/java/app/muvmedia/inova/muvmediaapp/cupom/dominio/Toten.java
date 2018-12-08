@@ -2,13 +2,16 @@ package app.muvmedia.inova.muvmediaapp.cupom.dominio;
 
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 
-public class Toten {
+public class Toten implements Parcelable, Serializable {
     private String name;
     private app.muvmedia.inova.muvmediaapp.mapa.dominio.Location location;
     private List<String> campaigns;
@@ -31,6 +34,16 @@ public class Toten {
 
     public List<String> getCampaigns() {
         return campaigns;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 
 //    public void setCampaigns(ArrayList<Campaign> campaigns) {
