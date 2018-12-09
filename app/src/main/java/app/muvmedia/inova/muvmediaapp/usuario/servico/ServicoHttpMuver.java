@@ -217,6 +217,7 @@ public class ServicoHttpMuver {
                 answer = EntityUtils.toString(resposta.getEntity());
                 Sessao.instance.setResposta("206");
             } else {
+                Sessao.instance.setResposta("1000");
                 throw new Exception("Erro");
             }
         } catch (Exception e) {

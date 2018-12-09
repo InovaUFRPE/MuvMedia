@@ -26,6 +26,9 @@ import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import static android.Manifest.permission.CAMERA;
 
 public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerView.ResultHandler{
