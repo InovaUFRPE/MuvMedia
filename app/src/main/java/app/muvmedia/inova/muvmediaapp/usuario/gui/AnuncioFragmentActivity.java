@@ -1,6 +1,8 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -68,7 +70,6 @@ public class AnuncioFragmentActivity extends Fragment  {
             } catch (InterruptedException e) {
                 Toast.makeText(getContext(), "Erro Inesperado", Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(getContext(), scanContent, Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(getContext(), "Erro Inesperado", Toast.LENGTH_LONG).show();
         }
@@ -97,6 +98,22 @@ public class AnuncioFragmentActivity extends Fragment  {
     }
 
     public void getResposta() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("NOVO CUPOM!?");
+        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(getContext(), BottomNavigation.class);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("Sair", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(getContext(), BottomNavigation.class);
+                startActivity(intent);
+            }
+        });
         String mensagem = "Hoje não temos nada para você!";
         if (Sessao.instance.getResposta().equals("200")) {
             mensagem = "YOOOOOOOOO, PARABÉNS MARUJO VOCÊ RECEBEU UM NOME CUPOM... VÁ ATÉ SEU PERFIL E APROVEITE HOHOHOHO";
@@ -104,9 +121,9 @@ public class AnuncioFragmentActivity extends Fragment  {
             mensagem = "ARRRRGHHHH, TA ACHANDO QUE SOU BOBO? VOLTE AMANHÃ!!!";
 
         }
-        Toast.makeText(getContext(), mensagem , Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(getContext(), BottomNavigation.class);
-        startActivity(intent);
+        builder.setMessage(mensagem);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }
