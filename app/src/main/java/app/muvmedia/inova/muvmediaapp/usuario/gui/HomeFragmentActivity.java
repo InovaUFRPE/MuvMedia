@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +32,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,7 +50,6 @@ public class HomeFragmentActivity extends Fragment implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient provedorLocalizacaoCliente;
     private static final float ZOOM = 15f;
-    private AutoCompleteTextView buscaMapa;
     private ImageView gpsMapa;
 
     private static boolean cont;
@@ -64,7 +59,6 @@ public class HomeFragmentActivity extends Fragment implements OnMapReadyCallback
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        buscaMapa = v.findViewById(R.id.editBuscaMapa);
         gpsMapa = v.findViewById(R.id.ic_gps);
         return v;
     }
@@ -81,19 +75,7 @@ public class HomeFragmentActivity extends Fragment implements OnMapReadyCallback
         getPermissaoLocalizacao();
     }
 
-    private void buscarMapa(){
-        buscaMapa.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE
-                        || event.getAction() == KeyEvent.ACTION_DOWN
-                        || event.getAction() == KeyEvent.KEYCODE_ENTER){
-                    geoLocalizacao();
-                }
-                return false;
-            }
-        });
-
+    private void gps(){
         gpsMapa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,22 +83,6 @@ public class HomeFragmentActivity extends Fragment implements OnMapReadyCallback
             }
         });
     }
-
-    private void geoLocalizacao(){
-        String busca = buscaMapa.getText().toString();
-        Geocoder geocoder = new Geocoder(getContext());
-        List<Address> lista = new ArrayList<>();
-        try{
-            lista = geocoder.getFromLocationName(busca, 1);
-        }catch (IOException e){
-            e.getMessage();
-        }
-        if (lista.size() > 0){
-            Address endereco = lista.get(0);
-            moverCamera(new LatLng(endereco.getLatitude(), endereco.getLongitude()), ZOOM, endereco.getAddressLine(0));
-        }
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -131,7 +97,7 @@ public class HomeFragmentActivity extends Fragment implements OnMapReadyCallback
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            buscarMapa();
+            gps();
         }
     }
 

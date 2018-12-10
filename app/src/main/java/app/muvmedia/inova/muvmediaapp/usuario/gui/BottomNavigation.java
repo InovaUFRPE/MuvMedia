@@ -1,8 +1,10 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -54,9 +56,16 @@ public class BottomNavigation extends AppCompatActivity {
     private Sailor sailor = Sessao.instance.getSailor();
     private ArrayList<Integer> idNotificationList = new ArrayList<>();
 
+    private boolean backPressedOnce = false;
+    private Handler backPressedHandler = new Handler();
+    private static final int BACK_PRESSED_DELAY = 2000;
 
-    private Toast toast;
-    private long lastBackPressTime = 0;
+    private final Runnable backPressedTimeoutAction = new Runnable() {
+        @Override
+        public void run() {
+            backPressedOnce = false;
+        }
+    };
 
 
     @Override
@@ -253,8 +262,8 @@ public class BottomNavigation extends AppCompatActivity {
         builder.setTicker("Olá Marujo!!!");
         builder.setContentTitle("Capitão Cupom");
         builder.setContentText("Um novo tesouro próximo de você");
-        builder.setSmallIcon(R.drawable.logo);
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
+        builder.setSmallIcon(R.drawable.caplogocap);
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.caplogocap));
         builder.setContentIntent(pi);
         builder.setAutoCancel(true);
         builder.setVibrate(new long[]{150, 300, 150, 600});
@@ -272,8 +281,6 @@ public class BottomNavigation extends AppCompatActivity {
         Sessao.instance.setSailor(sailor);
         Log.i("Lista notificações", String.valueOf(idNotificationList.size()));
     }
-
-
 
     private void atualizarLocalizacao(){
         final Handler handler = new Handler();
@@ -295,7 +302,6 @@ public class BottomNavigation extends AppCompatActivity {
         };
         handler.postDelayed(runnable, 0);
     }
-
 
     public static List<Toten> getTotens(){
         return listaDefinitiva;
@@ -337,33 +343,29 @@ public class BottomNavigation extends AppCompatActivity {
         return minhaLocalizacao2;
     }
 
-    @Override
-    public void onBackPressed() {
-        if (this.lastBackPressTime < System.currentTimeMillis() - 4000) {
-            toast = Toast.makeText(this, "Pressione o Botão Voltar novamente para fechar o Aplicativo.", 4000);
-            toast.show();
-            this.lastBackPressTime = System.currentTimeMillis();
-        } else {
-            if (toast != null) {
-                toast.cancel();
-            }
-            if (idNotificationList.size() != 0){
-                for (int id : idNotificationList){
-                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    mNotificationManager.cancel(id);
-                    Sessao.instance.setSailor(null);
-                    finish();
-                }
+    private void apagarNotificacao(){
+        if (idNotificationList.size() != 0) {
+            for (int id : idNotificationList) {
+                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.cancel(id);
                 Sessao.instance.setSailor(null);
-                finish();
-                Log.i("Entrou if onBackPressed", String.valueOf(idNotificationList.size()));
             }
-            else{
-                Log.i("Entrou else onBackPressed", "");
-            }
-            Sessao.instance.setSailor(null);
-            finish();
         }
-        super.onBackPressed();
+    }
+
+    public void onBackPressed() {
+        try {
+            if (this.backPressedOnce) {
+                apagarNotificacao();
+                finish();
+                return;
+            }
+            this.backPressedOnce = true;
+            Toast.makeText(this, "Pressione novamente para sair", Toast.LENGTH_SHORT).show();
+            backPressedHandler.postDelayed(backPressedTimeoutAction, BACK_PRESSED_DELAY);
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(this, "Erro", Toast.LENGTH_SHORT).show();
+        }
     }
 }
