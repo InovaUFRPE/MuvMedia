@@ -1,6 +1,5 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -19,16 +18,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,10 +43,9 @@ import java.util.ArrayList;
 import java.util.List;
 import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.cupom.dominio.Toten;
-import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 
 
-public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
+public class HomeFragmentActivity extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
     private final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -155,7 +150,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
 
     private void iniciarMapa(){
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapinha1);
-        mapFragment.getMapAsync(HomeTeste.this);
+        mapFragment.getMapAsync(HomeFragmentActivity.this);
     }
 
 
@@ -270,7 +265,7 @@ public class HomeTeste extends Fragment implements OnMapReadyCallback, GoogleApi
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 9000);
+                handler.postDelayed(this, 11000);
                 setTotensMap(mapa);
             }
         };

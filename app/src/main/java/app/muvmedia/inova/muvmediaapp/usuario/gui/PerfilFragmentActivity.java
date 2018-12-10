@@ -66,7 +66,7 @@ public class PerfilFragmentActivity extends Fragment {
         }
         setUpView(v);
         setUpListView(v);
-        logout(v);
+//        logout(v);
         return v;
     }
 
@@ -90,20 +90,25 @@ public class PerfilFragmentActivity extends Fragment {
     private void setUpView(View v) {
         alterarInformações = v.findViewById(R.id.btnAlterarInfo);
         nome = v.findViewById(R.id.textView2);
-        nome.setText(Sessao.instance.getSailor().getName());
         emailInvisivel = v.findViewById(R.id.emailTextPerfil);
-        emailInvisivel.setText(Sessao.instance.getSailor().getUser().getEmail());
         nascimentoInvisivel = v.findViewById(R.id.nascimentoTextPerfil);
-        nascimentoInvisivel.setText(formatarNasc(Sessao.instance.getSailor().getBirthday()));
-//        nascimentoInvisivel.setText(Sessao.instance.getSailor().getBirthday());
         xp = v.findViewById(R.id.textViewXp);
-        xp.setText("XP:"+String.valueOf(Sessao.instance.getSailor().getXp())+"/"+getMaxToBar());
         level = v.findViewById(R.id.textViewLevel);
-        level.setText("LEVEL:"+String.valueOf(Sessao.instance.getSailor().getLevel()));
         progressBar = v.findViewById(R.id.progressBar);
-        progressBar.setMax(getMaxToBar());
-        progressBar.setProgress(sailor.getXp());
-        setListners();
+
+        if (isOnline()){
+            nome.setText(Sessao.instance.getSailor().getName());
+            emailInvisivel.setText(Sessao.instance.getSailor().getUser().getEmail());
+            nascimentoInvisivel.setText(formatarNasc(Sessao.instance.getSailor().getBirthday()));
+            xp.setText("XP:"+String.valueOf(Sessao.instance.getSailor().getXp())+"/"+getMaxToBar());
+            level.setText("LEVEL:"+String.valueOf(Sessao.instance.getSailor().getLevel()));
+            progressBar.setMax(getMaxToBar());
+            progressBar.setProgress(sailor.getXp());
+            setListners();
+        }
+        else{
+            Toast.makeText(getContext(), "Por favor, ative a internet e atualize a página", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void callSailor() throws InterruptedException {
@@ -117,7 +122,6 @@ public class PerfilFragmentActivity extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //Sessao.instance.setResposta(usuarioEditado);
             }
         });
         thread.start();
@@ -129,8 +133,13 @@ public class PerfilFragmentActivity extends Fragment {
             @Override
             public void onClick(View view) {
                 View mView = getLayoutInflater().inflate(R.layout.dialog_mudar_inform, null);
-                setInformacoesDialog(mView);
-                createDialogInformacoes(mView);
+                if (isOnline()){
+                    setInformacoesDialog(mView);
+                    createDialogInformacoes(mView);
+                }
+                else{
+                    Toast.makeText(getContext(), "Por favor, ative a internet", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -248,8 +257,6 @@ public class PerfilFragmentActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 setDatePicker();
-//                Toast.makeText(getActivity(), nascimento, Toast.LENGTH_SHORT).show();
-//                edtNascimento.setText(formatarNasc(nascimento));
             }
         });
 
@@ -270,7 +277,6 @@ public class PerfilFragmentActivity extends Fragment {
         else {
             try {
                 editarSailorNascimento(putBackNasc(edtNascimento.getText().toString()));
-//                String nascimentoFinal = nascimento.replace("-", "/");
                 nascimentoInvisivel.setText(edtNascimento.getText().toString());
                 edtNascimento.setText(edtNascimento.getText().toString());
                 changeEmail.setText(edtNascimento.getText().toString());
@@ -447,7 +453,6 @@ public class PerfilFragmentActivity extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //Sessao.instance.setResposta(usuarioEditado);
             }
         });
         thread.start();
@@ -525,15 +530,15 @@ public class PerfilFragmentActivity extends Fragment {
     }
 
 
-    private void logout(View v){
-        sair = v.findViewById(R.id.imSair);
-        sair.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//TODO          Adicionar dialog de confirmação para sair
-                Sessao.instance.setSailor(null);
-                getActivity().finish();
-            }
-        });
-    }
+//    private void logout(View v){
+//        sair = v.findViewById(R.id.imSair);
+//        sair.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////TODO          Adicionar dialog de confirmação para sair
+//                Sessao.instance.setSailor(null);
+//                getActivity().finish();
+//            }
+//        });
+//    }
 }

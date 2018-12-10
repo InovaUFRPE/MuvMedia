@@ -1,9 +1,8 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
-import android.annotation.TargetApi;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -13,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
@@ -24,19 +22,15 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,12 +39,11 @@ import app.muvmedia.inova.muvmediaapp.cupom.dominio.Toten;
 import app.muvmedia.inova.muvmediaapp.infra.HttpConnection;
 import app.muvmedia.inova.muvmediaapp.infra.ServicoDownload;
 import app.muvmedia.inova.muvmediaapp.infra.Sessao;
-import app.muvmedia.inova.muvmediaapp.mapa.gui.HomeFragmentActivity;
 import app.muvmedia.inova.muvmediaapp.usuario.dominio.Sailor;
 
 
 public class BottomNavigation extends AppCompatActivity {
-    private Fragment selectedFragment = new HomeTeste();
+    private Fragment selectedFragment = new HomeFragmentActivity();
     private int tela ;
     private boolean novoTotem = false;
 
@@ -59,6 +52,11 @@ public class BottomNavigation extends AppCompatActivity {
     private static List<Toten> listaDefinitiva = new ArrayList<>();
     private ArrayList<Toten> teste = new ArrayList<>();
     private Sailor sailor = Sessao.instance.getSailor();
+    private ArrayList<Integer> idNotificationList = new ArrayList<>();
+
+
+    private Toast toast;
+    private long lastBackPressTime = 0;
 
 
     @Override
@@ -70,12 +68,13 @@ public class BottomNavigation extends AppCompatActivity {
         chamarMapaHome();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(navListener);
+    }
 
+    @Override
+    public void onResume(){
+        super.onResume();
         atualizarLocalizacao();
         iniciarCont();
-
-//        Bundle bundle = getIntent().getExtras();
-//        teste = getIntent().getSerializableExtra("totens");
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -84,10 +83,8 @@ public class BottomNavigation extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()){
                         case R.id.navigation_home2:
-//                            HomeTeste.setMinhaLocalizacao();
-//                            HomeTeste.cont = false;
                             if (tela != 1){
-                                HomeTeste homeTeste = new HomeTeste();
+                                HomeFragmentActivity homeTeste = new HomeFragmentActivity();
                                 FragmentManager manager1 = getSupportFragmentManager();
                                 manager1.beginTransaction().replace(R.id.fragment_container, homeTeste).commit();
                                 getLocalizacaoAparelho2();
@@ -100,7 +97,6 @@ public class BottomNavigation extends AppCompatActivity {
                                 selectedFragment = new AnuncioFragmentActivity();
                                 getLocalizacaoAparelho2();
                                 tela = 2;
-//                                HomeTeste.setCont();
                             }
                             break;
                         case R.id.navigation_perfil:
@@ -108,7 +104,6 @@ public class BottomNavigation extends AppCompatActivity {
                                 selectedFragment = new PerfilFragmentActivity();
                                 getLocalizacaoAparelho2();
                                 tela = 3;
-//                            HomeTeste.setCont();
                             }
                             break;
                     }
@@ -118,10 +113,12 @@ public class BottomNavigation extends AppCompatActivity {
             };
 
     private void chamarMapaHome(){
-        HomeTeste homeTeste = new HomeTeste();
+        HomeFragmentActivity homeTeste = new HomeFragmentActivity();
         FragmentManager manager1 = getSupportFragmentManager();
         manager1.beginTransaction().replace(R.id.fragment_container, homeTeste).commit();
-        getLocalizacaoAparelho2();
+        if (isOnline()){
+            getLocalizacaoAparelho2();
+        }
         tela = 1;
     }
 
@@ -131,7 +128,7 @@ public class BottomNavigation extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                handler.postDelayed(this, 8000);
+                handler.postDelayed(this, 10000);
                 if (minhaLocalizacao2 != null) {
                     try {
                         if (isOnline()) {
@@ -147,7 +144,7 @@ public class BottomNavigation extends AppCompatActivity {
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                        Toast.makeText(BottomNavigation.this, "Erro inesperado", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(BottomNavigation.this, "Erro inesperado", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -168,7 +165,6 @@ public class BottomNavigation extends AppCompatActivity {
                         Location currentLocation = (Location) task.getResult();
                         if (currentLocation == null){
                             atualizarLocalizacao();
-//                            Toast.makeText(getApplicationContext(), "Ative o GPS Porfavor", Toast.LENGTH_SHORT).show();
                             Log.e("E","Cliente desligou GPS desligado");
                         }
                         else{
@@ -205,19 +201,16 @@ public class BottomNavigation extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.017297 + "&lon=" + -34.944933));
+//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ -8.017297 + "&lon=" + -34.944933));
 
 //                //testando localização verdadeira
-//                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ location.getLatitude() +"&lon=" + location.getLongitude()));
-
-//                Type type = new TypeToken<List<Toten>>(){}.getType();
+                Sessao.instance.setResposta(HttpConnection.get("https://capitao-api.herokuapp.com/totens/nearby?lat="+ location.getLatitude() +"&lon=" + location.getLongitude()));
                 Gson gson = new Gson();
                 if (!Sessao.instance.getResposta().contains("location")) {
                     Log.i("Resposta Json vazio", Sessao.instance.getResposta());
                 }
                 else{
                     Log.i("Resposta Json correto", Sessao.instance.getResposta());
-//                    listaTotem = gson.fromJson(Sessao.instance.getResposta(), List<Toten>.class);
                     listaTotem = new Gson().fromJson(Sessao.instance.getResposta(), new TypeToken<List<Toten>>(){}.getType());
                 }
             }
@@ -245,41 +238,6 @@ public class BottomNavigation extends AppCompatActivity {
         Sessao.instance.setSailor(sailor);
     }
 
-//    public void notinha(){
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        Intent intent = new Intent(this, BottomNavigation.class);
-//        Bundle bundle = new Bundle();
-//        intent.setAction(Intent.ACTION_MAIN);
-//        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-//        intent.putExtra("totens", listaTotem);
-////        bundle.putSerializable("totens", listaTotem);
-////        intent.putExtras(bundle);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-//
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-//        builder.setTicker("Olá Marujo!!!");
-//        builder.setContentTitle("Capitão Cupom");
-//        builder.setContentText("Um novo tesouro próximo de você");
-//        builder.setSmallIcon(R.drawable.logo);
-//        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
-//        builder.setContentIntent(pendingIntent);
-//
-//
-//        Notification n = builder.build();
-//        n.vibrate = new long[]{150, 300, 150, 600};
-//        n.flags = Notification.FLAG_AUTO_CANCEL;
-//        notificationManager.notify(R.drawable.logo, n);
-//
-//        try {
-//            Uri som  = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//            Ringtone toque = RingtoneManager.getRingtone(this, som);
-//            toque.play();
-//        }catch (Exception e){
-//
-//        }
-//    }
-
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void enviarNotificacao(){
         Intent intent = new Intent(this, BottomNavigation.class);
@@ -289,6 +247,7 @@ public class BottomNavigation extends AppCompatActivity {
         intent.putExtra("totens", listaTotem);
 
         int id = (int) (Math.random()*1000);
+        idNotificationList.add(id);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setTicker("Olá Marujo!!!");
@@ -298,14 +257,10 @@ public class BottomNavigation extends AppCompatActivity {
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
         builder.setContentIntent(pi);
         builder.setAutoCancel(true);
+        builder.setVibrate(new long[]{150, 300, 150, 600});
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(id, builder.build());
-
-        Notification n = builder.build();
-        n.vibrate = new long[]{150, 300, 150, 600};
-//      n.flags = Notification.FLAG_AUTO_CANCEL;
-        notificationManager.notify(R.drawable.logo, n);
 
         try {
             Uri som  = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -315,7 +270,9 @@ public class BottomNavigation extends AppCompatActivity {
 
         }
         Sessao.instance.setSailor(sailor);
+        Log.i("Lista notificações", String.valueOf(idNotificationList.size()));
     }
+
 
 
     private void atualizarLocalizacao(){
@@ -382,8 +339,31 @@ public class BottomNavigation extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (this.lastBackPressTime < System.currentTimeMillis() - 4000) {
+            toast = Toast.makeText(this, "Pressione o Botão Voltar novamente para fechar o Aplicativo.", 4000);
+            toast.show();
+            this.lastBackPressTime = System.currentTimeMillis();
+        } else {
+            if (toast != null) {
+                toast.cancel();
+            }
+            if (idNotificationList.size() != 0){
+                for (int id : idNotificationList){
+                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    mNotificationManager.cancel(id);
+                    Sessao.instance.setSailor(null);
+                    finish();
+                }
+                Sessao.instance.setSailor(null);
+                finish();
+                Log.i("Entrou if onBackPressed", String.valueOf(idNotificationList.size()));
+            }
+            else{
+                Log.i("Entrou else onBackPressed", "");
+            }
+            Sessao.instance.setSailor(null);
+            finish();
+        }
         super.onBackPressed();
-//TODO      Adicionar dialog de confirmação para sair
-        Sessao.instance.setSailor(null);
     }
 }

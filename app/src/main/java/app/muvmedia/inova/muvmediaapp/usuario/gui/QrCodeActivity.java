@@ -147,11 +147,7 @@ public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerVi
         });
         thread.start();
         thread.join();
-
-
     }
-
-
 
     @Override
     public void handleResult(final Result result) {
@@ -166,7 +162,7 @@ public class QrCodeActivity extends AppCompatActivity  implements ZXingScannerVi
                     callCampanha(meuResultado);
                     finish();
                 } catch (InterruptedException e) {
-                    Toast.makeText(QrCodeActivity.this, "Erro Inesperado", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(QrCodeActivity.this, "Nenhum código escaneado", Toast.LENGTH_LONG).show();
                     finish();
                 }
                 Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);

@@ -101,11 +101,11 @@ public class LoginActivity extends AppCompatActivity {
                 logar(usuario);
                 try{
                     if(Sessao.instance.getResposta().contains("Usuário ou senha incorreto")){
-                        progress.setVisibility(View.GONE);
+//                        progress.setVisibility(View.GONE);
                         Toast.makeText(this, "Usuário ou senha incorreto", Toast.LENGTH_SHORT).show();
                     } else {
+                        progress.setVisibility(View.GONE);
                         getSessaoApi();
-
                         Intent intent = new Intent(getApplicationContext(), BottomNavigation.class);
                         Sessao.instance.setCodigo("");
                         startActivity(intent);
