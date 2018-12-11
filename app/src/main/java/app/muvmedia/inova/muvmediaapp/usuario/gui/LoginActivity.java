@@ -1,7 +1,9 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -128,6 +130,17 @@ public class LoginActivity extends AppCompatActivity {
         Session session = sessionApi.getSession();
         Sessao.instance.setSession(sessionApi.getSession());
         Sessao.instance.setSailor(sessionApi.getSailor());
+
+        try {
+            SharedPreferences sharedPreferences = getSharedPreferences("sessao",
+                    Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("token", session.getToken());
+            editor.apply();
+        } catch (Error e) {
+            System.out.print(e);
+        }
+
     }
 
 
