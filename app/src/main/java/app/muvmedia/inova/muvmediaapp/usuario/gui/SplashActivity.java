@@ -51,7 +51,8 @@ public class SplashActivity extends Activity implements Runnable {
             SharedPreferences sharedPreferences = getSharedPreferences("sessao",
                     Context.MODE_PRIVATE);
             String token = sharedPreferences.getString("token", null);
-            if (token != null) {
+            System.out.println(token);
+            if (token != null && !token.equals("null")) {
                 relogar(token);
             } else {
                 startActivity(new Intent(this, LoginActivity.class));

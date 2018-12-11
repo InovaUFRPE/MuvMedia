@@ -1,7 +1,9 @@
 package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,7 +39,7 @@ import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoHttpMuver;
 import app.muvmedia.inova.muvmediaapp.usuario.servico.ServicoValidacao;
 
 public class PerfilFragmentActivity extends Fragment {
-    private Button alterarInformações, confirmarButton;
+    private Button alterarInformações, confirmarButton, sairApp;
     private ImageView sair;
     private Usuario usuario = Sessao.instance.getSailor().getUser();
     private Sailor sailor = Sessao.instance.getSailor();
@@ -89,6 +91,7 @@ public class PerfilFragmentActivity extends Fragment {
 
     private void setUpView(View v) {
         alterarInformações = v.findViewById(R.id.btnAlterarInfo);
+        sairApp = v.findViewById(R.id.btnSair);
         nome = v.findViewById(R.id.textView2);
         emailInvisivel = v.findViewById(R.id.emailTextPerfil);
         nascimentoInvisivel = v.findViewById(R.id.nascimentoTextPerfil);
@@ -142,8 +145,35 @@ public class PerfilFragmentActivity extends Fragment {
                 }
             }
         });
+
+        this.sairApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sairApp();
+            }
+        });
+
     }
 
+    private void sairApp() {
+        try {
+            SharedPreferences preferences =
+            this.getActivity()
+                .getSharedPreferences("sessao",
+                        Context.MODE_PRIVATE);
+            String token = preferences.getString("token", null);
+            System.out.println(token);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.remove("token");
+            editor.apply();
+            token = preferences.getString("token", null);
+            System.out.println(token);
+            this.getActivity().finish();
+            Log.d(">", "saiu!");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
     private void setInformacoesDialog(View mView){
         changeEmail = mView.findViewById(R.id.emailChange);
