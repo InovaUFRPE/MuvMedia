@@ -48,7 +48,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="Nome Completo"
+            android:text=""
             android:textColor="@color/preto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -116,17 +116,6 @@
             android:text="Alterar Informações"
             android:textColor="@color/cardview_light_background"
             app:layout_constraintTop_toBottomOf="@+id/progressBar" />
-
-        <ImageView
-            android:id="@+id/imSair"
-            android:layout_width="28dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="250dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
-            app:srcCompat="@drawable/exit" />
 
 
     </android.support.v7.widget.CardView>

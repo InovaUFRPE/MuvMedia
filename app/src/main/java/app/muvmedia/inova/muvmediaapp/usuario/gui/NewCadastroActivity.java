@@ -2,6 +2,7 @@ package app.muvmedia.inova.muvmediaapp.usuario.gui;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -30,6 +32,7 @@ public class NewCadastroActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private int dia, mes, ano, diaX, mesX, anoX;
     private String nascimento, cadastro;
+    private TextView titulo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,10 @@ public class NewCadastroActivity extends AppCompatActivity {
     }
 
     private void setItensView(){
+        this.titulo = findViewById(R.id.textView5);
+        String fontPath = "fonts/pieces.ttf";
+        Typeface typeface = Typeface.createFromAsset(getAssets(), fontPath);
+        this.titulo.setTypeface(typeface);
         this.campoEmail = findViewById(R.id.campoEmailNew);
         this.campoSenha = findViewById(R.id.campoSenhaNew);
         this.campoNome = findViewById(R.id.campoNome2);

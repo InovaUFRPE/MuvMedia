@@ -32,7 +32,7 @@ import app.muvmedia.inova.muvmediaapp.R;
 import app.muvmedia.inova.muvmediaapp.infra.PermissoesMaps;
 
 
-public class HomeFragmentActivity extends Fragment implements
+public class HomeFragmentActivity2 extends Fragment implements
         OnMyLocationButtonClickListener,
         OnMyLocationClickListener,
         OnMapReadyCallback,

@@ -33,10 +33,10 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/caplogocap"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/caplogocap"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".usuario.gui.SplashActivity">
@@ -83,7 +83,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".usuario.gui.HomeTeste" />
+        <activity android:name=".usuario.gui.HomeFragmentActivity" />
         <activity android:name=".usuario.gui.NewCadastroActivity"></activity>
     </application>
 
