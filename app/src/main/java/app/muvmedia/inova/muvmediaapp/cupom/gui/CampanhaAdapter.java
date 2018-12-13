@@ -6,7 +6,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import app.muvmedia.inova.muvmediaapp.R;
@@ -49,7 +52,17 @@ public class CampanhaAdapter extends BaseAdapter {
         Campaign cupom = campanhas.get(position);
         nome.setText(cupom.getName());
         descricao.setText(cupom.getDescription());
-        dataInicio.setText(cupom.getInitDate());
+        try {
+            dataInicio.setText(formateDate(cupom.getInitDate()));
+        } catch (ParseException pe) {
+            System.out.println(pe);
+        }
         return view;
+    }
+
+    private String formateDate(String oldstring) throws ParseException {
+        Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(oldstring);
+        String newstring = new SimpleDateFormat("dd/MM/yyyy").format(date);
+       return newstring;
     }
 }
